@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Footer">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/dark_blue"
+            android:src="@drawable/home_white"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/home_white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:src="@drawable/home"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/newUser"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/dark_blue"
+            android:src="@drawable/newlyadded_white"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/newUser_white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:src="@drawable/newlyadded"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/existingUser"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/dark_blue"
+            android:src="@drawable/existinguser_white"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/existingUser_white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:src="@drawable/existinguser"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/chatList"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/dark_blue"
+            android:src="@drawable/chat_white"
+            android:layout_weight="1"/>
+
+
+        <ImageView
+            android:id="@+id/chatList_white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:src="@drawable/chat"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/contact"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/dark_blue"
+            android:src="@drawable/contacts_white"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/contact_white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:src="@drawable/contacts"
+            android:layout_weight="1"
+            android:visibility="gone"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
