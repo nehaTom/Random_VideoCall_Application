@@ -23,6 +23,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.login.Login;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +47,13 @@ public class SignIn extends AppCompatActivity {
     Map<String, String> header1;
     String email, password;
 
+    static final String APP_ID="72405";
+    static final String AUTH_KEY="zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +70,7 @@ public class SignIn extends AppCompatActivity {
 
 
 
-
+initializeQuickBlox();
         setLoginButton();
         setRegisterNow();
     }
@@ -126,6 +138,7 @@ public class SignIn extends AppCompatActivity {
                                     String userId = resobj.getString("success");
                                 editor.putString("USER_ID",userId);
                                 editor.apply();
+                                quickBloxValidation();
                                 Intent i = new Intent(SignIn.this, Home.class);
                                 startActivity(i);
                             }
@@ -171,10 +184,29 @@ public class SignIn extends AppCompatActivity {
     requestQueue.add(jsonObjRequest);
 }
 
+    private void quickBloxValidation()
+
+    {
+        String User=userNameEditText.getText().toString().trim();
+        String Password= userPasswordEditText.getText().toString().trim();
+        QBUser qbUser = new QBUser(User, Password);
+        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+
+}
 
 
 
-    public void showMessage(String title,String message){
+public void showMessage(String title,String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle(title);
@@ -212,6 +244,13 @@ public class SignIn extends AppCompatActivity {
     }
         return true;
     }
+
+    private void initializeQuickBlox()
+    {
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+    }
+
 }
 
 

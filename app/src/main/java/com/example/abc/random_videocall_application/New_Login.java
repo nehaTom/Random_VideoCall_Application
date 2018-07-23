@@ -26,6 +26,11 @@ public class New_Login extends AppCompatActivity {
     SignInButton sign_in_button;
     CallbackManager callbackManager;
 
+    static final String APP_ID="72405";
+    static final String AUTH_KEY="zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

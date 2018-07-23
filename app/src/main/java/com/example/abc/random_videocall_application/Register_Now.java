@@ -22,6 +22,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.QBSession;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,6 +60,7 @@ public class Register_Now extends AppCompatActivity {
         birthEdit =findViewById(R.id.birthEdit);
         emailEdit=findViewById(R.id.emailEdit);
 
+registerQuickBlox();
 
 
 
@@ -109,7 +116,8 @@ public class Register_Now extends AppCompatActivity {
             }
 
 
-            public void showMessage(String title, String message) {
+
+    public void showMessage(String title, String message) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
                 builder.setCancelable(true);
                 builder.setTitle(title);
@@ -175,7 +183,7 @@ public class Register_Now extends AppCompatActivity {
                 mobile = mobileEdit.getText().toString().trim();
                 password = passwordEdit.getText().toString().trim();
 
-                String url = "http://192.168.31.180:8888/LoginAPI/REST/service/Registration";
+                String url = "http://192.168.1.28:8888/LoginAPI/REST/service/Registration";
 
                 RequestQueue requestQueue = Volley.newRequestQueue(this);
                 StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
@@ -210,6 +218,7 @@ public class Register_Now extends AppCompatActivity {
                                             String UeserId = profileobj.getString("uqId");
                                             String Username = profileobj.getString("userName");
                                             String Gender = profileobj.getString("gender");
+                                            quickBloxValidation();
 
                                             Intent i = new Intent(Register_Now.this, Profile.class);
                                             i.putExtra("DOB", DOB);
@@ -264,6 +273,40 @@ public class Register_Now extends AppCompatActivity {
                 requestQueue.add(jsonObjRequest);
 
             }
+    private void quickBloxValidation()
+
+    {
+      String  User =  emailEdit.getText().toString().trim();
+      String  Password =nameEdit.getText().toString().trim();
+        QBUser qbUser = new QBUser(User, Password);
+        QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e("QuickBlox_Error",e.getMessage());
+            }
+        });
+
+    }
+    private void registerQuickBlox()
+
+    {
+        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+Log.e("Error",e.getMessage());
+            }
+        });
+    }
 
 
 }

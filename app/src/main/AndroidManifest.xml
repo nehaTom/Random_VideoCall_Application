@@ -3,6 +3,11 @@
     package="com.example.abc.random_videocall_application">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -24,20 +29,22 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".NewJoined" />
-        <activity android:name=".Profile" />
+        <activity android:name=".Profile" >   </activity>
         <activity android:name=".Register_Now">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".SignIn" />
+        <activity android:name=".SignIn" ><intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter></activity>
         <activity android:name=".UserProfile" />
         <activity android:name=".My_Contacts" />
         <activity android:name=".Footer" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Pic"></activity>
+
+
     </application>
 
 </manifest>
