@@ -187,12 +187,18 @@ initializeQuickBlox();
     private void quickBloxValidation()
 
     {
-        String User=userNameEditText.getText().toString().trim();
-        String Password= userPasswordEditText.getText().toString().trim();
+        final String User=userNameEditText.getText().toString().trim();
+        final String Password= userPasswordEditText.getText().toString().trim();
         QBUser qbUser = new QBUser(User, Password);
         QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
+            public void onSuccess(QBUser qbUser, Bundle bundle)
+            {
+
+            Intent intent=new Intent(getApplicationContext(),ChatDialogsActivity.class);
+            intent.putExtra("user",User);
+            intent.putExtra("password",Password);
+            startActivity(intent);
 
             }
 

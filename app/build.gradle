@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.0.0'
     implementation 'com.quickblox:quickblox-android-sdk-core:3.3.0'
     implementation 'com.quickblox:quickblox-android-sdk-chat:3.3.0'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

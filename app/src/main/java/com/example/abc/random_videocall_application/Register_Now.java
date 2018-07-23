@@ -276,9 +276,11 @@ registerQuickBlox();
     private void quickBloxValidation()
 
     {
+        String Name=  name = nameEdit.getText().toString().trim();
       String  User =  emailEdit.getText().toString().trim();
       String  Password =nameEdit.getText().toString().trim();
         QBUser qbUser = new QBUser(User, Password);
+        qbUser.setFullName(Name);
         QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {

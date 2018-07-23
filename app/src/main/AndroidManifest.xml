@@ -4,10 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,22 +30,22 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".NewJoined" />
-        <activity android:name=".Profile" >   </activity>
-        <activity android:name=".Register_Now">
+        <activity android:name=".Profile" />
+        <activity android:name=".Register_Now" />
+        <activity android:name=".SignIn">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".SignIn" ><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
         <activity android:name=".UserProfile" />
         <activity android:name=".My_Contacts" />
         <activity android:name=".Footer" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".Pic"></activity>
-
-
+        <activity android:name=".Pic" />
+        <activity android:name=".ChatDialogsActivity" />
+        <activity android:name=".list_user_activity"></activity>
     </application>
 
 </manifest>
