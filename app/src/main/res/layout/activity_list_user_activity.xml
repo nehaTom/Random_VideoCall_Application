@@ -5,5 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".list_user_activity">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lstuser"
+        android:layout_marginBottom="40dp"></ListView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Chat"
+        android:id="@+id/btn_create_chat"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
 </android.support.constraint.ConstraintLayout>

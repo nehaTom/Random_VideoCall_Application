@@ -31,7 +31,7 @@
 
         <activity android:name=".NewJoined" />
         <activity android:name=".Profile" />
-        <activity android:name=".Register_Now" />
+        <activity android:name=".Register_Now" > </activity>
         <activity android:name=".SignIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

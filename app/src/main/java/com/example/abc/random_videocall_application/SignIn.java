@@ -93,7 +93,8 @@ initializeQuickBlox();
                    }
 
                }
-                    loginApiCall();
+                quickBloxValidation();
+//                    loginApiCall();
                 }
                // }
 
@@ -119,7 +120,7 @@ initializeQuickBlox();
     RequestQueue requestQueue = Volley.newRequestQueue(this);
     email = userNameEditText.getText().toString().trim();
     password = userPasswordEditText.getText().toString().trim();
-    String url =  "http://192.168.31.180:8888/LoginAPI/REST/WebService/login";
+    String url =  "http://192.168.1.28:8888/LoginAPI/REST/WebService/login";
     StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
             url,
             new Response.Listener<String>() {
@@ -139,8 +140,8 @@ initializeQuickBlox();
                                 editor.putString("USER_ID",userId);
                                 editor.apply();
                                 quickBloxValidation();
-                                Intent i = new Intent(SignIn.this, Home.class);
-                                startActivity(i);
+//                                Intent i = new Intent(SignIn.this, Home.class);
+//                                startActivity(i);
                             }
                             else {
                                 showMessage("Error", "Wrong Username or password");

@@ -50,6 +50,9 @@ public class ChatDialogsAdapters extends BaseAdapter{
            txtTitle=view.findViewById(R.id.list_chat_dialog_title);
            txtMessage=view.findViewById(R.id.list_chat_dialog_msg);
 
+           txtMessage.setText(qbChatDialogs.get(position).getLastMessage());
+           txtTitle.setText(qbChatDialogs.get(position).getName());
+
            ColorGenerator generator=ColorGenerator.MATERIAL;
            int randomColor=generator.getRandomColor();
            TextDrawable .IBuilder builder= (TextDrawable.IBuilder) TextDrawable.builder().beginConfig()

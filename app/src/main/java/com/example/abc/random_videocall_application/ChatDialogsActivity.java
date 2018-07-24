@@ -83,6 +83,13 @@ public class ChatDialogsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadChatDialogs();
+    }
+
     private void loadChatDialogs()
     {
         QBRequestGetBuilder requestGetBuilder=new QBRequestGetBuilder();

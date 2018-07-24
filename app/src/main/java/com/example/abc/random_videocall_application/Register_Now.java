@@ -24,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -45,6 +46,11 @@ public class Register_Now extends AppCompatActivity {
     Button registrationBtn;
     Map<String, String> header;
     String name, mobile, password, birthday, gender,email;
+
+    static final String APP_ID="72405";
+    static final String AUTH_KEY="zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +65,7 @@ public class Register_Now extends AppCompatActivity {
         passwordEdit =findViewById(R.id.passwordEdit);
         birthEdit =findViewById(R.id.birthEdit);
         emailEdit=findViewById(R.id.emailEdit);
-
+        initializeQuickBlox();
 registerQuickBlox();
 
 
@@ -106,8 +112,8 @@ registerQuickBlox();
                     @Override
                     public void onClick(View v) {
                         if (checkValidation()) {
-
-                            RegisterationApi();
+                            quickBloxValidation();
+                            //RegisterationApi();
                         }
                     }
                 });
@@ -220,14 +226,14 @@ registerQuickBlox();
                                             String Gender = profileobj.getString("gender");
                                             quickBloxValidation();
 
-                                            Intent i = new Intent(Register_Now.this, Profile.class);
-                                            i.putExtra("DOB", DOB);
-                                            i.putExtra("Phone", Phone);
-                                            i.putExtra("Email", Email);
-                                            i.putExtra("UeserId", UeserId);
-                                            i.putExtra("Username", Username);
-                                            i.putExtra("Gender", Gender);
-                                            startActivity(i);
+//                                           / Intent i = new Intent(Register_Now.this, Profile.class);
+//                                            i.putExtra("DOB", DOB);
+//                                            i.putExtra("Phone", Phone);
+//                                            i.putExtra("Email", Email);
+//                                            i.putExtra("UeserId", UeserId);
+//                                            i.putExtra("Username", Username);
+//                                            i.putExtra("Gender", Gender);
+//                                            startActivity(i);
                                         } else {
                                             showMessage("Error", "Wrong Username or password");
                                         }
@@ -277,14 +283,14 @@ registerQuickBlox();
 
     {
         String Name=  name = nameEdit.getText().toString().trim();
-      String  User =  emailEdit.getText().toString().trim();
-      String  Password =nameEdit.getText().toString().trim();
+        String  User =  emailEdit.getText().toString().trim();
+       String  Password =passwordEdit.getText().toString().trim();
         QBUser qbUser = new QBUser(User, Password);
         qbUser.setFullName(Name);
         QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
-
+Log.e("QuickBloxSuccess","Success");
             }
 
             @Override
@@ -310,5 +316,11 @@ Log.e("Error",e.getMessage());
         });
     }
 
+    private void initializeQuickBlox()
+    {
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+    }
 
 }
+
