@@ -7,8 +7,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBPagedRequestBuilder;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
+
+import java.util.ArrayList;
 
 public class Existing_User extends AppCompatActivity {
     RecyclerView Existing_RecyclerView;
@@ -34,7 +43,56 @@ public class Existing_User extends AppCompatActivity {
         setRecyclerView();
         setData();
         setOnClicks();
+        getRecyclerViewId();
 
+    }
+
+    private void setRecyclerView()
+    {
+
+        Existing_RecyclerView=findViewById(R.id.Existing_RecyclerView);
+        getUserList();
+//        Existing_RecyclerView.setHasFixedSize(true);
+
+    }
+    private void getUserList()
+    {
+        QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
+        pagedRequestBuilder.setPage(1);
+        pagedRequestBuilder.setPerPage(50);
+
+        Bundle params = new Bundle();
+
+        QBUsers.getUsers(pagedRequestBuilder, params).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+            @Override
+            public void onSuccess(ArrayList<QBUser> users, Bundle params) {
+                Log.e("Users: ", users.toString());
+                setDaaToAdapter(users);
+            }
+            @Override
+            public void onError(QBResponseException errors) {
+
+            }
+        });
+    }
+
+    private void setDaaToAdapter(ArrayList<QBUser> users) {
+
+        layoutManager=new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        Existing_RecyclerView.setLayoutManager(layoutManager);
+
+        String[] names = new String[users.size()];
+        for(int i = 0;i<users.size();i++){
+            QBUser qbUser = new QBUser();
+            qbUser=users.get(i);
+            names[i] = qbUser.getFullName();
+        }
+
+        adapter = new ExistingUser_Card_Adapter(this,"Existing_User",names,images);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
+        Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
+        Existing_RecyclerView.setAdapter(adapter);
     }
 
 
@@ -115,17 +173,16 @@ public class Existing_User extends AppCompatActivity {
             }
         });
     }
-    private void setRecyclerView()
+
+    private void getRecyclerViewId()
     {
-        Existing_RecyclerView=findViewById(R.id.Existing_RecyclerView);
-//        Existing_RecyclerView.setHasFixedSize(true);
-        layoutManager=new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        Existing_RecyclerView.setLayoutManager(layoutManager);
-        adapter = new ExistingUser_Card_Adapter(this,"Existing_User",images);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
-        Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
-        Existing_RecyclerView.setAdapter(adapter);
+        Existing_RecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
+
 }
 

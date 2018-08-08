@@ -12,18 +12,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 class NewJoined_GridView extends BaseAdapter {
 
     private Context mContext;
-    private final String[] gridViewString;
+    private final String[] names;
     private final int[] gridViewImageId;
 
-    public NewJoined_GridView(Context context, String[] gridViewString, int[] gridViewImageId) {
+    public NewJoined_GridView(Context context, String[] names, int[] gridViewImageId) {
         mContext = context;
         this.gridViewImageId = gridViewImageId;
-        this.gridViewString = gridViewString;
+        this.names = names;
     }
 
     @Override
     public int getCount() {
-        return gridViewString.length;
+        return names.length;
     }
 
     @Override
@@ -48,7 +48,7 @@ class NewJoined_GridView extends BaseAdapter {
             gridViewAndroid = inflater.inflate(R.layout.new_joined_grid_layout, null);
             TextView name = (TextView) gridViewAndroid.findViewById(R.id.name);
             CircleImageView profile_image = (CircleImageView) gridViewAndroid.findViewById(R.id.profile_image);
-            name.setText(gridViewString[i]);
+            name.setText(names[i]);
 
             //uploadphoto.setImageDrawable(roundedBitmapDrawable);
             profile_image.setImageResource(gridViewImageId[i]);

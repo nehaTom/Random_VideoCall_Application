@@ -1,31 +1,50 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        google()
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "2.5"
+}
 apply plugin: 'com.android.application'
+
+
+repositories {
+    maven {
+        url = 'http://archiva.temasys.com.sg/repository/internal'
+    }
+    google()
+}
 
 android {
     compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.example.abc.random_videocall_application"
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion 18
+        targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName "0.11.0"
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    // Run lint checks but don't abort build
+    lintOptions {
+        abortOnError false
     }
-}
-repositories {
-
-    maven {
-        url "https://maven.google.com"
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+
+    implementation 'com.android.support:appcompat-v7:27.+'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.github.lguipeng:BubbleView:1.0.1'
@@ -34,16 +53,27 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.google.android.gms:play-services-auth:9.0.1'
+    implementation 'com.google.android.gms:play-services-base:11.8.0'
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
     implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.volley:volley:1.0.0'
-    implementation 'com.quickblox:quickblox-android-sdk-core:3.3.0'
-    implementation 'com.quickblox:quickblox-android-sdk-chat:3.3.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-}
-//apply plugin: 'com.google.gms.google-services'
+    implementation "com.quickblox:quickblox-android-sdk-core:3.8.1@aar"
+    implementation("com.quickblox:quickblox-android-sdk-chat:3.8.1@aar") {
+        transitive = true
+    }
+    implementation("com.quickblox:quickblox-android-sdk-chat:3.8.1")
+    implementation 'com.quickblox:quickblox-android-sdk-customobjects:3.8.1'
+    implementation 'com.quickblox:quickblox-android-sdk-content:3.8.1'
+    implementation 'com.github.bhargavms:DotLoader:1.1.1'
+    implementation "com.google.firebase:firebase-messaging:11.8.0"
+    implementation "com.google.firebase:firebase-core:11.8.0"
+    implementation "com.quickblox:quickblox-android-sdk-videochat-webrtc:3.8.1"
+    api('com.quickblox:quickblox-android-sdk-messages:3.8.1')
 
+
+}
+
+apply plugin: 'com.google.gms.google-services'

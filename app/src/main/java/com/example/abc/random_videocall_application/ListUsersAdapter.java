@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quickblox.chat.model.QBChatDialog;
@@ -43,9 +44,19 @@ public class ListUsersAdapter extends BaseAdapter
         View view = convertView;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.support_simple_spinner_dropdown_item, null);
-            TextView textView = view.findViewById(android.R.id.text1);
-            textView.setText(qbUserArrayList.get(position).getLogin());
+//            view = inflater.inflate(R.layout.support_simple_spinner_dropdown_item, null);
+//            TextView textView = view.findViewById(android.R.id.text1);
+//            textView.setText(qbUserArrayList.get(position).getFullName());
+
+
+
+
+
+            view = inflater.inflate(R.layout.list_card, null);
+            TextView name = view.findViewById(R.id.name);
+
+            name.setText(qbUserArrayList.get(position).getFullName());
+
 
         }
         return view;

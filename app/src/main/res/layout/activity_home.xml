@@ -9,7 +9,8 @@
     tools:openDrawer="start">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="start">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,11 +52,12 @@
             android:layout_alignParentBottom="true"/>
 
         <ImageView
+            android:id="@+id/randomCall"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="100dp"
             android:background="@drawable/background_img"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter" />
 
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatMessage">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/chatTool"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/dark_blue"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:id="@+id/BackArrow"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/back_arrow"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:id="@+id/userName"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/BackArrow"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="@dimen/largeFont"/>
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/attachment_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@null"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_input_add"
+            android:visibility="invisible"/>
+
+        <ImageButton
+            android:id="@+id/send_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_send" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_content"
+            android:hint="Enter your Message"
+            android:layout_toLeftOf="@+id/send_button"
+            android:layout_toRightOf="@+id/attachment_button"
+            android:layout_alignParentBottom="true"/>
+
+        <ListView
+            android:stackFromBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp"
+            android:id="@+id/list_of_messages"
+            android:layout_below="@+id/chatTool"
+            android:layout_above="@+id/edit_content"
+            android:divider="@color/transparent"
+            android:dividerHeight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_alignParentStart="true">
+            >
+
+
+        </ListView>
+
+
+        <com.bhargavms.dotloader.DotLoader
+            android:id="@+id/dot_loader"
+            android:visibility="invisible"
+            android:layout_alignBottom="@+id/list_of_messages"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:color_array="@array/dot_clors"
+            app:number_of_dots="3"
+            app:dot_radius="4dp"/>
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

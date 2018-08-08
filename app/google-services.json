@@ -1,1 +1,55 @@
-{"web":{"client_id":"77069785519-u08cd9bn199pc4i10op52to747uoqrpa.apps.googleusercontent.com","project_id":"random-video-app-1531901749974","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"mV4ff0mz6aISG6bmFD958Jwb"}}
+{
+  "project_info": {
+    "project_number": "500668445761",
+    "firebase_url": "https://live-video-chat-1533201897106.firebaseio.com",
+    "project_id": "live-video-chat-1533201897106",
+    "storage_bucket": "live-video-chat-1533201897106.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500668445761:android:3af52a5ac69659fc",
+        "android_client_info": {
+          "package_name": "com.example.abc.random_videocall_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500668445761-nga0hcaa1viu78qqvad572o9bfnl8ta8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.abc.random_videocall_application",
+            "certificate_hash": "595ae0299f7aaaa1fabbe05d035fd51d27f17c48"
+          }
+        },
+        {
+          "client_id": "500668445761-70me6f6rtaplf7ccjp3v23k4vat2dp98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7lGMYjqaOXQ1aWXKd8sTFn3udkoBwsjQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500668445761-70me6f6rtaplf7ccjp3v23k4vat2dp98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

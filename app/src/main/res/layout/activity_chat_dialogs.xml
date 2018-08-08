@@ -6,20 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".ChatDialogsActivity">
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_collapseMode="pin"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:contentInsetLeft="0dp"
+        android:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetEnd="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp">
+
+        <include
+            layout="@layout/tool_bar" />
+    </android.support.v7.widget.Toolbar>
 
     <ListView
         android:id="@+id/lstChatDialogs"
+        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="55dp">
 
     </ListView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/chatdialog_adduser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/camera"
-        android:layout_margin="16dp" />
-
+    <include
+        layout="@layout/activity_footer"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
 </android.support.constraint.ConstraintLayout>

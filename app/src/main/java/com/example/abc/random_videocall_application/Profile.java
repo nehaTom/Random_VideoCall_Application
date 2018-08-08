@@ -1,6 +1,7 @@
 package com.example.abc.random_videocall_application;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,20 +19,38 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.quickblox.chat.QBChatService;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.model.QBBaseCustomObject;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class Profile extends AppCompatActivity {
-TextView id,age,gmail,gender;
+TextView id,age,gmail,gender,submit;
 ImageView upload_photo;
 EditText name,phone,state,height,weight,Ethnicity,aboutYou;
 RadioGroup interestedRadioGroup;
 RadioButton male,female;
+ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +63,25 @@ RadioButton male,female;
         name  = findViewById(R.id.name);
         gmail = findViewById(R.id.gmail);
         gender = findViewById(R.id.gender);
+        submit=findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setProfile();
+            }
+        });
 
 
         upload_photo  = findViewById(R.id.upload_photo);
         upload_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+Intent intent=new Intent();
+intent.setType("image/*");
+intent.setAction(Intent.ACTION_GET_CONTENT);
+startActivityForResult(Intent.createChooser(intent,"Select Picture"),Common.SELECT_PICTURE);
 
-                setProfileImage();
+                //setProfileImage();
             }
         });
         age = findViewById(R.id.age);
@@ -65,33 +95,98 @@ RadioButton male,female;
         male = findViewById(R.id.male);
         female  = findViewById(R.id.female);
 
+        String State = state.getText().toString().trim();
+        String Height = height.getText().toString().trim();
+        String Weight = weight.getText().toString().trim();
+        String ethinicity = Ethnicity.getText().toString().trim();
+        String About_You = aboutYou.getText().toString().trim();
+
+
+
 
 
         setData();
         //ageCalculate();
 
+
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Common.SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+//                dialog.setMessage("Please wait...");
+//                dialog.setCancelable(false);
+//                dialog.show();
 
+                ////update user avtar
+                try {
+                    InputStream image = getContentResolver().openInputStream(selectedImageUri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(image);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                    File file = new File(Environment.getExternalStorageDirectory() + "/myimage.png");
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bos.toByteArray());
+                    fos.flush();
+                    fos.close();
+
+                    /// Get File size
+                    final int imageSizeKB = (int) file.length() / 1024;
+                    if (imageSizeKB >= (1024 * 100)) {
+                        Toast.makeText(this, "Error image size", Toast.LENGTH_SHORT).show();
+                    }
+
+                    ///// upload file to server
+                    QBContent.uploadFileTask(file,true,null).performAsync(new QBEntityCallback<QBFile>() {
+                        @Override
+                        public void onSuccess(QBFile qbFile, Bundle bundle) {
+                           /// set avtar for user
+                            QBUser user = new QBUser();
+                            user.setId(QBChatService.getInstance().getUser().getId());
+                            user.setFileId(Integer.parseInt(qbFile.getId().toString()));
+
+                            // /update user
+
+                            QBUsers.updateUser(user).performAsync(new QBEntityCallback<QBUser>() {
+                                @Override
+                                public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+                                    dialog.dismiss();
+                                    upload_photo.setImageBitmap(bitmap);
+                                }
+
+                                @Override
+                                public void onError(QBResponseException e) {
+
+                                }
+                            });
+
+
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+
+                        }
+                    });
+
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 
     private void setData()
     {
 
-       String State = state.getText().toString().trim();
-       String Height = height.getText().toString().trim();
-       String Weight = weight.getText().toString().trim();
-       String ethinicity = Ethnicity.getText().toString().trim();
-       String About_You = aboutYou.getText().toString().trim();
 
-
-        Intent intent=getIntent();
-        String DOB=intent.getStringExtra("DOB");
-        String Phone=intent.getStringExtra("Phone");
-        String Email=intent.getStringExtra("Email");
-        String User_Id=intent.getStringExtra("UeserId");
-        String User_Name=intent.getStringExtra("Username");
-//        String Gender=intent.getStringExtra("Gender");
 //
 //        switch (Gender.toString()) {
 //            case "F":
@@ -107,18 +202,18 @@ RadioButton male,female;
 //        }
 
 
-        id.setText("ID:"+User_Id);
-        phone.setText(Phone);
-        gmail.setText(Email);
-        name.setText(User_Name);
-//        gender.setText(Gender);
-
-        state.setText(State);
-        height.setText(Height+"Ft.");
-        weight.setText(Weight+"Kg.");
-
-        Ethnicity.setText(ethinicity);
-        aboutYou.setText(About_You);
+//        id.setText("ID:"+User_Id);
+//        phone.setText(Phone);
+//        gmail.setText(Email);
+//        name.setText(User_Name);
+////        gender.setText(Gender);
+//
+//        state.setText(State);
+//        height.setText(Height+"Ft.");
+//        weight.setText(Weight+"Kg.");
+//
+//        Ethnicity.setText(ethinicity);
+//        aboutYou.setText(About_You);
     }
     /*private String ageCalculate()
     {
@@ -141,178 +236,151 @@ RadioButton male,female;
 
     }*/
 
-    private void setProfileImage()
+    private void setProfile()
     {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+
+        String State = state.getText().toString().trim();
+        String Height = height.getText().toString().trim();
+        String Weight = weight.getText().toString().trim();
+        String ethinicity = Ethnicity.getText().toString().trim();
+        String About_You = aboutYou.getText().toString().trim();
+
+        Intent intent=getIntent();
+        String User=intent.getStringExtra("User");
+        String Password=intent.getStringExtra("Password");
+        String DOB=intent.getStringExtra("DOB");
+        String Phone=intent.getStringExtra("Phone");
+        String Email=intent.getStringExtra("Email");
+        String User_Name=intent.getStringExtra("Full_Name");
+        String Gender=intent.getStringExtra("Gender");
 
 
+//// put fields
+        QBCustomObject object= new QBCustomObject();
+        object.putString("Gender","");
+        object.putString("Age","");
+        object.putString("State",State);
+        object.putString("Height",Height);
+        object.putString("Weight",Weight);
+        object.putString("Ethnicity",ethinicity);
+        object.putString("About_You",About_You);
+        object.putString("Interested_In","");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+       ///// set the class name
 
-        builder.setTitle("Add Photo!");
+       object.setClassName("User_Profile");
 
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-
+        QBCustomObjects.createObject(object).performAsync(new QBEntityCallback<QBCustomObject>() {
             @Override
-
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Take Photo"))
-
-                {
-
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-
-                    startActivityForResult(intent, 1);
-
-                }
-
-                else if (options[item].equals("Choose from Gallery"))
-
-                {
-
-                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                    startActivityForResult(intent, 2);
+            public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle) {
 
 
+                QBUser qbUser = new QBUser(User, Password);
+               // qbUser.setId(QBChatService.getInstance().getUser().getId());
+               Integer ID= qbUser.getId();
+                id.setText("ID:"+ID);
+        phone.setText(Phone);
+        gmail.setText(Email);
+        name.setText(User_Name);
+        gender.setText(Gender);
 
-                }
+        state.setText(State);
+        height.setText(Height+"Ft.");
+        weight.setText(Weight+"Kg.");
 
-                else if (options[item].equals("Cancel")) {
-
-                    dialog.dismiss();
-
-                }
+        Ethnicity.setText((CharSequence) Ethnicity);
+        aboutYou.setText(About_You);
+                Intent intent= new Intent(Profile.this,Home.class);
+                startActivity(intent);
 
             }
-
+            @Override
+            public void onError(QBResponseException e) {
+Log.e("Error_Profile",e.getMessage());
+            }
         });
 
-        builder.show();
+
+
+
+
+
+
+    }
+    private void setProfileUpdate()
+
+    {
+        Intent intent=getIntent();
+        String User=intent.getStringExtra("User");
+        String Password=intent.getStringExtra("Password");
+        QBUser qbUser = new QBUser(User, Password);
+        qbUser.setId(QBChatService.getInstance().getUser().getId());
+        QBUsers.updateUser(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                Toast.makeText(Profile.this,"User:"+qbUser.getFullName()+"Updated",Toast.LENGTH_SHORT).show();
+//                dialog.dismiss();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
 
     }
 
+
+    private void loadUserProfile()
+
+    {
+        //// Load avtar
+        QBUsers.getUser(QBChatService.getInstance().getUser().getId()).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                ///save to cache
+
+                QBUsersHolder.getInstance().putUsers(qbUser);
+                if (qbUser.getFileId() != null) {
+                    int profilePictureId = qbUser.getFileId();
+
+                    QBContent.getFile(profilePictureId).performAsync(new QBEntityCallback<QBFile>() {
+                        @Override
+                        public void onSuccess(QBFile qbFile, Bundle bundle) {
+                            String fileUrl=qbFile.getPublicUrl();
+                            Picasso.get().load(fileUrl).into(upload_photo);
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+
+                        }
+                    });
+
+                }
+            }
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+        QBUser currentUser =QBChatService.getInstance().getUser();
+        String fullName=currentUser.getFullName();
+        String email=currentUser.getLogin();
+        String phone=currentUser.getPhone();
+        //// then set there
+
+
+    }
 
 
     @Override
+    public void onBackPressed() {
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-
-            if (requestCode == 1) {
-
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-
-                for (File temp : f.listFiles()) {
-
-                    if (temp.getName().equals("temp.jpg")) {
-
-                        f = temp;
-
-                        break;
-
-                    }
-
-                }
-
-                try {
-
-                    Bitmap bitmap;
-
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-
-
-
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
-
-                            bitmapOptions);
-
-
-
-                    upload_photo.setImageBitmap(bitmap);
-
-
-
-                    String path = android.os.Environment
-
-                            .getExternalStorageDirectory()
-
-                            + File.separator
-
-                            + "Phoenix" + File.separator + "default";
-
-                    f.delete();
-
-                    OutputStream outFile = null;
-
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-
-                    try {
-
-                        outFile = new FileOutputStream(file);
-
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
-
-                        outFile.flush();
-
-                        outFile.close();
-
-                    } catch (FileNotFoundException e) {
-
-                        e.printStackTrace();
-
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-
-                    } catch (Exception e) {
-
-                        e.printStackTrace();
-
-                    }
-
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-
-                }
-
-            } else if (requestCode == 2) {
-
-
-
-                Uri selectedImage = data.getData();
-
-                String[] filePath = { MediaStore.Images.Media.DATA };
-
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
-
-                c.moveToFirst();
-
-                int columnIndex = c.getColumnIndex(filePath[0]);
-
-                String picturePath = c.getString(columnIndex);
-
-                c.close();
-
-                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-
-                Log.w("path", picturePath+"");
-
-                upload_photo.setImageBitmap(thumbnail);
-
-            }
-
-        }
+        return;
     }
+
+
 
 
 }

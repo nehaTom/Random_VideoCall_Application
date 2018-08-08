@@ -26,6 +26,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.QBSession;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.ServiceZone;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -44,10 +53,18 @@ public class MainActivity extends AppCompatActivity implements
     private ImageView imgProfilePic;
     private TextView txtName, txtEmail;
 
+    static final String APP_ID="72405";
+    static final String AUTH_KEY="zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initializeQuickBlox();
+        registerSession();
 
         btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
         btnSignOut = (Button) findViewById(R.id.btn_sign_out);
@@ -106,29 +123,83 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
+//            GoogleSignInAccount acct = result.getSignInAccount();
+//
+//            Log.e(TAG, "display name: " + acct.getDisplayName());
+//
+//            String personName = acct.getDisplayName();
+//           // String personPhotoUrl = acct.getPhotoUrl().toString();
+//            String email = acct.getEmail();
+//
+//            Log.e(TAG, "Name: " + personName + ", email: " + email
+//                    );
+//
+//            txtName.setText(personName);
+//            txtEmail.setText(email);
 
-            Log.e(TAG, "display name: " + acct.getDisplayName());
 
-            String personName = acct.getDisplayName();
-            String personPhotoUrl = acct.getPhotoUrl().toString();
-            String email = acct.getEmail();
 
-            Log.e(TAG, "Name: " + personName + ", email: " + email
-                    + ", Image: " + personPhotoUrl);
 
-            txtName.setText(personName);
-            txtEmail.setText(email);
-            Glide.with(getApplicationContext()).load(personPhotoUrl)
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgProfilePic);
+//            Glide.with(getApplicationContext()).load(personPhotoUrl)
+//                    .thumbnail(0.5f)
+//                    .crossFade()
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(imgProfilePic);
 
-            updateUI(true);
+            String User= result.getSignInAccount().getEmail();
+            String Password= result.getSignInAccount().getId();
+            String Name=result.getSignInAccount().getGivenName();
+            QBUser user = new QBUser();
+            user.setEmail(User);
+            user.setPassword(Password);
+
+            QBUsers.signIn(user).performAsync(new QBEntityCallback<QBUser>() {
+                @Override
+                public void onSuccess(QBUser user, Bundle args)
+                {
+                    Intent intent=new Intent(getApplicationContext(),Home.class);
+                    startActivity(intent);
+
+                }
+
+                @Override
+                public void onError(QBResponseException errors)
+                {
+                    StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
+                    Tag_Name.add("chatUser");
+
+
+                    QBUser qbUser = new QBUser(User, Password);
+                    qbUser.setFullName(Name);
+                    qbUser.getFullName();
+                    qbUser.setTags(Tag_Name);
+                    QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+                        @Override
+                        public void onSuccess(QBUser qbUser, Bundle bundle) {
+
+                            Log.e("QuickBloxSuccess","Success");
+
+                            Intent intent=new Intent(getApplicationContext(),Home.class);
+                            startActivity(intent);
+
+                        }
+
+                        @Override
+
+                        public void onError(QBResponseException e) {
+
+                        }
+                    });
+                    Log.e("Gmail_Error",errors.getMessage());
+                }
+            });
+
+
+            // updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
-            updateUI(false);
+
+//            updateUI(false);
         }
     }
 
@@ -214,8 +285,8 @@ public class MainActivity extends AppCompatActivity implements
     private void updateUI(boolean isSignedIn) {
         if (isSignedIn) {
             btnSignIn.setVisibility(View.GONE);
-            btnSignOut.setVisibility(View.VISIBLE);
-            btnRevokeAccess.setVisibility(View.VISIBLE);
+            btnSignOut.setVisibility(View.GONE);
+            btnRevokeAccess.setVisibility(View.GONE);
             llProfileLayout.setVisibility(View.VISIBLE);
         } else {
             btnSignIn.setVisibility(View.VISIBLE);
@@ -224,4 +295,31 @@ public class MainActivity extends AppCompatActivity implements
             llProfileLayout.setVisibility(View.GONE);
         }
     }
+
+    private void initializeQuickBlox()
+    {
+//
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
+        // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+//        final String API_DOAMIN = "https://apicustomdomain.quickblox.com";
+//        final String CHAT_DOMAIN = "chatcustomdomain.quickblox.com";
+
+        QBSettings.getInstance().setEndpoints("https://api.quickblox.com", "chat.quickblox.com", ServiceZone.PRODUCTION);
+        QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
+    }
+
+    private void registerSession() {
+        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e("ERROR", e.getMessage());
+            }
+        });
+    }
+
 }

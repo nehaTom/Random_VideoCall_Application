@@ -25,16 +25,16 @@ public class QBUsersHolder {
     private QBUsersHolder()
     {
         qbUserSparseArray=new SparseArray<>();
-        
+
     }
-    
+
     public void putUsers(List<QBUser> users)
     {
         for (QBUser user:users)
             putUsers(user);
     }
 
-    private void putUsers(QBUser user)
+    public void putUsers(QBUser user)
     {
         qbUserSparseArray.put(user.getId(),user);
     }

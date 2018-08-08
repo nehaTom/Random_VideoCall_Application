@@ -19,6 +19,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginBottom="4dp"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
@@ -30,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="7dp"
-                android:layout_marginLeft="150dp"
+                android:layout_centerInParent="true"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="7dp"
                 android:text="Live Video Chat"
@@ -40,41 +41,42 @@
                 android:textSize="20sp"/>
 
 
-            <ImageView
-                android:id="@+id/search"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginBottom="7dp"
-                android:layout_toRightOf="@id/app_name"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="7dp"
-                android:scaleType="fitCenter"
-                android:background="@drawable/search"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/search"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:layout_marginBottom="7dp"-->
+                <!--android:layout_marginLeft="30dp"-->
+                <!--android:layout_marginTop="7dp"-->
+                <!--android:layout_toRightOf="@id/app_name"-->
+                <!--android:background="@drawable/search"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:visibility="gone"/>-->
 
-            <SearchView
-                android:id="@+id/serchView"
-                android:layout_width="250dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="7dp"
-                android:layout_marginLeft="80dp"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="7dp"
-                android:queryHint="Search Contact"
-                android:textStyle="italic"
-                android:scaleType="fitCenter"
-                android:textColor="@color/white"
-                android:visibility="gone"/>
+            <!--<SearchView-->
+                <!--android:id="@+id/serchView"-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginBottom="7dp"-->
+                <!--android:layout_marginLeft="80dp"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--android:layout_marginTop="7dp"-->
+                <!--android:queryHint="Search Contact"-->
+                <!--android:textStyle="italic"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:visibility="gone"/>-->
 
             <ImageView
                 android:id="@+id/logout"
                 android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="7dp"
-                android:layout_marginLeft="5dp"
                 android:layout_marginTop="7dp"
-                android:scaleType="fitCenter"
-                android:background="@drawable/logout_white" />
+                android:layout_marginRight="5dp"
+                android:background="@drawable/logout_white"
+                android:scaleType="fitCenter" />
         </RelativeLayout>
 
     </LinearLayout>

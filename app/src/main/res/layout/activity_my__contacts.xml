@@ -64,10 +64,11 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:background="@color/dark_blue" />
+            android:background="@color/dark_blue"
+            />
     </LinearLayout>
 
         <include

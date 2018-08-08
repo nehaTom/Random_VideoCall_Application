@@ -2,19 +2,34 @@ package com.example.abc.random_videocall_application;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBPagedRequestBuilder;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
+
+import java.util.ArrayList;
 
 public class NewJoined extends AppCompatActivity {
 
     GridView androidGridView;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
             chatList_white, contact_white;
+
+    boolean doubleBackToExitPressedOnce = false;
     String[] gridViewString = {
             "Name","Name","Name",
             "Name","Name","Name",
@@ -23,11 +38,11 @@ public class NewJoined extends AppCompatActivity {
             "Name","Name","Name",
     } ;
     int[] gridViewImageId = {
-            R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background
+            R.drawable.profile, R.drawable.profile, R.drawable.profile,
+            R.drawable.profile, R.drawable.profile, R.drawable.profile,
+            R.drawable.profile, R.drawable.profile, R.drawable.profile,
+            R.drawable.profile, R.drawable.profile, R.drawable.profile,
+            R.drawable.profile, R.drawable.profile, R.drawable.profile
     };
 
     @Override
@@ -36,10 +51,50 @@ public class NewJoined extends AppCompatActivity {
         setContentView(R.layout.activity_new_joined);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        Toolbar  logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //setLogout();
+//            }
+//        });
         setGridView();
         setData();
         setOnClicks();
 
+
+    }
+
+    private void setLogout()
+
+    {
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle) {
+
+                        Toast.makeText(NewJoined.this,"You Are Logout !!! ",Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(NewJoined.this,New_Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
 
     }
 
@@ -55,6 +110,8 @@ public class NewJoined extends AppCompatActivity {
         chatList_white = findViewById(R.id.chatList_white);
         home_white = findViewById(R.id.home_white);
         contact_white = findViewById(R.id.contact_white);
+        newUser.setVisibility(View.GONE);
+        newUser_white.setVisibility(View.VISIBLE);
     }
 
 
@@ -70,18 +127,7 @@ public class NewJoined extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        newUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                newUser.setBackgroundColor(Color.parseColor("#ffffff"));
-//                newUser.setImageResource(R.drawable.newlyadded);
 
-                newUser.setVisibility(View.GONE);
-                newUser_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), NewJoined.class);
-                startActivity(intent);
-            }
-        });
 
         existingUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +137,7 @@ public class NewJoined extends AppCompatActivity {
 
                 existingUser.setVisibility(View.GONE);
                 existingUser_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Existing_User.class);
+                Intent intent = new Intent(getApplication(), list_user_activity.class);
                 startActivity(intent);
             }
         });
@@ -103,7 +149,7 @@ public class NewJoined extends AppCompatActivity {
 
                 chatList.setVisibility(View.GONE);
                 chatList_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Call_History.class);
+                Intent intent = new Intent(getApplication(), ChatDialogsActivity.class);
                 startActivity(intent);
             }
         });
@@ -122,15 +168,84 @@ public class NewJoined extends AppCompatActivity {
     }
     private void setGridView()
     {
-        NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, gridViewString, gridViewImageId);
-        androidGridView=(GridView)findViewById(R.id.grid_view_image_text);
-        androidGridView.setAdapter(adapterViewAndroid);
-        androidGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+        getUserList();
+
+    }
+
+
+
+
+
+
+    private void getUserList()
+    {
+        QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
+        pagedRequestBuilder.setPage(1);
+        pagedRequestBuilder.setPerPage(50);
+
+        Bundle params = new Bundle();
+
+        QBUsers.getUsers(pagedRequestBuilder, params).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int i, long id) {
+            public void onSuccess(ArrayList<QBUser> users, Bundle params) {
+                Log.e("Users: ", users.toString());
+                setDaaToAdapter(users);
+            }
+            @Override
+            public void onError(QBResponseException errors) {
+
             }
         });
     }
+
+    private void setDaaToAdapter(ArrayList<QBUser> users) {
+        String[] names = new String[users.size()];
+        for(int i = 0;i<users.size();i++){
+            QBUser qbUser = new QBUser();
+            qbUser=users.get(i);
+            names[i] = qbUser.getFullName();
+        }
+        NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, names, gridViewImageId);
+        androidGridView=(GridView)findViewById(R.id.grid_view_image_text);
+        androidGridView.setAdapter(adapterViewAndroid);
+//        androidGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int i, long id) {
+//            }
+//        });
+
+
+
+
+    }
+    @Override
+    public void onBackPressed() {
+
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+
+    }
+
+
 }

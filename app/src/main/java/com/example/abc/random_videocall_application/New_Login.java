@@ -3,9 +3,11 @@ package com.example.abc.random_videocall_application;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -17,6 +19,15 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBProvider;
+import com.quickblox.auth.session.QBSession;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.ServiceZone;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import org.json.JSONObject;
 
@@ -41,12 +52,16 @@ public class New_Login extends AppCompatActivity {
 
 //        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 //        updateUI(account);
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        SignInButton signInButton = findViewById(R.id.gmail_sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
+
+        initializeQuickBlox();
+        registerSession();
         setData();
         setfacebookLogin();
         setGoogleLogin();
         setLoginOnClick();
+
     }
 
     private void updateUI(GoogleSignInAccount account) {
@@ -56,7 +71,7 @@ public class New_Login extends AppCompatActivity {
     private void setData()
     {
         login_textview=findViewById(R.id.login_textview);
-        FacebookLogin =findViewById(R.id.login_button);
+        FacebookLogin =findViewById(R.id.facebook_login_button);
     }
 
 
@@ -78,7 +93,30 @@ public class New_Login extends AppCompatActivity {
         FacebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                getUserDetails(loginResult);
+                Log.e("Facebook_Success",loginResult.toString());
+                //getUserDetails(loginResult);
+                String Token=  loginResult.getAccessToken().getToken();
+
+                String facebookAccessToken = Token;
+
+                QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK,  facebookAccessToken, null).performAsync(new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser user, Bundle args) {
+                        Intent intent=new Intent(getApplicationContext(),Home.class);
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onError(QBResponseException errors)
+                    {
+
+                        Log.e("Facebook_Error",errors.toString());
+
+
+                    }
+                });
+
             }
 
             @Override
@@ -89,6 +127,7 @@ public class New_Login extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
+                Log.e("Facebook_Error",exception.getMessage());
             }
         });
     }
@@ -106,7 +145,7 @@ public class New_Login extends AppCompatActivity {
                     public void onCompleted(
                             JSONObject json_object,
                             GraphResponse response) {
-                        Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                        Intent intent = new Intent(getApplicationContext(), Profile.class);
                         intent.putExtra("userProfile", json_object.toString());
                         startActivity(intent);
                     }
@@ -134,9 +173,43 @@ public class New_Login extends AppCompatActivity {
 
     private void setGoogleLogin()
     {
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        SignInButton signInButton = findViewById(R.id.gmail_sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
-        signInButton.setOnClickListener((View.OnClickListener) this);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+    }
+
+    private void initializeQuickBlox()
+    {
+//
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
+        // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+//        final String API_DOAMIN = "https://apicustomdomain.quickblox.com";
+//        final String CHAT_DOMAIN = "chatcustomdomain.quickblox.com";
+
+        QBSettings.getInstance().setEndpoints("https://api.quickblox.com", "chat.quickblox.com", ServiceZone.PRODUCTION);
+        QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
+    }
+
+    private void registerSession() {
+        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e("ERROR", e.getMessage());
+            }
+        });
     }
 
 

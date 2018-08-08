@@ -6,6 +6,9 @@ import java.util.List;
 
 public class Common {
 
+    public static final String DIALOG_EXTRA="Dialogs";
+    /// avtar
+    public static final int SELECT_PICTURE = 7171;
     public static String createChatDialogName(List<Integer> qbUsers)
     {
         List<QBUser> qbUsers1= QBUsersHolder.getInstance().getUsersByIds(qbUsers);
@@ -16,5 +19,8 @@ public class Common {
             name=name.replace(30,name.length()-1,"....");
         return name.toString();
     }
-
+public static boolean isNullorEmptyString(String content)
+{
+    return (content==null && !content.trim().isEmpty()?false:true);
+}
 }

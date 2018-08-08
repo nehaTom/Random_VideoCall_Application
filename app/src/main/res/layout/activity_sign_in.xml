@@ -5,18 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignIn">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@drawable/bg_login">
 
         <LinearLayout
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:orientation="vertical"
-            android:layout_marginTop="60dp"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:gravity="center"
             android:background="@drawable/bg_cornner">
@@ -39,24 +40,22 @@
 
             <EditText
                 android:id="@+id/userNameEditText"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:layout_gravity="center"/>
             <EditText
                 android:id="@+id/userPasswordEditText"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Password"
                 android:inputType="textPassword"
                 android:layout_gravity="center"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
@@ -86,8 +85,6 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
@@ -106,8 +103,6 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="40dp"
                 android:layout_gravity="center"
@@ -142,5 +137,5 @@
                 android:textColor="@color/white" />
 
 
-        </LinearLayout></LinearLayout>
+        </LinearLayout></RelativeLayout>
 </android.support.constraint.ConstraintLayout>

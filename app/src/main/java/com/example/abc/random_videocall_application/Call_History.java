@@ -8,9 +8,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 
-public class Call_History extends AppCompatActivity {
+import com.quickblox.chat.exception.QBChatException;
+import com.quickblox.chat.listeners.QBChatDialogMessageListener;
+import com.quickblox.chat.listeners.QBSystemMessageListener;
+import com.quickblox.chat.model.QBChatDialog;
+import com.quickblox.chat.model.QBChatMessage;
+
+public class Call_History extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
+
     RecyclerView CallHistory_RecyclerView;
     LinearLayoutManager layoutManager;
     ExistingUser_Card_Adapter adapter;
@@ -34,9 +43,39 @@ public class Call_History extends AppCompatActivity {
         setRecyclerView();
         setData();
         setOnClicks();
+        createSessionForChat();
+        loadChatDialogs();
 
+
+
+        /////////////////////
+
+        CallHistory_RecyclerView=findViewById(R.id.CallHistory_RecyclerView);
+//        CallHistory_RecyclerView.setOnClickListener(new AdapterView.OnItemClickListener() {
+//                                                        @Override
+//                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                                            QBChatDialog qbChatDialog = (QBChatDialog) CallHistory_RecyclerView.getAdapter().getItemId(position);
+//                                                            Intent intent=new Intent(Call_History.this,ChatMessage.class);
+//
+//                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
+//                startActivity(intent);
+////
+//                                                        }
+//                                                    });
+
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                QBChatDialog qbChatDialog= (QBChatDialog) CallHistory_RecyclerView.getAdapter().getItemId(position);
+//                Intent intent=new Intent(Call_History.this,ChatMessage.class);
+//
+//                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
+//                startActivity(intent);
+//
+//            }
+//        });
 
     }
+
 
 
     private void setData() {
@@ -87,7 +126,7 @@ public class Call_History extends AppCompatActivity {
 
                 existingUser.setVisibility(View.GONE);
                 existingUser_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Existing_User.class);
+                Intent intent = new Intent(getApplication(), list_user_activity.class);
                 startActivity(intent);
             }
         });
@@ -99,7 +138,7 @@ public class Call_History extends AppCompatActivity {
 
                 chatList.setVisibility(View.GONE);
                 chatList_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Call_History.class);
+                Intent intent = new Intent(getApplication(), ChatDialogsActivity.class);
                 startActivity(intent);
             }
         });
@@ -128,4 +167,38 @@ public class Call_History extends AppCompatActivity {
         CallHistory_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
         CallHistory_RecyclerView.setAdapter(adapter);
     }
+
+    @Override
+    public void processMessage(String s, QBChatMessage qbChatMessage, Integer integer) {
+
+    }
+
+    @Override
+    public void processError(String s, QBChatException e, QBChatMessage qbChatMessage, Integer integer) {
+
+    }
+
+    @Override
+    public void processMessage(QBChatMessage qbChatMessage) {
+
+    }
+
+    @Override
+    public void processError(QBChatException e, QBChatMessage qbChatMessage) {
+
+    }
+
+    private void createSessionForChat()
+
+    {
+
+    }
+
+
+    private void loadChatDialogs()
+    {
+
+    }
+
+
 }

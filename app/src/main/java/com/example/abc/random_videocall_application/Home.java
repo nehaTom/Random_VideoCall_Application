@@ -3,6 +3,7 @@ package com.example.abc.random_videocall_application;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -15,13 +16,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.activities.OpponentsActivity;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
+    private SharedPrefsHelper sharedPrefsHelper;
 
     ImageView home, newUser, existingUser, chatList, contact, home_icon,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white;;
+            chatList_white, contact_white,logout,randomCall;
+
+    boolean doubleBackToExitPressedOnce = false;
+
 //    Footer footer=new Footer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +44,24 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+//        logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //setLogout();
+//            }
+//        });
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
+//
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+       navigationView.setNavigationItemSelectedListener(this);
 
 
 
@@ -45,8 +69,62 @@ public class Home extends AppCompatActivity
 
         setfooter();
         setOnClicks();
+        setOnclicksRandomButton();
 
 
+    }
+
+    private void setOnclicksRandomButton() {
+        randomCall = findViewById(R.id.randomCall);
+        randomCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPrefsHelper = SharedPrefsHelper.getInstance();
+
+                if (sharedPrefsHelper.hasQbUser()) {
+                    startLoginService(sharedPrefsHelper.getQbUser());
+                    //startOpponentsActivity();
+                    OpponentsActivity.start(Home.this, false);
+                    finish();
+                    return;
+                }
+
+            }
+        });
+    }
+
+    protected void startLoginService(QBUser qbUser) {
+        CallService.start(this, qbUser);
+    }
+
+    private void setLogout()
+    {
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle) {
+
+                        Toast.makeText(Home.this,"You Are Logout !!! ",Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(Home.this,New_Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
     }
 
     private void setData()
@@ -72,77 +150,58 @@ public class Home extends AppCompatActivity
         chatList_white = findViewById(R.id.chatList_white);
         home_white = findViewById(R.id.home_white);
         contact_white = findViewById(R.id.contact_white);
+        home.setVisibility(View.GONE);
+        home_white.setVisibility(View.VISIBLE);
     }
 
 
     private void setOnClicks() {
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                home.setBackgroundColor(Color.parseColor("#ffffff"));
-                home.setImageResource(R.drawable.home);
-//                home.setVisibility(View.GONE);
-//                home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home.class);
-                startActivity(intent);
-            }
-        });
+
         newUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                newUser.setBackgroundColor(Color.parseColor("#ffffff"));
-//                newUser.setImageResource(R.drawable.newlyadded);
 
-                newUser.setVisibility(View.GONE);
-                newUser_white.setVisibility(View.VISIBLE);
+
                 Intent intent = new Intent(getApplication(), NewJoined.class);
                 startActivity(intent);
+
+
             }
         });
 
         existingUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                existingUser.setBackgroundColor(Color.parseColor("#ffffff"));
-//                existingUser.setImageResource(R.drawable.existinguser);
 
-                existingUser.setVisibility(View.GONE);
-                existingUser_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Existing_User.class);
+
+                Intent intent = new Intent(getApplication(), list_user_activity.class);
                 startActivity(intent);
+
             }
         });
         chatList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                chatList.setBackgroundColor(Color.parseColor("#ffffff"));
-//                chatList.setImageResource(R.drawable.chat);
-
-                chatList.setVisibility(View.GONE);
-                chatList_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Call_History.class);
+                Intent intent = new Intent(getApplication(), ChatDialogsActivity.class);
                 startActivity(intent);
+
             }
         });
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                contact.setBackgroundColor(Color.parseColor("#ffffff"));
-//                contact.setImageResource(R.drawable.contacts);
-
-                contact.setVisibility(View.GONE);
-                contact_white.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(getApplication(), My_Contacts.class);
                 startActivity(intent);
+
             }
         });
     }
     private void setAppMenu()
     { DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.END);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
-            drawer.openDrawer(GravityCompat.END);
+            drawer.openDrawer(GravityCompat.START);
         }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -159,10 +218,30 @@ public class Home extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
-    }
+            if (doubleBackToExitPressedOnce) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
+        }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -204,4 +283,8 @@ public class Home extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
 }

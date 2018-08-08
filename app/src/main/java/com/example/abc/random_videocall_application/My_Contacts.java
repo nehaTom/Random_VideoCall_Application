@@ -2,6 +2,7 @@ package com.example.abc.random_videocall_application;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
 
 public class My_Contacts extends AppCompatActivity {
     RecyclerView Existing_RecyclerView;
@@ -16,6 +23,8 @@ public class My_Contacts extends AppCompatActivity {
     ExistingUser_Card_Adapter adapter;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
             chatList_white, contact_white;
+
+    boolean doubleBackToExitPressedOnce = false;
     int[] images = {
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
@@ -30,11 +39,55 @@ public class My_Contacts extends AppCompatActivity {
         setContentView(R.layout.activity_my__contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        Toolbar  logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               // setLogout();
+//            }
+//        });
         setRecyclerView();
         setData();
         setOnClicks();
+        getRecyclerViewId();
 
 
+    }
+
+    private void setLogout()
+
+    {
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle) {
+
+                        Toast.makeText(My_Contacts.this,"You Are Logout !!! ",Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(My_Contacts.this,New_Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+
+    }
+
+    private void getRecyclerViewId() {
     }
 
     private void setData() {
@@ -49,6 +102,8 @@ public class My_Contacts extends AppCompatActivity {
         chatList_white = findViewById(R.id.chatList_white);
         home_white = findViewById(R.id.home_white);
         contact_white = findViewById(R.id.contact_white);
+        contact.setVisibility(View.GONE);
+        contact_white.setVisibility(View.VISIBLE);
     }
 
 
@@ -85,7 +140,7 @@ public class My_Contacts extends AppCompatActivity {
 
                 existingUser.setVisibility(View.GONE);
                 existingUser_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Existing_User.class);
+                Intent intent = new Intent(getApplication(), list_user_activity.class);
                 startActivity(intent);
             }
         });
@@ -97,23 +152,13 @@ public class My_Contacts extends AppCompatActivity {
 
                 chatList.setVisibility(View.GONE);
                 chatList_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Call_History.class);
-                startActivity(intent);
-            }
-        });
-        contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                contact.setBackgroundColor(Color.parseColor("#ffffff"));
-//                contact.setImageResource(R.drawable.contacts);
-
-                contact.setVisibility(View.GONE);
-                contact_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), My_Contacts.class);
+                Intent intent = new Intent(getApplication(), ChatDialogsActivity.class);
                 startActivity(intent);
             }
         });
     }
+
+
         private void setRecyclerView ()
         {
             Existing_RecyclerView = findViewById(R.id.Existing_RecyclerView);
@@ -126,4 +171,30 @@ public class My_Contacts extends AppCompatActivity {
             Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
             Existing_RecyclerView.setAdapter(adapter);
         }
+
+    @Override
+    public void onBackPressed() {
+
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+
+    }
     }

@@ -4,126 +4,131 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v7.widget.CardView
+    <RelativeLayout
+        android:id="@+id/existingUserL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        app:cardBackgroundColor="#e8eaf0"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        card_view:cardCornerRadius="16dp"
-        card_view:cardElevation="5dp"
-        card_view:contentPadding="4dp">
-
-        <LinearLayout
+        android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
+            app:cardBackgroundColor="#e8eaf0"
             android:orientation="horizontal"
-            android:padding="20dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_launcher_background"
-                />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp">
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:text="Name"
-                android:textColor="@color/dark_blue"
-                android:textSize="@dimen/mediumFont"
-                android:textStyle="bold"/>
-            <TextView
-                android:id="@+id/User_chitchat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:text="Lets Chit Chat"
-                android:textColor="@color/dark_blue"
-                android:textSize="@dimen/smallFont"
-                android:textStyle="italic"/>
-            <TextView
-                android:id="@+id/History_chitchat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:text="Hii how are you?"
-                android:textColor="@color/dark_blue"
-                android:textSize="@dimen/smallFont"
-                android:textStyle="italic"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="2"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="5dp">
-            <ImageView
-                android:id="@+id/User_fav"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:background="@drawable/heart"/>
-            <ImageView
-                android:id="@+id/User_video"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:background="@drawable/video"/>
-            <ImageView
-                android:id="@+id/User_call"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:background="@drawable/call"/>
+            card_view:cardCornerRadius="16dp"
+            card_view:cardElevation="5dp"
+            card_view:contentPadding="4dp">
 
-            <ImageView
-                android:id="@+id/User_chat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:background="@drawable/chat"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-            <TextView
-                android:id="@+id/History_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="02:30PM"
-                android:layout_marginLeft="50dp"
-                android:textSize="@dimen/mediumFont"
-                android:visibility="gone"/>
-        </LinearLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_launcher_background"
+                    />
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10dp">
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:text="Name"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="@dimen/mediumFont"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/User_chitchat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:text="Lets Chit Chat"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="@dimen/smallFont"
+                        android:textStyle="italic"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/History_chitchat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:text="Hii how are you?"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="@dimen/smallFont"
+                        android:textStyle="italic"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="2"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="5dp">
+                    <ImageView
+                        android:id="@+id/User_fav"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/heart"
+                        android:visibility="invisible"/>
+                    <ImageView
+                        android:id="@+id/User_video"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/video"
+                        android:visibility="invisible"/>
+                    <ImageView
+                        android:id="@+id/User_call"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/call"
+                        android:visibility="invisible"/>
+
+                    <ImageView
+                        android:id="@+id/User_chat"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/chat"/>
+
+                    <TextView
+                        android:id="@+id/History_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="02:30PM"
+                        android:layout_marginLeft="50dp"
+                        android:textSize="@dimen/mediumFont"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

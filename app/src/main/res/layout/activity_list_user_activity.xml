@@ -9,19 +9,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+    <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    app:layout_collapseMode="pin"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    android:contentInsetLeft="0dp"
+    android:contentInsetStart="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    android:contentInsetRight="0dp"
+    android:contentInsetEnd="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetEnd="0dp">
+
+    <include
+        layout="@layout/tool_bar" />
+</android.support.v7.widget.Toolbar>
 
     <ListView
+        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lstuser"
-        android:layout_marginBottom="40dp"></ListView>
+        android:layout_marginBottom="40dp"
+        android:padding="10dp"></ListView>
 
-    <Button
+    <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Create Chat"-->
+        <!--android:id="@+id/btn_create_chat"-->
+        <!--android:layout_alignParentBottom="true"/>-->
+    <include
+        layout="@layout/activity_footer"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create Chat"
-        android:id="@+id/btn_create_chat"
         android:layout_alignParentBottom="true"/>
-
 </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
