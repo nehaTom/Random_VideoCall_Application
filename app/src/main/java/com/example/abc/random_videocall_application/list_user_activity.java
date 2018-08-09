@@ -170,7 +170,8 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
                 ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
                 int i=1;
                 for (QBUser user: qbUsers){
-                    if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin())){
+
+                    if (!user.getLogin().equals(sharedPreferences.getString("user",""))){//(QBChatService.getInstance().getUser().getLogin())){
                         qbUserWithoutCurrent.add(user);
                         Log.d("myTag", "retrieve " + i);
                     }

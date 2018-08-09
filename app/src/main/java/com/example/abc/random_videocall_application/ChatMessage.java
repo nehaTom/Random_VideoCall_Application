@@ -70,9 +70,9 @@ public class ChatMessage extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         contextMenuIndexClicked = info.position;
         switch (item.getItemId()) {
-            case R.id.chat_message_update_message:
-                updateMessage();
-                break;
+//            case R.id.chat_message_update_message:
+//                updateMessage();
+//                break;
 
             case R.id.chat_message_delete_message:
                 deleteMessage();
@@ -377,30 +377,10 @@ public class ChatMessage extends AppCompatActivity {
             });
         }
     }
+
     @Override
-    public void onBackPressed() {
-
-        if (doubleBackToExitPressedOnce) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
-
+    public void onBackPressed()
+    {
+return;
     }
-
 }

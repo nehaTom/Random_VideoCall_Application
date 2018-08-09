@@ -32,6 +32,7 @@ import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.ServiceZone;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.core.request.QBPagedRequestBuilder;
@@ -211,103 +212,6 @@ public class Register_Now extends AppCompatActivity {
     }
 
 
-    private void RegisterationApi() {
-        birthday = birthEdit.getText().toString().trim();
-        name = nameEdit.getText().toString().trim();
-        email = emailEdit.getText().toString().trim();
-        mobile = mobileEdit.getText().toString().trim();
-        password = passwordEdit.getText().toString().trim();
-
-        String url = "http://192.168.31.180:8888/LoginAPI/REST/service/Registration";
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-//                        dialog.dismiss();
-                        Log.e("my app", "123" + response);
-
-                        if (response != null) {
-                            try {
-                                JSONArray resarray = new JSONArray(response);
-
-                                JSONObject resobj=null;
-
-                                for(int i=0; i < resarray.length(); i++ )
-                                {
-                                    resobj = resarray.getJSONObject(i);
-
-                                }
-
-                                if (resobj.getString("Status").equalsIgnoreCase("Success")) {
-
-                                    String profile = resobj.getString("Profile");
-
-                                    JSONObject profileobj = new JSONObject(profile);
-
-                                    String DOB = profileobj.getString("dateOfBirth");
-                                    String Phone = profileobj.getString("phoneNo");
-                                    String Email = profileobj.getString("emailId");
-                                    String UeserId = profileobj.getString("uqId");
-                                    String Username = profileobj.getString("userName");
-                                    String Gender = profileobj.getString("gender");
-                                    quickBloxValidation();
-
-                                    Intent i = new Intent(Register_Now.this, Profile.class);
-                                    i.putExtra("DOB", DOB);
-                                    i.putExtra("Phone", Phone);
-                                    i.putExtra("Email", Email);
-                                    i.putExtra("UeserId", UeserId);
-                                    i.putExtra("Username", Username);
-                                    i.putExtra("Gender", Gender);
-                                    startActivity(i);
-                                } else {
-                                    showMessage("Error", "Wrong Username or password");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-
-                        } else {
-                            showMessage("Error", "Wrong Username or password");
-                        }
-
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-//                dialog.dismiss();
-                Log.e("my app1", "error");
-
-            }
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("emailId", email);
-                params.put("phoneNo", mobile);
-                params.put("userName", name);
-                params.put("password", password);
-                params.put("gender", gender);
-                params.put("dateOfBirth", birthday);
-                return params;
-            }
-
-        };
-        requestQueue.add(jsonObjRequest);
-
-    }
 
 
     private void quickBloxValidation()
@@ -335,14 +239,18 @@ public class Register_Now extends AppCompatActivity {
                 dialog.dismiss();
                 saveUserData(qbUser);
                 Log.e("QuickBloxSuccess","Success");
-                Intent i=new Intent(getApplicationContext(),Profile.class);
-                i.putExtra("User",User);
-                i.putExtra("Password", Password);
-                i.putExtra("Full_Name",Name);
-                i.putExtra("DOB", birthday);
-                i.putExtra("Phone", mobile);
-                i.putExtra("Email", email);
-                i.putExtra("Gender", gender);
+                Intent i=new Intent(getApplicationContext(),Home.class);
+
+                editor.putString("user",User);
+                editor.putString("password",Password);
+                editor.commit();
+//                i.putExtra("User",User);
+//                i.putExtra("Password", Password);
+//                i.putExtra("Full_Name",Name);
+//                i.putExtra("DOB", birthday);
+//                i.putExtra("Phone", mobile);
+//                i.putExtra("Email", email);
+//                i.putExtra("Gender", gender);
                 startActivity(i);
                 finish();
 
@@ -403,14 +311,16 @@ public class Register_Now extends AppCompatActivity {
 
     private void initializeQuickBlox()
     {
+        //
         QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
-        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-    }
-    @Override
-    public void onBackPressed() {
+        // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
+//        final String API_DOAMIN = "https://apicustomdomain.quickblox.com";
+//        final String CHAT_DOMAIN = "chatcustomdomain.quickblox.com";
 
-        return;
+        QBSettings.getInstance().setEndpoints("https://api.quickblox.com", "chat.quickblox.com", ServiceZone.PRODUCTION);
+        QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
     }
+
 
 }
 

@@ -64,26 +64,8 @@ ProgressDialog dialog;
         gmail = findViewById(R.id.gmail);
         gender = findViewById(R.id.gender);
         submit=findViewById(R.id.submit);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setProfile();
-            }
-        });
-
-
         upload_photo  = findViewById(R.id.upload_photo);
-        upload_photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-Intent intent=new Intent();
-intent.setType("image/*");
-intent.setAction(Intent.ACTION_GET_CONTENT);
-startActivityForResult(Intent.createChooser(intent,"Select Picture"),Common.SELECT_PICTURE);
 
-                //setProfileImage();
-            }
-        });
         age = findViewById(R.id.age);
         state = findViewById(R.id.state);
         height = findViewById(R.id.height);
@@ -95,17 +77,28 @@ startActivityForResult(Intent.createChooser(intent,"Select Picture"),Common.SELE
         male = findViewById(R.id.male);
         female  = findViewById(R.id.female);
 
-        String State = state.getText().toString().trim();
-        String Height = height.getText().toString().trim();
-        String Weight = weight.getText().toString().trim();
-        String ethinicity = Ethnicity.getText().toString().trim();
-        String About_You = aboutYou.getText().toString().trim();
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setProfile();
+            }
+        });
 
 
 
+        upload_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+Intent intent=new Intent();
+intent.setType("image/*");
+intent.setAction(Intent.ACTION_GET_CONTENT);
+startActivityForResult(Intent.createChooser(intent,"Select Picture"),Common.SELECT_PICTURE);
 
+                //setProfileImage();
+            }
+        });
 
-        setData();
+setData();
         //ageCalculate();
 
 

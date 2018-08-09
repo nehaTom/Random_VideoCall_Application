@@ -73,6 +73,9 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
     private void deleteDialog(int index)
     {
+        ProgressDialog deleteDialog = new ProgressDialog(ChatDialogsActivity.this);
+        deleteDialog.setMessage("Plese wait....");
+        deleteDialog.show();
         QBChatDialog chatDialog=(QBChatDialog)lstChatDialogs.getAdapter().getItem(index);
         QBRestChatService.deleteDialog(chatDialog.getDialogId(),false).performAsync(new QBEntityCallback<Void>() {
             @Override
@@ -81,6 +84,8 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
                 ChatDialogsAdapters adapters= new ChatDialogsAdapters(getBaseContext(),QBChatDialogHolder.getInstance().getAllChatDialogs());
                 lstChatDialogs.setAdapter(adapters);
                 adapters.notifyDataSetChanged();
+                loadChatDialogs();
+                deleteDialog.dismiss();
             }
 
             @Override
@@ -96,7 +101,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         setContentView(R.layout.activity_chat_dialogs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-setAddMob();
+        setAddMob();
 
 //      Toolbar  logout=findViewById(R.id.logout);
 //        logout.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +284,9 @@ setAddMob();
 
     private void loadChatDialogs()
     {
+        ProgressDialog loadChatdialog = new ProgressDialog(ChatDialogsActivity.this);
+        loadChatdialog.setMessage("Plese wait....");
+        loadChatdialog.show();
         QBRequestGetBuilder requestGetBuilder=new QBRequestGetBuilder();
         requestGetBuilder.setLimit(100);
 
@@ -310,7 +318,7 @@ setAddMob();
                         ChatDialogsAdapters adapters = new ChatDialogsAdapters(getBaseContext(),qbChatDialogs);
                         lstChatDialogs.setAdapter((adapters));
                         adapters.notifyDataSetChanged();
-                    }
+                        loadChatdialog.dismiss();                   }
 
                     @Override
                     public void onError(QBResponseException e) {

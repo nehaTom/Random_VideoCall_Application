@@ -7,33 +7,37 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.quickblox.users.model.QBUser;
+
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 class NewJoined_GridView extends BaseAdapter {
 
     private Context mContext;
-    private final String[] names;
+    private ArrayList<QBUser> qbUserWithoutCurrent;
     private final int[] gridViewImageId;
 
-    public NewJoined_GridView(Context context, String[] names, int[] gridViewImageId) {
+    public NewJoined_GridView(Context context, ArrayList<QBUser> qbUserWithoutCurrent, int[] gridViewImageId) {
         mContext = context;
         this.gridViewImageId = gridViewImageId;
-        this.names = names;
+        this.qbUserWithoutCurrent = qbUserWithoutCurrent;
     }
 
     @Override
     public int getCount() {
-        return names.length;
+        return qbUserWithoutCurrent.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Object getItem(int position) {
+        return qbUserWithoutCurrent.get(position);
     }
 
     @Override
-    public long getItemId(int i) {
-        return 0;
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -48,9 +52,15 @@ class NewJoined_GridView extends BaseAdapter {
             gridViewAndroid = inflater.inflate(R.layout.new_joined_grid_layout, null);
             TextView name = (TextView) gridViewAndroid.findViewById(R.id.name);
             CircleImageView profile_image = (CircleImageView) gridViewAndroid.findViewById(R.id.profile_image);
-            name.setText(names[i]);
+            String[] names = new String[qbUserWithoutCurrent.size()];
+            for( i = 0;i<qbUserWithoutCurrent.size();i++) {
+                QBUser qbUser = new QBUser();
+                qbUser = qbUserWithoutCurrent.get(i);
+                names[i] = qbUser.getFullName();
+                name.setText(names[i]);
 
-            //uploadphoto.setImageDrawable(roundedBitmapDrawable);
+                //uploadphoto.setImageDrawable(roundedBitmapDrawable);
+            }
             profile_image.setImageResource(gridViewImageId[i]);
         } else {
             gridViewAndroid = (View) convertView;

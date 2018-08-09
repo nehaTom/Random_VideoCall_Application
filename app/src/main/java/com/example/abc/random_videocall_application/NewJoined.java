@@ -1,6 +1,9 @@
 package com.example.abc.random_videocall_application;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +21,18 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.BaseService;
+import com.quickblox.auth.session.QBSession;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBIncomingMessagesManager;
+import com.quickblox.chat.QBSystemMessagesManager;
+import com.quickblox.chat.exception.QBChatException;
+import com.quickblox.chat.listeners.QBChatDialogMessageListener;
+import com.quickblox.chat.listeners.QBSystemMessageListener;
+import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBPagedRequestBuilder;
 import com.quickblox.users.QBUsers;
@@ -27,12 +40,13 @@ import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 
-public class NewJoined extends AppCompatActivity {
+public class NewJoined extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
 
     GridView androidGridView;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
             chatList_white, contact_white;
-
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     boolean doubleBackToExitPressedOnce = false;
     String[] gridViewString = {
             "Name","Name","Name",
@@ -56,6 +70,9 @@ public class NewJoined extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setAddMob();
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        createSessionForChat();
 
 //        Toolbar  logout=findViewById(R.id.logout);
 //        logout.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +86,70 @@ public class NewJoined extends AppCompatActivity {
         setOnClicks();
 
 
+    }
+
+    private void createSessionForChat()
+    {
+        ProgressDialog mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Please waiting....");
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
+
+        String user,password;
+        user=sharedPreferences.getString("user","");
+        password=sharedPreferences.getString("password","");
+
+
+        ///Load All User and save cache
+        QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+            @Override
+            public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                QBUsersHolder.getInstance().putUsers(qbUsers);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+
+
+        final QBUser qbUser=new QBUser(user,password);
+        QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+                qbUser.setId(qbSession.getUserId());
+                try {
+                    qbUser.setPassword(String.valueOf(BaseService.getBaseService().getToken()));
+                } catch (BaseServiceException e) {
+                    e.printStackTrace();
+                }
+
+                QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+
+                        mDialog.dismiss();
+
+                        QBSystemMessagesManager qbSystemMessagesManager=QBChatService.getInstance().getSystemMessagesManager();
+                        qbSystemMessagesManager.addSystemMessageListener(NewJoined.this);
+
+                        QBIncomingMessagesManager qbIncomingMessagesManager= QBChatService.getInstance().getIncomingMessagesManager();
+                        qbIncomingMessagesManager.addDialogMessageListener(NewJoined.this);
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        mDialog.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     private void setLogout()
@@ -187,7 +268,7 @@ public class NewJoined extends AppCompatActivity {
     {
         QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
         pagedRequestBuilder.setPage(1);
-        pagedRequestBuilder.setPerPage(50);
+        pagedRequestBuilder.setPerPage(100);
 
         Bundle params = new Bundle();
 
@@ -195,7 +276,21 @@ public class NewJoined extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<QBUser> users, Bundle params) {
                 Log.e("Users: ", users.toString());
-                setDaaToAdapter(users);
+                QBUsersHolder.getInstance().putUsers(users);
+
+                ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
+                int i=1;
+                for (QBUser user: users){
+
+                    if (!user.getLogin().equals(sharedPreferences.getString("user",""))){//(QBChatService.getInstance().getUser().getLogin())){
+                        qbUserWithoutCurrent.add(user);
+                        Log.d("myTag", "retrieve " + i);
+                    }
+                }
+                //setDaaToAdapter(qbUserWithoutCurrent);
+                NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, qbUserWithoutCurrent, gridViewImageId);
+                androidGridView=(GridView)findViewById(R.id.grid_view_image_text);
+                androidGridView.setAdapter(adapterViewAndroid);
             }
             @Override
             public void onError(QBResponseException errors) {
@@ -211,9 +306,11 @@ public class NewJoined extends AppCompatActivity {
             qbUser=users.get(i);
             names[i] = qbUser.getFullName();
         }
-        NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, names, gridViewImageId);
+        //NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, names, gridViewImageId);
         androidGridView=(GridView)findViewById(R.id.grid_view_image_text);
-        androidGridView.setAdapter(adapterViewAndroid);
+        //androidGridView.setAdapter(adapterViewAndroid);
+
+
 //        androidGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //
 //            @Override
@@ -290,5 +387,25 @@ public class NewJoined extends AppCompatActivity {
                 // to the app after tapping on an ad.
             }
         });
+    }
+
+    @Override
+    public void processMessage(String s, QBChatMessage qbChatMessage, Integer integer) {
+
+    }
+
+    @Override
+    public void processError(String s, QBChatException e, QBChatMessage qbChatMessage, Integer integer) {
+
+    }
+
+    @Override
+    public void processMessage(QBChatMessage qbChatMessage) {
+
+    }
+
+    @Override
+    public void processError(QBChatException e, QBChatMessage qbChatMessage) {
+
     }
 }
