@@ -32,7 +32,7 @@
             app:arrowHeight="10dp"
             app:arrowLocation="left"
             app:arrowCenter="true"
-            app:bubbleColor="#333639"/>
+            app:bubbleColor="#01bad8"/>
     </RelativeLayout>
 </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

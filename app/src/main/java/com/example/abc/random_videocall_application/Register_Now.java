@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.utils.Consts;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
 import com.quickblox.auth.session.QBSettings;
@@ -144,7 +146,11 @@ public class Register_Now extends AppCompatActivity {
 
     }
 
-
+    private void saveUserData(QBUser qbUser) {
+        SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        sharedPrefsHelper.save(Consts.PREF_CURREN_ROOM_NAME, qbUser.getTags().get(0));
+        sharedPrefsHelper.saveQbUser(qbUser);
+    }
 
     public void showMessage(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
@@ -325,16 +331,18 @@ public class Register_Now extends AppCompatActivity {
         QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
+
                 dialog.dismiss();
+                saveUserData(qbUser);
                 Log.e("QuickBloxSuccess","Success");
-                Intent i=new Intent(getApplicationContext(),Home.class);
-//                i.putExtra("User",User);
-//                i.putExtra("Password", Password);
-//                i.putExtra("Full_Name",Name);
-//                i.putExtra("DOB", birthday);
-//                i.putExtra("Phone", mobile);
-//                i.putExtra("Email", email);
-//                i.putExtra("Gender", gender);
+                Intent i=new Intent(getApplicationContext(),Profile.class);
+                i.putExtra("User",User);
+                i.putExtra("Password", Password);
+                i.putExtra("Full_Name",Name);
+                i.putExtra("DOB", birthday);
+                i.putExtra("Phone", mobile);
+                i.putExtra("Email", email);
+                i.putExtra("Gender", gender);
                 startActivity(i);
                 finish();
 

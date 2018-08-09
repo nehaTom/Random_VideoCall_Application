@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lstuser"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="110dp"
         android:padding="10dp"></ListView>
 
     <!--<Button-->
@@ -44,7 +44,7 @@
         <!--android:layout_alignParentBottom="true"/>-->
     <include
         layout="@layout/activity_footer"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

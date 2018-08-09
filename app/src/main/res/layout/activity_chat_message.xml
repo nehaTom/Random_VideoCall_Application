@@ -7,7 +7,8 @@
     tools:context=".ChatMessage">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/background_chat">
         <RelativeLayout
             android:id="@+id/chatTool"
             android:layout_width="match_parent"

@@ -19,19 +19,33 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.BaseService;
+import com.quickblox.auth.session.QBSession;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBIncomingMessagesManager;
 import com.quickblox.chat.QBRestChatService;
+import com.quickblox.chat.QBSystemMessagesManager;
+import com.quickblox.chat.exception.QBChatException;
+import com.quickblox.chat.listeners.QBChatDialogMessageListener;
+import com.quickblox.chat.listeners.QBSystemMessageListener;
 import com.quickblox.chat.model.QBChatDialog;
+import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.chat.utils.DialogUtils;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 
-public class list_user_activity extends AppCompatActivity {
+public class list_user_activity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
 
     //    ListView lstuser;
     ListView lstUsers;
@@ -50,7 +64,8 @@ public class list_user_activity extends AppCompatActivity {
         setContentView(R.layout.activity_list_user_activity);
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
+        createSessionForChat();
+        setAddMob();
         lstUsers = (ListView)findViewById(R.id.lstuser);
         lstUsers.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
@@ -397,6 +412,128 @@ public class list_user_activity extends AppCompatActivity {
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+
+    }
+
+    private void setAddMob()
+    {
+        AdView mAdView;
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+    }
+    private void createSessionForChat()
+    {
+        ProgressDialog mDialog = new ProgressDialog(this);
+        mDialog.setMessage("Please waiting....");
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
+
+        String user,password;
+        user=sharedPreferences.getString("user","");
+        password=sharedPreferences.getString("password","");
+
+
+        ///Load All User and save cache
+        QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+            @Override
+            public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                QBUsersHolder.getInstance().putUsers(qbUsers);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+
+
+        final QBUser qbUser=new QBUser(user,password);
+        QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+                qbUser.setId(qbSession.getUserId());
+                try {
+                    qbUser.setPassword(String.valueOf(BaseService.getBaseService().getToken()));
+                } catch (BaseServiceException e) {
+                    e.printStackTrace();
+                }
+
+                QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+
+                        mDialog.dismiss();
+
+                        QBSystemMessagesManager qbSystemMessagesManager=QBChatService.getInstance().getSystemMessagesManager();
+                        qbSystemMessagesManager.addSystemMessageListener(list_user_activity.this);
+
+                        QBIncomingMessagesManager qbIncomingMessagesManager= QBChatService.getInstance().getIncomingMessagesManager();
+                        qbIncomingMessagesManager.addDialogMessageListener(list_user_activity.this);
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        mDialog.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                mDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void processMessage(String s, QBChatMessage qbChatMessage, Integer integer) {
+
+    }
+
+    @Override
+    public void processError(String s, QBChatException e, QBChatMessage qbChatMessage, Integer integer) {
+
+    }
+
+    @Override
+    public void processMessage(QBChatMessage qbChatMessage) {
+
+    }
+
+    @Override
+    public void processError(QBChatException e, QBChatMessage qbChatMessage) {
 
     }
 }

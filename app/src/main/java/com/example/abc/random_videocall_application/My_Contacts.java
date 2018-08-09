@@ -12,6 +12,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -39,6 +43,9 @@ public class My_Contacts extends AppCompatActivity {
         setContentView(R.layout.activity_my__contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setAddMob();
+
+        Toast.makeText(getApplicationContext(), "Coming Soon", Toast.LENGTH_SHORT).show();
 
 //        Toolbar  logout=findViewById(R.id.logout);
 //        logout.setOnClickListener(new View.OnClickListener() {
@@ -197,4 +204,43 @@ public class My_Contacts extends AppCompatActivity {
         }, 2000);
 
     }
+    private void setAddMob()
+    {
+        AdView mAdView;
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
     }
+
+}

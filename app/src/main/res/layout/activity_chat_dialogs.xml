@@ -33,12 +33,12 @@
         android:layout_marginTop="55dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="55dp">
+        android:layout_marginBottom="110dp">
 
     </ListView>
     <include
         layout="@layout/activity_footer"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

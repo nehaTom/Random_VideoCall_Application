@@ -31,6 +31,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "0.11.0"
+        multiDexEnabled true
     }
     // Run lint checks but don't abort build
     lintOptions {
@@ -51,6 +52,8 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+
+    implementation 'com.google.android.gms:play-services-ads:11.8.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.gms:play-services-base:11.8.0'

@@ -21,6 +21,10 @@ import android.widget.Toast;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.example.abc.random_videocall_application.VideoClasses.activities.OpponentsActivity;
 import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -44,6 +48,7 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setAddMob();
 //        logout=findViewById(R.id.logout);
 //        logout.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -133,7 +138,7 @@ public class Home extends AppCompatActivity
         home_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setAppMenu();
+                //setAppMenu();
             }
         });
     }
@@ -286,5 +291,43 @@ public class Home extends AppCompatActivity
 
 
 
+    private void setAddMob()
+    {
+        AdView mAdView;
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+    }
 
 }

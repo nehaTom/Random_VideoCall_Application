@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.example.abc.random_videocall_application.Home;
 import com.example.abc.random_videocall_application.R;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.example.abc.random_videocall_application.VideoClasses.Toaster;
@@ -52,6 +54,7 @@ public class OpponentsActivity extends BaseActivity {
     private WebRtcSessionManager webRtcSessionManager;
     SharedPreferences sharedPreferences;
     private PermissionsChecker checker;
+    private ImageButton retry;
 
     public static void start(Context context, boolean isRunForCall) {
         Intent intent = new Intent(context, OpponentsActivity.class);
@@ -61,10 +64,16 @@ public class OpponentsActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(getApplicationContext(), Home.class);
+        startActivity(intent);
+    }
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_opponents);
+
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
@@ -146,6 +155,28 @@ public class OpponentsActivity extends BaseActivity {
 
     private void initUi() {
         opponentsListView = (ListView) findViewById(R.id.list_opponents);
+        opponentsListView.setVisibility(View.GONE);
+        retry= findViewById(R.id.retry);
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int i = 0;
+                i = currentOpponentsList.size();
+                if(i>0) {
+
+                    int random = 0 + (int) (Math.random() * ((i - 1) + 1));
+                    //tempList.add(currentOpponentsList.get(random));
+                    opponentsListView.clearChoices();
+
+                    opponentsAdapter.selectItem(random);
+                    opponentsAdapter.notifyDataSetChanged();
+                    hideProgressDialog();
+                    videoCallfunction();
+                }
+            }
+        });
+
     }
 
     private boolean isCurrentOpponentsListActual(ArrayList<QBUser> actualCurrentOpponentsList) {
@@ -174,17 +205,23 @@ public class OpponentsActivity extends BaseActivity {
         Log.e("check","");
         int i = 0;
         i = currentOpponentsList.size();
-        int random = 0 + (int)(Math.random() * ((i - 0) + 1));
+        int random = 0 + (int)(Math.random() * ((i - 1) + 1));
         //tempList.add(currentOpponentsList.get(random));
-        opponentsAdapter = new OpponentsAdapter(this, currentOpponentsList);
-        opponentsAdapter.setSelectedItemsCountsChangedListener(new OpponentsAdapter.SelectedItemsCountsChangedListener() {
-            @Override
-            public void onCountSelectedItemsChanged(int count) {
-                updateActionBar(count);
-            }
-        });
+        if(i>0) {
+            opponentsAdapter = new OpponentsAdapter(this, currentOpponentsList);
+            opponentsAdapter.selectItem(random);
+            hideProgressDialog();
 
-        opponentsListView.setAdapter(opponentsAdapter);
+            opponentsAdapter.setSelectedItemsCountsChangedListener(new OpponentsAdapter.SelectedItemsCountsChangedListener() {
+                @Override
+                public void onCountSelectedItemsChanged(int count) {
+                    updateActionBar(count);
+                }
+            });
+
+            opponentsListView.setAdapter(opponentsAdapter);
+            videoCallfunction();
+        }
     }
 
     @Override
@@ -197,6 +234,15 @@ public class OpponentsActivity extends BaseActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
+    public void videoCallfunction(){
+        if (isLoggedInChat()) {
+            startCall(true);
+        }
+        if (checker.lacksPermissions(Consts.PERMISSIONS)) {
+            startPermissionsActivity(false);
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -204,24 +250,19 @@ public class OpponentsActivity extends BaseActivity {
 
         switch (id) {
             case R.id.update_opponents_list:
-                startLoadUsers();
+                //startLoadUsers();
                 return true;
 
             case R.id.settings:
-                showSettings();
+                //showSettings();
                 return true;
 
             case R.id.log_out:
-                logOut();
+                //logOut();
                 return true;
 
             case R.id.start_video_call:
-                if (isLoggedInChat()) {
-                    startCall(true);
-                }
-                if (checker.lacksPermissions(Consts.PERMISSIONS)) {
-                    startPermissionsActivity(false);
-                }
+                //videoCallfunction();
                 return true;
 
             case R.id.start_audio_call:

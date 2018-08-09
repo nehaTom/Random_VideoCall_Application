@@ -120,7 +120,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_video);
 
         parseIntentExtras();
 
