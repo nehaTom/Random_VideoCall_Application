@@ -174,28 +174,28 @@ public class MainActivity extends AppCompatActivity implements
                     qbUser.getFullName();
                     qbUser.setTags(Tag_Name);
                     QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
-                        @Override
-                        public void onSuccess(QBUser qbUser, Bundle bundle) {
+                                                            @Override
+                                                            public void onSuccess(QBUser qbUser, Bundle bundle) {
 
-                            Log.e("QuickBloxSuccess","Success");
+                                                                Log.e("QuickBloxSuccess","Success");
 
-                            Intent intent=new Intent(getApplicationContext(),Home.class);
-                            startActivity(intent);
+                                                                Intent intent=new Intent(getApplicationContext(),Home.class);
+                                                                startActivity(intent);
 
-                        }
+                                                            }
 
-                        @Override
+                                                            @Override
 
-                        public void onError(QBResponseException e) {
+                                                            public void onError(QBResponseException e) {
 
-                        }
-                    });
-                    Log.e("Gmail_Error",errors.getMessage());
+                                                            }
+                                                        });
+Log.e("Gmail_Error",errors.getMessage());
                 }
             });
 
 
-            // updateUI(true);
+           // updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
 

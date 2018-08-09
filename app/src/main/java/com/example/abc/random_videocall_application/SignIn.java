@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.facebook.login.Login;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
@@ -78,8 +79,8 @@ public class SignIn extends AppCompatActivity {
         userPasswordEditText = findViewById(R.id.userPasswordEditText);
         agree_checkbox = findViewById(R.id.agree_checkbox);
         checkBox = findViewById(R.id.checkbox);
-        userNameEditText.setText(sharedPreferences.getString("userName",""));
-        userPasswordEditText.setText(sharedPreferences.getString("password",""));
+        //userNameEditText.setText(sharedPreferences.getString("userName",""));
+        //userPasswordEditText.setText(sharedPreferences.getString("password",""));
 
 
 
@@ -214,6 +215,8 @@ public class SignIn extends AppCompatActivity {
                 editor.putString("user",User);
                 editor.putString("password",Password);
                 editor.commit();
+                qbUser.setPassword(Password);
+                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
                 Intent intent=new Intent(getApplicationContext(),Home.class);
 //            intent.putExtra("user",User);
 //            intent.putExtra("password",Password);
@@ -228,7 +231,7 @@ public class SignIn extends AppCompatActivity {
             {
                 dialog.dismiss();
 //Log.e("Login_Error",e.getMessage());
-                Toast.makeText(getApplicationContext(),"Invalid Username or Password",
+                Toast.makeText(getApplicationContext(),e.getMessage(),
                         Toast.LENGTH_LONG).show();
 
             }

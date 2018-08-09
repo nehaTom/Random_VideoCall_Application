@@ -50,8 +50,8 @@
                 android:id="@+id/userPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textWebPassword"
                 android:hint="Password"
-                android:inputType="textPassword"
                 android:layout_gravity="center"/>
             <RelativeLayout
                 android:layout_width="match_parent"

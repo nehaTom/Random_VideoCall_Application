@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Call_History" />
         <activity android:name=".Existing_User" />
-        <activity android:name=".New_Login" />
+        <activity android:name=".New_Login" > </activity>
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
@@ -99,7 +99,8 @@
             android:name=".VideoClasses.activities.OpponentsActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".VideoClasses.activities.PermissionsActivity" />
         <activity
             android:name=".VideoClasses.activities.CallActivity"

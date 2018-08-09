@@ -43,8 +43,8 @@ public abstract class BaseActivity extends CoreBaseActivity {
             currentUserFullName = sharedPrefsHelper.getQbUser().getFullName();
         }
 
-        setActionBarTitle(currentRoomName);
-        setActionbarSubTitle(String.format(getString(R.string.subtitle_text_logged_in_as), currentUserFullName));
+        setActionBarTitle("Random Call");
+        //setActionbarSubTitle(String.format(getString(R.string.subtitle_text_logged_in_as), currentUserFullName));
     }
 
 
@@ -75,7 +75,7 @@ public abstract class BaseActivity extends CoreBaseActivity {
             progressDialog.setOnKeyListener(keyListener);
         }
 
-        progressDialog.setMessage(getString(messageId));
+        progressDialog.setMessage("Searching available user");
 
         progressDialog.show();
 
