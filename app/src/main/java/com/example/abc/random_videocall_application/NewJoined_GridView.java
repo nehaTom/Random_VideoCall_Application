@@ -17,11 +17,9 @@ class NewJoined_GridView extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<QBUser> qbUserWithoutCurrent;
-    private final int[] gridViewImageId;
 
-    public NewJoined_GridView(Context context, ArrayList<QBUser> qbUserWithoutCurrent, int[] gridViewImageId) {
+    public NewJoined_GridView(Context context, ArrayList<QBUser> qbUserWithoutCurrent) {
         mContext = context;
-        this.gridViewImageId = gridViewImageId;
         this.qbUserWithoutCurrent = qbUserWithoutCurrent;
     }
 
@@ -53,15 +51,14 @@ class NewJoined_GridView extends BaseAdapter {
             TextView name = (TextView) gridViewAndroid.findViewById(R.id.name);
             CircleImageView profile_image = (CircleImageView) gridViewAndroid.findViewById(R.id.profile_image);
             String[] names = new String[qbUserWithoutCurrent.size()];
-            for( i = 0;i<qbUserWithoutCurrent.size();i++) {
+//            for( i = 0;i<qbUserWithoutCurrent.size();i++) {
                 QBUser qbUser = new QBUser();
                 qbUser = qbUserWithoutCurrent.get(i);
                 names[i] = qbUser.getFullName();
                 name.setText(names[i]);
 
                 //uploadphoto.setImageDrawable(roundedBitmapDrawable);
-            }
-            profile_image.setImageResource(gridViewImageId[i]);
+            profile_image.setImageResource(R.drawable.profile);
         } else {
             gridViewAndroid = (View) convertView;
         }

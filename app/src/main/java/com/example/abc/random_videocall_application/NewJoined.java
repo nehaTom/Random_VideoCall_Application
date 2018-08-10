@@ -281,14 +281,13 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
                 ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
                 int i=1;
                 for (QBUser user: users){
-
                     if (!user.getLogin().equals(sharedPreferences.getString("user",""))){//(QBChatService.getInstance().getUser().getLogin())){
                         qbUserWithoutCurrent.add(user);
                         Log.d("myTag", "retrieve " + i);
                     }
                 }
                 //setDaaToAdapter(qbUserWithoutCurrent);
-                NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, qbUserWithoutCurrent, gridViewImageId);
+                NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, qbUserWithoutCurrent);
                 androidGridView=(GridView)findViewById(R.id.grid_view_image_text);
                 androidGridView.setAdapter(adapterViewAndroid);
             }
