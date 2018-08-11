@@ -9,14 +9,27 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.Toaster;
+import com.example.abc.random_videocall_application.VideoClasses.activities.CallActivity;
+import com.example.abc.random_videocall_application.VideoClasses.activities.PermissionsActivity;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
+import com.example.abc.random_videocall_application.VideoClasses.utils.CollectionsUtils;
+import com.example.abc.random_videocall_application.VideoClasses.utils.Consts;
+import com.example.abc.random_videocall_application.VideoClasses.utils.PermissionsChecker;
+import com.example.abc.random_videocall_application.VideoClasses.utils.PushNotificationSender;
+import com.example.abc.random_videocall_application.VideoClasses.utils.WebRtcSessionManager;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -37,8 +50,12 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBPagedRequestBuilder;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCClient;
+import com.quickblox.videochat.webrtc.QBRTCSession;
+import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class NewJoined extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
 
@@ -48,6 +65,9 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     boolean doubleBackToExitPressedOnce = false;
+    NewJoined_GridView adapterViewAndroid;
+    QBUser selectedUser;
+    ArrayList<QBUser> qbUserWithoutCurrent;
     String[] gridViewString = {
             "Name","Name","Name",
             "Name","Name","Name",
@@ -62,6 +82,8 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             R.drawable.profile, R.drawable.profile, R.drawable.profile,
             R.drawable.profile, R.drawable.profile, R.drawable.profile
     };
+    SharedPrefsHelper sharedPrefsHelper;
+    private PermissionsChecker checker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +93,9 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         setSupportActionBar(toolbar);
         setAddMob();
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
         editor = sharedPreferences.edit();
+        checker = new PermissionsChecker(getApplicationContext());
         createSessionForChat();
 
 //        Toolbar  logout=findViewById(R.id.logout);
@@ -277,8 +301,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             public void onSuccess(ArrayList<QBUser> users, Bundle params) {
                 Log.e("Users: ", users.toString());
                 QBUsersHolder.getInstance().putUsers(users);
-
-                ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
+                qbUserWithoutCurrent = new ArrayList<QBUser>();
                 int i=1;
                 for (QBUser user: users){
                     if (!user.getLogin().equals(sharedPreferences.getString("user",""))){//(QBChatService.getInstance().getUser().getLogin())){
@@ -287,13 +310,51 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
                     }
                 }
                 //setDaaToAdapter(qbUserWithoutCurrent);
-                NewJoined_GridView adapterViewAndroid = new NewJoined_GridView(NewJoined.this, qbUserWithoutCurrent);
+                adapterViewAndroid = new NewJoined_GridView(NewJoined.this, qbUserWithoutCurrent);
                 androidGridView=(GridView)findViewById(R.id.grid_view_image_text);
+                setOnSelectedItem();
                 androidGridView.setAdapter(adapterViewAndroid);
             }
             @Override
             public void onError(QBResponseException errors) {
 
+            }
+        });
+    }
+
+    private void setOnSelectedItem() {
+        androidGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedUser = qbUserWithoutCurrent.get(position);
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
+                popupMenu.getMenuInflater().inflate(R.menu.activity_selected_opponents,
+                        popupMenu.getMenu());
+                popupMenu
+                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                int id = item.getItemId();
+                                switch (id) {
+                                    case R.id.start_video_call:
+                                        videoCallfunction();
+                                        return true;
+
+                                    case R.id.start_audio_call:
+                                        if (isLoggedInChat()) {
+                                            startCall(false);
+                                        }
+                                        if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
+                                            startPermissionsActivity(true);
+                                        }
+                                        return true;
+                                }
+
+                                return false;
+                            }
+                        });
+                popupMenu.show();
             }
         });
     }
@@ -406,5 +467,54 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
     @Override
     public void processError(QBChatException e, QBChatMessage qbChatMessage) {
 
+    }
+
+    public void videoCallfunction(){
+        if (isLoggedInChat()) {
+            startCall(true);
+        }
+        if (checker.lacksPermissions(Consts.PERMISSIONS)) {
+            startPermissionsActivity(false);
+        }
+    }
+    private void startPermissionsActivity(boolean checkOnlyAudio) {
+        PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
+    }
+    private void startCall(boolean isVideoCall) {
+
+        //Log.d(TAG, "startCall()");
+        //Collection<QBUser> selectedUsers = new Collection<QBUser>;
+        //QBUser id = (QBUser)androidGridView.getSelectedItem();
+        int idValue = selectedUser.getId();
+        ArrayList<Integer> opponentsList = new ArrayList<>();
+        opponentsList.add(idValue);
+                //CollectionsUtils.getIdsSelectedOpponents(androidGridView.getSelectedItem());
+        QBRTCTypes.QBConferenceType conferenceType = isVideoCall
+                ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
+                : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+
+        QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
+
+        QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
+
+        WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
+
+        PushNotificationSender.sendPushMessage(opponentsList, sharedPrefsHelper.getQbUser().getFullName());
+
+        CallActivity.start(this, false);
+    }
+    private boolean isLoggedInChat() {
+        if (!QBChatService.getInstance().isLoggedIn()) {
+            Toaster.shortToast(R.string.dlg_signal_error);
+            tryReLoginToChat();
+            return false;
+        }
+        return true;
+    }
+    private void tryReLoginToChat() {
+        if (sharedPrefsHelper.hasQbUser()) {
+            QBUser qbUser = sharedPrefsHelper.getQbUser();
+            CallService.start(this, qbUser);
+        }
     }
 }
