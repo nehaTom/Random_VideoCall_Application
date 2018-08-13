@@ -199,16 +199,36 @@ public class OpponentsActivity extends BaseActivity {
 
     private void proceedInitUsersList() {
         ArrayList<QBUser> tempList = new ArrayList<>();
+        int i = 0;
+
+
         currentOpponentsList = dbManager.getAllUsers();
         Log.d(TAG, "proceedInitUsersList currentOpponentsList= " + currentOpponentsList);
         currentOpponentsList.remove(sharedPrefsHelper.getQbUser());
+        long currentTime = System.currentTimeMillis();
+        for(i=0;i<currentOpponentsList.size();i++)
+        {
+            QBUser user=(QBUser) currentOpponentsList.get(i);
+            long userLastRequestAtTime = user.getLastRequestAt().getTime();
+            if((currentTime - userLastRequestAtTime) > 5*60*1000){
+                // user is offline now
+            }else{
+                tempList.add(user);
+            }
+
+        }
+
+
         Log.e("check","");
-        int i = 0;
-        i = currentOpponentsList.size();
+
+        i = tempList.size();
+
+
+        //long userLastRequestAtTime = c.getLastRequestAt().getTime();
         int random = 0 + (int)(Math.random() * ((i - 1) + 1));
         //tempList.add(currentOpponentsList.get(random));
         if(i>0) {
-            opponentsAdapter = new OpponentsAdapter(this, currentOpponentsList);
+            opponentsAdapter = new OpponentsAdapter(this, tempList);
             opponentsAdapter.selectItem(random);
             hideProgressDialog();
 

@@ -61,9 +61,13 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:id="@+id/edit_content"
             android:hint="Enter your Message"
+            android:inputType="textMultiLine"
+            android:editable="true"
+            android:isScrollContainer="true"
+            android:focusable="true"
             android:layout_toLeftOf="@+id/send_button"
             android:layout_toRightOf="@+id/attachment_button"
             android:layout_alignParentBottom="true"/>

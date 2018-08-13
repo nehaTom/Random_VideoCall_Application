@@ -24,7 +24,8 @@
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
                 android:scaleType="fitCenter"
-                android:background="@drawable/menu_white"/>
+                android:background="@drawable/menu_white"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/app_name"

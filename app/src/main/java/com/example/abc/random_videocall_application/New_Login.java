@@ -1,6 +1,9 @@
 package com.example.abc.random_videocall_application;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,10 +25,12 @@ import com.google.android.gms.common.SignInButton;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBProvider;
 import com.quickblox.auth.session.QBSession;
+import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.ServiceZone;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
@@ -36,6 +41,9 @@ public class New_Login extends AppCompatActivity {
     LoginButton FacebookLogin;
     SignInButton sign_in_button;
     CallbackManager callbackManager;
+    SharedPreferences sharedPreferences;
+    ProgressDialog dialog;
+    SharedPreferences.Editor editor;
 
     static final String APP_ID="72405";
     static final String AUTH_KEY="zCNmPJGEkrGyseU";
@@ -46,6 +54,8 @@ public class New_Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__login);
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -96,12 +106,26 @@ public class New_Login extends AppCompatActivity {
                 Log.e("Facebook_Success",loginResult.toString());
                 //getUserDetails(loginResult);
                 String Token=  loginResult.getAccessToken().getToken();
-
+               //session maintenance
+                QBSessionManager.getInstance().createActiveSession(Token,null);
                 String facebookAccessToken = Token;
+
+                StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
+                Tag_Name.add("chatUser");
+                QBUser user=new QBUser();
+                user.setTags(Tag_Name);
+
+
+
 
                 QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK,  facebookAccessToken, null).performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle args) {
+
+//                        user.setPassword("1234567890");
+//                        editor.putString("user",facebookAccessToken);
+//                        editor.putString("password","1234567890");
+                        editor.commit();
                         Intent intent=new Intent(getApplicationContext(),Home.class);
                         startActivity(intent);
 

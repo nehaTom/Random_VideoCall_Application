@@ -141,7 +141,7 @@ public class ChatMessage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!editContent.getText().toString().isEmpty()) {
-                    if (!isEditMode) {
+                   //
                         QBChatMessage chatMessage = new QBChatMessage();
                         chatMessage.setBody(editContent.getText().toString());
                         chatMessage.setSenderId(QBChatService.getInstance().getUser().getId());
@@ -188,7 +188,7 @@ public class ChatMessage extends AppCompatActivity {
                     }
 
                 }
-            }
+          //  }
 
         });
     }
