@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -26,7 +28,8 @@ public class My_Contacts extends AppCompatActivity {
     LinearLayoutManager layoutManager;
     ExistingUser_Card_Adapter adapter;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white;
+            chatList_white, contact_white,logout;
+    SharedPrefsHelper  sharedPrefsHelper;
 
     boolean doubleBackToExitPressedOnce = false;
     int[] images = {
@@ -43,17 +46,18 @@ public class My_Contacts extends AppCompatActivity {
         setContentView(R.layout.activity_my__contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setAddMob();
 
         Toast.makeText(getApplicationContext(), "Coming Soon", Toast.LENGTH_SHORT).show();
 
-//        Toolbar  logout=findViewById(R.id.logout);
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//               // setLogout();
-//            }
-//        });
+        logout=findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               setLogout();
+            }
+        });
         setRecyclerView();
         setData();
         setOnClicks();
@@ -62,35 +66,9 @@ public class My_Contacts extends AppCompatActivity {
 
     }
 
-    private void setLogout()
-
-    {
-        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-
-                        Toast.makeText(My_Contacts.this,"You Are Logout !!! ",Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(My_Contacts.this,New_Login.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-
-            }
-        });
+    private void setLogout() {
+        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+        logOutClass.logout();
 
     }
 

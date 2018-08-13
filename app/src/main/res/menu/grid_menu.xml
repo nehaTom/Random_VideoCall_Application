@@ -13,4 +13,9 @@
         android:title="Call"
         android:icon="@drawable/ic_call_grey"
         />
+    <item
+        android:id="@+id/start_chat"
+        android:title="Message"
+        android:icon="@drawable/chat"
+         />
 </menu>

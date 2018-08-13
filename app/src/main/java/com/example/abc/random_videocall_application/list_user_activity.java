@@ -11,14 +11,28 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.Toaster;
+import com.example.abc.random_videocall_application.VideoClasses.activities.CallActivity;
+import com.example.abc.random_videocall_application.VideoClasses.activities.PermissionsActivity;
+import com.example.abc.random_videocall_application.VideoClasses.db.QbUsersDbManager;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
+import com.example.abc.random_videocall_application.VideoClasses.utils.Consts;
+import com.example.abc.random_videocall_application.VideoClasses.utils.PermissionsChecker;
+import com.example.abc.random_videocall_application.VideoClasses.utils.PushNotificationSender;
+import com.example.abc.random_videocall_application.VideoClasses.utils.WebRtcSessionManager;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -42,6 +56,9 @@ import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCClient;
+import com.quickblox.videochat.webrtc.QBRTCSession;
+import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
 
@@ -51,12 +68,15 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
     ListView lstUsers;
     Button btn_create_chat;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white;
+            chatList_white, contact_white,logout;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-
+    QBUser selectedUser;
+    SharedPrefsHelper sharedPrefsHelper;
+    private PermissionsChecker checker;
     boolean doubleBackToExitPressedOnce = false;
+    private QbUsersDbManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,132 +84,207 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         setContentView(R.layout.activity_list_user_activity);
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        checker = new PermissionsChecker(getApplicationContext());
+        dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         createSessionForChat();
         setAddMob();
+
+        logout=findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLogout();
+            }
+        });
         lstUsers = (ListView)findViewById(R.id.lstuser);
         lstUsers.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//       setSupportActionBar(toolbar);
-//        Toolbar  logout=findViewById(R.id.logout);
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //setLogout();
-//            }
-//        });
 
         lstUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final ProgressDialog mDialog = new ProgressDialog(list_user_activity.this);
-                mDialog.setMessage("Loading...");
-                mDialog.setCanceledOnTouchOutside(false);
-                mDialog.show();
+                final int position = i;
+                selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
+                popupMenu.getMenuInflater().inflate(R.menu.grid_menu,
+                        popupMenu.getMenu());
+                popupMenu
+                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                QBUser user =(QBUser)lstUsers.getItemAtPosition(i);
-                String SenderName = user.getFullName();
-                editor.putString("SenderName",SenderName);
-                editor.commit();
-                QBChatDialog dialog = DialogUtils.buildPrivateDialog(user.getId());
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                int id = item.getItemId();
+                                switch (id) {
+                                    case R.id.start_video_call:
+                                        videoCallfunction(position);
+                                        return true;
 
-                QBRestChatService.createChatDialog(dialog).performAsync(new QBEntityCallback<QBChatDialog>() {
-                    @Override
-                    public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
-                        mDialog.dismiss();
-                        //Toast.makeText(getBaseContext(), "Create private chat dialog successfully", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(getApplication(), ChatDialogsActivity.class);
-//                        startActivity(intent);
+                                    case R.id.start_audio_call:
+                                        if (isLoggedInChat()) {
+                                            startCall(false);
+                                        }
+                                        if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
+                                            startPermissionsActivity(true);
+                                        }
+                                        return true;
 
-                        //QBChatDialog qbChatDialog= (QBChatDialog) lstChatDialogs.getAdapter().getItem(position);
-                        Intent intent=new Intent(getApplication(),ChatMessage.class);
-                        intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
-                        intent.putExtra("Activity_Name","List_User");
-                        startActivity(intent);
+                                    case R.id.start_chat:
+                                        onClickChatIcon(position);
+                                        return true;
+                                }
 
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-                        Log.e("ERROR", ""+e.getMessage());
-                    }
-                });
+                                return false;
+                            }
+                        });
+                popupMenu.show();
             }
         });
+
+
 
         retrieveAllUsers();
         setData();
         setOnClicks();
     }
 
-    private void setLogout()
-    {
-        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-
-                        Toast.makeText(list_user_activity.this,"You Are Logout !!! ",Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(list_user_activity.this,New_Login.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-
-            }
-        });
+    private boolean isLoggedInChat() {
+        if (!QBChatService.getInstance().isLoggedIn()) {
+            Toaster.shortToast(R.string.dlg_signal_error);
+            tryReLoginToChat();
+            return false;
+        }
+        return true;
     }
 
+    private void tryReLoginToChat() {
+        if (sharedPrefsHelper.hasQbUser()) {
+            QBUser qbUser = sharedPrefsHelper.getQbUser();
+            CallService.start(this, qbUser);
+        }
+    }
 
-    private void retrieveAllUsers() {
+    private void videoCallfunction(int position) {
+        //  selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
+        if (isLoggedInChat()) {
+            startCall(true);
+        }
+        if (checker.lacksPermissions(Consts.PERMISSIONS)) {
+            startPermissionsActivity(false);
+        }
+
+    }
+
+    private void startPermissionsActivity(boolean checkOnlyAudio) {
+        PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
+    }
+
+    private void startCall(boolean isVideoCall) {
+
+        int idValue = selectedUser.getId();
+        ArrayList<Integer> opponentsList = new ArrayList<>();
+        opponentsList.add(idValue);
+        QBRTCTypes.QBConferenceType conferenceType = isVideoCall
+                ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
+                : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+
+        QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
+
+        QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
+
+        WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
+
+        PushNotificationSender.sendPushMessage(opponentsList, sharedPrefsHelper.getQbUser().getFullName());
+
+        CallActivity.start(this, false);
+    }
+
+    private void onClickChatIcon(int i){
 
         final ProgressDialog mDialog = new ProgressDialog(list_user_activity.this);
         mDialog.setMessage("Loading...");
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
-        QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+
+        QBUser user =(QBUser)lstUsers.getItemAtPosition(i);
+        String SenderName = user.getFullName();
+        editor.putString("SenderName",SenderName);
+        editor.commit();
+        QBChatDialog dialog = DialogUtils.buildPrivateDialog(user.getId());
+
+        QBRestChatService.createChatDialog(dialog).performAsync(new QBEntityCallback<QBChatDialog>() {
             @Override
-            public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
                 mDialog.dismiss();
 
-                QBUsersHolder.getInstance().putUsers(qbUsers);
+                Intent intent=new Intent(getApplication(),ChatMessage.class);
+                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
+                intent.putExtra("Activity_Name","List_User");
+                startActivity(intent);
 
-                ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
-                int i=1;
-                for (QBUser user: qbUsers){
-
-                    if (!user.getLogin().equals(sharedPreferences.getString("user",""))){//(QBChatService.getInstance().getUser().getLogin())){
-                        qbUserWithoutCurrent.add(user);
-                        Log.d("myTag", "retrieve " + i);
-                    }
-                }
-
-                ListUsersAdapter adapter = new ListUsersAdapter(getBaseContext(), qbUserWithoutCurrent);
-                lstUsers.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                finish();
             }
 
             @Override
             public void onError(QBResponseException e) {
-                mDialog.dismiss();
                 Log.e("ERROR", ""+e.getMessage());
+                mDialog.dismiss();
             }
         });
     }
 
+    private void setLogout()
+    {
+        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+        logOutClass.logout();
+    }
+
+
+    private void retrieveAllUsers() {
+
+        if(dbManager.getAllUsers().size()<=0) {
+
+            final ProgressDialog mDialog = new ProgressDialog(list_user_activity.this);
+            mDialog.setMessage("Loading...");
+            mDialog.setCanceledOnTouchOutside(false);
+            mDialog.show();
+            QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+                @Override
+                public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                    mDialog.dismiss();
+                    dbManager.saveAllUsers(qbUsers, true);
+                    setListDataValue();
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    mDialog.dismiss();
+                    Log.e("ERROR", "" + e.getMessage());
+                }
+            });
+
+        }else {
+            setListDataValue();
+        }
+    }
+
+    private void setListDataValue() {
+        ArrayList<QBUser> qbUsers = dbManager.getAllUsers();
+        QBUsersHolder.getInstance().putUsers(qbUsers);
+
+        ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
+        int i = 1;
+        for (QBUser user : qbUsers) {
+
+            if (!user.getLogin().equals(sharedPreferences.getString("user", ""))) {//(QBChatService.getInstance().getUser().getLogin())){
+                qbUserWithoutCurrent.add(user);
+                Log.d("myTag", "retrieve " + i);
+            }
+        }
+
+        ListUsersAdapter adapter = new ListUsersAdapter(getBaseContext(), qbUserWithoutCurrent);
+        lstUsers.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 
 
 //    @Override

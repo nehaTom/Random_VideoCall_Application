@@ -43,7 +43,8 @@
             android:layout_height="25dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/chat"/>
+            android:background="@drawable/chat"
+            android:visibility="invisible"/>
 
 
 

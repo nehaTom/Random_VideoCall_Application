@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lstuser"
-        android:layout_marginBottom="110dp"
+        android:layout_marginBottom="101dp"
         android:padding="10dp"></ListView>
 
     <!--<Button-->

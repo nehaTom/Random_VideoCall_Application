@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -48,9 +50,10 @@ import java.util.Set;
 public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener{
     ListView lstChatDialogs;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white;
+            chatList_white, contact_white,logout;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    SharedPrefsHelper sharedPrefsHelper;
 
     boolean doubleBackToExitPressedOnce = false;
     @Override
@@ -101,15 +104,16 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         setContentView(R.layout.activity_chat_dialogs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setAddMob();
 
-//      Toolbar  logout=findViewById(R.id.logout);
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //setLogout();
-//            }
-//        });
+      logout=findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLogout();
+            }
+        });
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -139,6 +143,11 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         });
 
 
+    }
+    private void setLogout()
+    {
+        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+        logOutClass.logout();
     }
 
     private void setAddMob()
@@ -176,37 +185,6 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
             public void onAdClosed() {
                 // Code to be executed when when the user is about to return
                 // to the app after tapping on an ad.
-            }
-        });
-    }
-
-
-    private void setLogout()
-    {
-        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-
-                        Toast.makeText(ChatDialogsActivity.this,"You Are Logout !!! ",Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(ChatDialogsActivity.this,New_Login.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-
             }
         });
     }

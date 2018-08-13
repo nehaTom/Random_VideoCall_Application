@@ -12,9 +12,6 @@ import com.quickblox.users.model.QBUser;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by tereha on 17.05.16.
- */
 public class QbUsersDbManager {
     private static String TAG = QbUsersDbManager.class.getSimpleName();
 

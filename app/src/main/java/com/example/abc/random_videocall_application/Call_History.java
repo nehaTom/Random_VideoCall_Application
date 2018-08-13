@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
 import com.quickblox.chat.listeners.QBSystemMessageListener;
@@ -25,7 +27,7 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
     ExistingUser_Card_Adapter adapter;
 
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white;
+            chatList_white, contact_white,logout;
     int[] images = {
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
@@ -33,6 +35,8 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background
     };
+    SharedPrefsHelper sharedPrefsHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,40 +44,32 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
         setContentView(R.layout.activity_call__history);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setRecyclerView();
         setData();
         setOnClicks();
         createSessionForChat();
         loadChatDialogs();
+        logout=findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLogout();
+            }
+        });
 
 
 
         /////////////////////
 
         CallHistory_RecyclerView=findViewById(R.id.CallHistory_RecyclerView);
-//        CallHistory_RecyclerView.setOnClickListener(new AdapterView.OnItemClickListener() {
-//                                                        @Override
-//                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                                                            QBChatDialog qbChatDialog = (QBChatDialog) CallHistory_RecyclerView.getAdapter().getItemId(position);
-//                                                            Intent intent=new Intent(Call_History.this,ChatMessage.class);
-//
-//                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
-//                startActivity(intent);
-////
-//                                                        }
-//                                                    });
 
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                QBChatDialog qbChatDialog= (QBChatDialog) CallHistory_RecyclerView.getAdapter().getItemId(position);
-//                Intent intent=new Intent(Call_History.this,ChatMessage.class);
-//
-//                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
-//                startActivity(intent);
-//
-//            }
-//        });
+    }
 
+    private void setLogout()
+    {
+        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+        logOutClass.logout();
     }
 
 

@@ -16,5 +16,11 @@
         android:icon="@drawable/ic_call_grey"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/start_chat"
+        android:title="Message"
+        android:icon="@drawable/ic_call_grey"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
 
 </menu>

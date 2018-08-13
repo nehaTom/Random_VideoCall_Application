@@ -202,7 +202,6 @@ public class OpponentsActivity extends BaseActivity {
         ArrayList<QBUser> tempList = new ArrayList<>();
         int i = 0;
 
-
         currentOpponentsList = dbManager.getAllUsers();
         Log.d(TAG, "proceedInitUsersList currentOpponentsList= " + currentOpponentsList);
         currentOpponentsList.remove(sharedPrefsHelper.getQbUser());
