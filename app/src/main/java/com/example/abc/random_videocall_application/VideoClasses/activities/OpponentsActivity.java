@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -54,7 +55,7 @@ public class OpponentsActivity extends BaseActivity {
     private WebRtcSessionManager webRtcSessionManager;
     SharedPreferences sharedPreferences;
     private PermissionsChecker checker;
-    private ImageButton retry;
+    private Button retry;
 
     public static void start(Context context, boolean isRunForCall) {
         Intent intent = new Intent(context, OpponentsActivity.class);
@@ -308,17 +309,19 @@ public class OpponentsActivity extends BaseActivity {
 
         Log.d(TAG, "startCall()");
         ArrayList<Integer> opponentsList = CollectionsUtils.getIdsSelectedOpponents(opponentsAdapter.getSelectedItems());
+        ArrayList<Integer> opponentsListTemp = new ArrayList<>();
+        opponentsListTemp.add(opponentsList.get(0));
         QBRTCTypes.QBConferenceType conferenceType = isVideoCall
                 ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
                 : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
 
         QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
 
-        QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
+        QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsListTemp, conferenceType);
 
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
 
-        PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
+        PushNotificationSender.sendPushMessage(opponentsListTemp, currentUser.getFullName());
 
         CallActivity.start(this, false);
         Log.d(TAG, "conferenceType = " + conferenceType);

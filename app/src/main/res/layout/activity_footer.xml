@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="#e1e1e1"
             android:src="@drawable/home"
             android:layout_weight="1"
             android:visibility="gone"/>
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="#e1e1e1"
             android:src="@drawable/newlyadded"
             android:layout_weight="1"
             android:visibility="gone"/>
@@ -81,7 +81,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="#e1e1e1"
             android:src="@drawable/existinguser"
             android:layout_weight="1"
             android:visibility="gone"/>
@@ -103,7 +103,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="#e1e1e1"
             android:src="@drawable/chat"
             android:layout_weight="1"
             android:visibility="gone"/>
@@ -123,7 +123,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="#e1e1e1"
             android:src="@drawable/contacts"
             android:layout_weight="1"
             android:visibility="gone"/>
