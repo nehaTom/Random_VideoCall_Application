@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -262,6 +263,8 @@ public class Register_Now extends AppCompatActivity {
             public void onError(QBResponseException e) {
                 dialog.dismiss();
                 Log.e("QuickBlox_Error",e.getMessage());
+                Toast.makeText(getApplicationContext(),e.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
 
