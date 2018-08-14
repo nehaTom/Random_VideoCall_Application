@@ -6,82 +6,115 @@
     android:layout_height="match_parent"
     tools:context=".Existing_User">
 
-<RelativeLayout
-    android:id="@+id/exsisting_ID"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/exsisting_ID"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:contentInsetLeft="0dp"
-            android:contentInsetStart="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            android:contentInsetRight="0dp"
-            android:contentInsetEnd="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetEnd="0dp">
+        android:layout_height="match_parent">
 
-            <include
-                layout="@layout/tool_bar" />
-        </android.support.v7.widget.Toolbar>
-        <TextView
-            android:id="@+id/exixtingUser_services"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="8dp"
-            android:text="Existing User"
-            android:textColor="@color/dark_blue"
-            android:textStyle="bold"
-            android:textSize="@dimen/largeFont"/>
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/dark_blue" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:contentInsetEnd="0dp"
+                android:contentInsetLeft="0dp"
+                android:contentInsetRight="0dp"
+                android:contentInsetStart="0dp"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/Existing_RecyclerView"
-            android:layout_marginLeft="10dp"
-            android:scrollbars="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+                <include layout="@layout/tool_bar" />
+            </android.support.v7.widget.Toolbar>
 
-        <View
-            android:id="@+id/lineSeprator2"
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/dark_blue" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textview_services"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Existing User"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/lineSeprator1"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/red" />
+
+                    <View
+                        android:id="@+id/lineSeprator4"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/red" />
+
+                    <View
+                        android:id="@+id/lineSeprator3"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/red" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/Existing_RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:scrollbars="horizontal" />
+
+            <View
+                android:id="@+id/lineSeprator2"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/dark_blue" />
+        </LinearLayout>
 
 
         <include
             layout="@layout/activity_footer"
-            android:layout_height="100dp"
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"/>
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
