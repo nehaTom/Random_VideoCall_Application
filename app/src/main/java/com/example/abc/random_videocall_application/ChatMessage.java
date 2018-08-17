@@ -1,5 +1,6 @@
 package com.example.abc.random_videocall_application;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,7 +42,10 @@ import com.quickblox.core.exception.QBResponseException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ChatMessage extends AppCompatActivity {
 
@@ -50,12 +55,12 @@ public class ChatMessage extends AppCompatActivity {
     EditText editContent;
     ChatMessageAdapter adapter;
     DotLoader dotLoader;
-    TextView userName;
+    TextView userName,date;
     ImageView BackArrow;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-    //variables for del message
+
     int contextMenuIndexClicked = -1;
     boolean isEditMode = false;
     QBChatMessage editMessage;
@@ -122,10 +127,34 @@ public class ChatMessage extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+
+        date=findViewById(R.id.date);
         initView();
         initChatDialogs();
         retrieveAllMessages();
         setUserName();
+        setDate();
+
+        ///// set date
+//        DatePickerDialog.OnDateSetListener setDate = new DatePickerDialog.OnDateSetListener() {
+//
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int monthOfYear,
+//                                  int dayOfMonth) {
+//                // TODO Auto-generated method stub
+//                myCalendar.set(Calendar.YEAR, year);
+//                myCalendar.set(Calendar.MONTH, monthOfYear);
+//                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//                updateLabel();
+//            }
+
+
+
+
+
+
+
 
         BackArrow=findViewById(R.id.BackArrow);
         BackArrow.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +167,9 @@ public class ChatMessage extends AppCompatActivity {
 
 
         submitButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
+
             public void onClick(View v) {
                 if (!editContent.getText().toString().isEmpty()) {
                    //
@@ -147,6 +178,9 @@ public class ChatMessage extends AppCompatActivity {
                         chatMessage.setSenderId(QBChatService.getInstance().getUser().getId());
                         chatMessage.setSaveToHistory(true);
 
+                    chatMessage.setDateSent(Calendar.getInstance().getTime().getTime());
+                    Log.e("SysT", String.valueOf(Calendar.getInstance().getTime()));
+                    chatMessage.setMarkable(true);
                         try {
                             qbChatDialog.sendMessage(chatMessage);
                         } catch (SmackException.NotConnectedException e) {
@@ -192,6 +226,15 @@ public class ChatMessage extends AppCompatActivity {
 
         });
     }
+
+    private void setDate() {
+        Calendar myCalendar = Calendar.getInstance();
+        String myFormat = "dd/MM/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        date.setText(sdf.format(myCalendar.getTime()));
+    }
+
 
     private void setBackArrow()
     {

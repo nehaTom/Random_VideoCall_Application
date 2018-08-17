@@ -110,9 +110,8 @@ public class SignIn extends AppCompatActivity {
 
                 }
                 quickBloxValidation();
-                // loginApiCall();
+
             }
-            // }
 
 
         });
@@ -132,74 +131,7 @@ public class SignIn extends AppCompatActivity {
     }
 
 
-    public void loginApiCall() {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        email = userNameEditText.getText().toString().trim();
-        password = userPasswordEditText.getText().toString().trim();
-        String url =  "http://192.168.31.180:8888/LoginAPI/REST/WebService/login";
-        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dialog.dismiss();
-                        Log.e("my app", "123"+response);
 
-                        String str[]=response.split(":");
-                        Log.e(str[0],str[1]);
-                        //Map<String, String> res = response;
-                        if(response != null){
-                            try {
-                                JSONObject resobj = new JSONObject(response);
-                                if(resobj.has("success")) {
-                                    String userId = resobj.getString("success");
-                                    editor.putString("USER_ID",userId);
-                                    editor.apply();
-                                    quickBloxValidation();
-                                    Intent i = new Intent(SignIn.this, Home.class);
-                                    startActivity(i);
-                                }
-                                else {
-                                    showMessage("Error", "Wrong Username or password");
-                                }
-                            }catch(Exception e){
-                                e.printStackTrace();
-                            }
-
-
-
-                        }else {
-                            showMessage("Error","Wrong Username or password");
-                        }
-
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                dialog.dismiss();
-                Log.e("my app1","error");
-
-            }
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("emailId", email);
-                params.put("password",password);
-                return params;
-            }
-
-        };
-        requestQueue.add(jsonObjRequest);
-    }
 
     private void quickBloxValidation()
 
@@ -214,6 +146,9 @@ public class SignIn extends AppCompatActivity {
                 dialog.dismiss();
                 editor.putString("user",User);
                 editor.putString("password",Password);
+                editor.putBoolean("hasLoggedIn", true);
+
+                editor.putString("App_User","Simple_Login");
                 editor.commit();
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
@@ -260,9 +195,9 @@ public class SignIn extends AppCompatActivity {
 
     }
     @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-    }
+//    public void onBackPressed() {
+//        moveTaskToBack(true);
+//    }
     private boolean checkifFieldsHaveValidValues()
     { String email,password;
         email= userNameEditText.getText().toString().trim();

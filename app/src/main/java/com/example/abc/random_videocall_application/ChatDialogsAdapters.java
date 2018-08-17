@@ -51,12 +51,11 @@ public class ChatDialogsAdapters extends BaseAdapter{
             txtTitle=view.findViewById(R.id.list_chat_dialog_title);
             txtMessage=view.findViewById(R.id.list_chat_dialog_msg);
             image_unread=view.findViewById(R.id.image_unread);
-            //lastMsgTime=view.findViewById(R.id.list_chat_last_msg);
-
+//            lastMsgTime=view.findViewById(R.id.list_chat_last_msg);
 
             txtMessage.setText(qbChatDialogs.get(position).getLastMessage());
             txtTitle.setText(qbChatDialogs.get(position).getName());
-//           lastMsgTime.setText((int) qbChatDialogs.get(position).getLastMessageDateSent());
+        //  lastMsgTime.setText(qbChatDialogs.get(position).setLastMessageDateSent(););
 
             ColorGenerator generator=ColorGenerator.MATERIAL;
             int randomColor=generator.getRandomColor();

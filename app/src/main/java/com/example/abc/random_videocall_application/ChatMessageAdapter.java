@@ -2,6 +2,7 @@ package com.example.abc.random_videocall_application;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,11 @@ import com.github.library.bubbleview.BubbleTextView;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
+import com.quickblox.users.QBUsers;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ChatMessageAdapter extends BaseAdapter {
 
@@ -60,8 +63,18 @@ public class ChatMessageAdapter extends BaseAdapter {
 
                 view = inflater.inflate(R.layout.list_send_message, null);
                 BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
+                TextView time=view.findViewById(R.id.time);
                 bubbleTextView.setText(qbChatMessages.get(i).getBody());
+                long millis=qbChatMessages.get(i).getDateSent();
+                //long s = millis % 60;
+                long m = (millis / 60) % 60;
+                long h = (millis / (60 * 60)) % 24;
+                String hms = String.format("%02d:%02d", h,
+                        m);
 
+                time.setText(hms);
+                time.setTextColor(Color.BLACK);
+                Log.e("time", String.valueOf(qbChatMessages.get(i).getDateSent()/1000));
 
             } else {
 
@@ -69,9 +82,12 @@ public class ChatMessageAdapter extends BaseAdapter {
                 editor = sharedPreferences.edit();
                 view = inflater.inflate(R.layout.list_rec_message, null);
                 BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
+               TextView time=view.findViewById(R.id.time);
                 bubbleTextView.setText(qbChatMessages.get(i).getBody());
                 TextView txtName = (TextView)view.findViewById(R.id.message_user);
                 txtName.setText(QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName());
+                time.setText(""+qbChatMessages.get(i).getDateSent());
+                time.setTextColor(Color.BLACK);
                 String SenderName= QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName();
                 //editor.putString("SenderName",SenderName);
                 //editor.commit();

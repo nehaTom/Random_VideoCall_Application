@@ -15,6 +15,7 @@ import com.example.abc.random_videocall_application.VideoClasses.utils.UsersUtil
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.messages.services.SubscribeService;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import static org.webrtc.ContextUtils.getApplicationContext;
@@ -30,10 +31,13 @@ public class LogOutClass {
         requestExecutor = App.getInstance().getQbResRequestExecutor();
     }
 
+
+
+
     public void  logout(){
         unsubscribeFromPushes();
         startLogoutCommand();
-        removeAllUserData();
+      //  removeAllUserData();
         startLoginActivity();
 
     }

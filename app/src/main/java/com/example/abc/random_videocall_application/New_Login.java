@@ -113,6 +113,7 @@ public class New_Login extends AppCompatActivity {
                 StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
                 Tag_Name.add("chatUser");
                 QBUser user=new QBUser();
+                
                 user.setTags(Tag_Name);
 
 
@@ -197,6 +198,7 @@ public class New_Login extends AppCompatActivity {
 
     private void setGoogleLogin()
     {
+
         SignInButton signInButton = findViewById(R.id.gmail_sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(new View.OnClickListener() {

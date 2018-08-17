@@ -53,35 +53,35 @@
                 android:inputType="textWebPassword"
                 android:hint="Password"
                 android:layout_gravity="center"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:paddingBottom="10dp">-->
 
-                <CheckBox
-                    android:id="@+id/checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content"
-                    android:text="Remember me"
-                    android:layout_alignParentLeft="true"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"/>
+                <!--<CheckBox-->
+                    <!--android:id="@+id/checkbox"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Remember me"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:textColor="@color/black"/>-->
 
-                <TextView
-                    android:id="@+id/forget_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="forget Password?"
-                    android:textAlignment="center"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="12sp" />
-            </RelativeLayout>
+                <!--<TextView-->
+                    <!--android:id="@+id/forget_textview"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:text="forget Password?"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textColor="@color/dark_blue"-->
+                    <!--android:textSize="12sp" />-->
+            <!--</RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"

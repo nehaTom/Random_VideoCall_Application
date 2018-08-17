@@ -26,6 +26,16 @@
             app:arrowLocation="right"
             app:arrowCenter="true"
             app:bubbleColor="#ce004b"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:text="2:00"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/message_content"/>
     </RelativeLayout>
 </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

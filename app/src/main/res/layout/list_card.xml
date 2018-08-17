@@ -8,10 +8,11 @@
         android:id="@+id/existingUserL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:background="@drawable/listview_selector">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,23 +31,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
             android:text="Name"
+            android:layout_toRightOf="@+id/profile_image"
             android:textColor="@color/dark_blue"
             android:textSize="@dimen/mediumFont"
             android:textStyle="bold"/>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_alignParentRight="true"
+    android:paddingLeft="8dp"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    android:paddingRight="1dp"
+    android:orientation="horizontal">
+
 
         <ImageView
-            android:id="@+id/User_chat"
+            android:id="@+id/User_chat1"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_weight="1"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/call"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/User_chat2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:layout_toRightOf="@+id/User_chat1"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/video"/>
+        <ImageView
+            android:id="@+id/User_chat3"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/chat"
-            android:visibility="invisible"/>
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/chat"/>
 
-
+</LinearLayout>
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

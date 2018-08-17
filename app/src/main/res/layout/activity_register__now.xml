@@ -75,7 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="Birthday" />
+                android:hint="Birthday"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

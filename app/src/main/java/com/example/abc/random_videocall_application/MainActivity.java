@@ -100,13 +100,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void signIn() {
+    public void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
-    private void signOut() {
+    public void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
                 });
     }
 
-    private void revokeAccess() {
+    public void revokeAccess() {
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -129,20 +129,20 @@ public class MainActivity extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-//            GoogleSignInAccount acct = result.getSignInAccount();
-//
-//            Log.e(TAG, "display name: " + acct.getDisplayName());
-//
-//            String personName = acct.getDisplayName();
-//           // String personPhotoUrl = acct.getPhotoUrl().toString();
-//            String email = acct.getEmail();
-//
-//            Log.e(TAG, "Name: " + personName + ", email: " + email
-//                    );
-//
-//            txtName.setText(personName);
-//            txtEmail.setText(email);
+             //Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+
+            Log.e(TAG, "display name: " + acct.getDisplayName());
+
+            String personName = acct.getDisplayName();
+         //  String personPhotoUrl = acct.getPhotoUrl().toString();
+            String email = acct.getEmail();
+
+            Log.e(TAG, "Name: " + personName + ", email: " + email
+                    );
+
+            txtName.setText(personName);
+            txtEmail.setText(email);
 
 
 
@@ -152,18 +152,24 @@ public class MainActivity extends AppCompatActivity implements
 //                    .crossFade()
 //                    .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                    .into(imgProfilePic);
-
+            boolean isSocialMedia=false;
             String User= result.getSignInAccount().getEmail();
-            String Password= result.getSignInAccount().getId();
+            String Password= "1234567890";
             String Name=result.getSignInAccount().getGivenName();
-            QBUser user = new QBUser();
-            user.setEmail(User);
-            user.setPassword(Password);
+            QBUser qbUser = new QBUser();
+            qbUser.setEmail(User);
+            qbUser.setPassword(Password);
 
-            QBUsers.signIn(user).performAsync(new QBEntityCallback<QBUser>() {
+            QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
                 @Override
                 public void onSuccess(QBUser user, Bundle args)
                 {
+                    qbUser.setPassword(Password);
+                    editor.putString("user",User);
+                    editor.putString("password",Password);
+                    editor.putString("App_User","gmail");
+                    editor.commit();
+                    SharedPrefsHelper.getInstance().saveQbUser(user);
                     Intent intent=new Intent(getApplicationContext(),Home.class);
                     startActivity(intent);
 
@@ -175,17 +181,27 @@ public class MainActivity extends AppCompatActivity implements
                     StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
                     Tag_Name.add("chatUser");
 
-
                     QBUser qbUser = new QBUser(User, Password);
-                    qbUser.setFullName(Name);
-                    qbUser.getFullName();
-                    qbUser.setTags(Tag_Name);
+//                    editor.putString("user",User);
+//                    editor.putString("password",Password);
+
+//                    editor.putString("App_User","gmail");
+//                    editor.commit();
+//                    qbUser.getFullName();
+//                    qbUser.setTags(Tag_Name);
                     QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
                                                             @Override
                                                             public void onSuccess(QBUser qbUser, Bundle bundle) {
 
                                                                 Log.e("QuickBloxSuccess","Success");
+                                                                editor.putString("user",User);
+                                                                editor.putString("password",Password);
 
+                                                                editor.putString("App_User","gmail");
+
+                                                                qbUser.setFullName(Name);
+                                                                qbUser.setPassword(Password);
+                                                                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
                                                                 Intent intent=new Intent(getApplicationContext(),Home.class);
                                                                 startActivity(intent);
 
@@ -202,11 +218,11 @@ Log.e("Gmail_Error",errors.getMessage());
             });
 
 
-           // updateUI(true);
+            updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
 
-//            updateUI(false);
+            updateUI(false);
         }
     }
 
@@ -292,7 +308,7 @@ Log.e("Gmail_Error",errors.getMessage());
     private void updateUI(boolean isSignedIn) {
         if (isSignedIn) {
             btnSignIn.setVisibility(View.GONE);
-            btnSignOut.setVisibility(View.GONE);
+            btnSignOut.setVisibility(View.VISIBLE);
             btnRevokeAccess.setVisibility(View.GONE);
             llProfileLayout.setVisibility(View.VISIBLE);
         } else {

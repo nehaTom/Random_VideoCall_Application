@@ -78,6 +78,7 @@ public class Register_Now extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register__now);
 
+        Calendar myCalendar = Calendar.getInstance();
         dialog = new ProgressDialog(this);
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -116,10 +117,33 @@ public class Register_Now extends AppCompatActivity {
             }
         });
 
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+            private void updateLabel()
+            {
+                String myFormat = "dd/MM/yy"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                birthEdit.setText(sdf.format(myCalendar.getTime()));
+            }
+
+        };
         birthEdit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
+
                 // TODO Auto-generated method stub
                 new DatePickerDialog(Register_Now.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -128,9 +152,7 @@ public class Register_Now extends AppCompatActivity {
         });
 
 
-        String myFormat = "yyyy-MM-dd"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        birthEdit.setText(sdf.format(myCalendar.getTime()));
+
 
 
         registrationBtn = findViewById(R.id.registrationBtn);
@@ -173,19 +195,6 @@ public class Register_Now extends AppCompatActivity {
 
     }
 
-    Calendar myCalendar = Calendar.getInstance();
-
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        }
-    };
 
     private boolean checkValidation() {
 
@@ -237,24 +246,20 @@ public class Register_Now extends AppCompatActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
 
-                dialog.dismiss();
+
                 saveUserData(qbUser);
                 Log.e("QuickBloxSuccess","Success");
-                Intent i=new Intent(getApplicationContext(),Home.class);
-
                 editor.putString("user",User);
                 editor.putString("password",Password);
+                editor.putString("App_User","Simple_Login");
                 editor.commit();
-//                i.putExtra("User",User);
-//                i.putExtra("Password", Password);
-//                i.putExtra("Full_Name",Name);
-//                i.putExtra("DOB", birthday);
-//                i.putExtra("Phone", mobile);
-//                i.putExtra("Email", email);
-//                i.putExtra("Gender", gender);
-                startActivity(i);
-                finish();
 
+                qbUser.setPassword(Password);
+                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
+
+                Intent i=new Intent(getApplicationContext(),Home.class);
+
+                startActivity(i);
 
             }
 

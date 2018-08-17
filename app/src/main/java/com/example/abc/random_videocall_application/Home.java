@@ -1,8 +1,10 @@
 package com.example.abc.random_videocall_application;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,15 +65,18 @@ public class Home extends AppCompatActivity
     private ProgressDialog progressDialog;
     protected QBResRequestExecutor requestExecutor;
     private QbUsersDbManager dbManager;
-    ImageView home, newUser, existingUser, chatList, contact, home_icon,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white,logout,randomCall;
+    ImageView home, newUser, existingUser, chatList, contact, home_icon, home_white, newUser_white, existingUser_white,
+            chatList_white, contact_white, logout, randomCall;
     private ArrayList<QBUser> currentOpponentsList;
     QBUser selectedUser;
     boolean doubleBackToExitPressedOnce = false;
     private PermissionsChecker checker;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     QBUser currentUser;
 
-//    Footer footer=new Footer();
+    //    Footer footer=new Footer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,15 +88,17 @@ public class Home extends AppCompatActivity
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());
         currentUser = sharedPrefsHelper.getQbUser();
+
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         setAddMob();
-        logout=findViewById(R.id.logout);
+        logout = findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setLogout();
             }
         });
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -101,8 +108,7 @@ public class Home extends AppCompatActivity
 //        toggle.syncState();
 //
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-       navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setNavigationItemSelectedListener(this);
 
 
         setData();
@@ -112,6 +118,58 @@ public class Home extends AppCompatActivity
         setOnclicksRandomButton();
 
 
+    }
+
+    private void setLogout() {
+
+        editor.putBoolean("hasLoggedIn", false);
+        LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
+        logOutClass.logout();
+
+        String Video_AppUser = sharedPreferences.getString("App_User", "");
+//        if (Video_AppUser.equals("Simple_Login")) {
+//
+//            LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
+//            logOutClass.logout();
+//        }
+
+        if (Video_AppUser.equals("gmail"))
+        {
+gmailLogout();
+        }
+    }
+
+    private void gmailLogout() {
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle)
+            {
+                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle)
+                    {
+                        Toast.makeText(getApplicationContext(), "You Are Logout from Gmail !!! ", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), New_Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+
+
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
     }
 
     private void setOnclicksRandomButton() {
@@ -132,26 +190,29 @@ public class Home extends AppCompatActivity
             }
         });
     }
-    private void randomVideoCallFunctionality(){
 
-            startLoadUsers();
+    private void randomVideoCallFunctionality() {
+
+        startLoadUsers();
     }
 
     protected void startLoginService(QBUser qbUser) {
         CallService.start(this, qbUser);
     }
 
-    private void setLogout()
-    {
-        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
-        logOutClass.logout();
-    }
 
-    private void setData()
-    {
+//
+//            private void setLogout()
+//    {
+//        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+//        logOutClass.logout();
+//    }
+
+
+    private void setData() {
 
         //startLoadUsers();
-        home_icon=findViewById(R.id.home_icon);
+        home_icon = findViewById(R.id.home_icon);
         home_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,8 +279,9 @@ public class Home extends AppCompatActivity
             }
         });
     }
-    private void setAppMenu()
-    { DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+    private void setAppMenu() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -241,28 +303,27 @@ public class Home extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
-            if (doubleBackToExitPressedOnce) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
 
-                return;
-            }
-
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce=false;
-                }
-            }, 2000);
+            return;
         }
 
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
 
 
     @Override
@@ -307,9 +368,7 @@ public class Home extends AppCompatActivity
     }
 
 
-
-    private void setAddMob()
-    {
+    private void setAddMob() {
         AdView mAdView;
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
@@ -347,7 +406,7 @@ public class Home extends AppCompatActivity
         });
     }
 
-    private void startLoadUsers(){
+    private void startLoadUsers() {
         showProgressDialog(R.string.dlg_loading_opponents);
         String currentRoomName = SharedPrefsHelper.getInstance().get("chatUser");
         requestExecutor.loadUsersByTag(currentRoomName, new QBEntityCallback<ArrayList<QBUser>>() {
@@ -432,22 +491,21 @@ public class Home extends AppCompatActivity
         Log.d("TAG", "proceedInitUsersList currentOpponentsList= " + currentOpponentsList);
         currentOpponentsList.remove(sharedPrefsHelper.getQbUser());
         long currentTime = System.currentTimeMillis();
-        for(i=0;i<currentOpponentsList.size();i++)
-        {
-            QBUser user=(QBUser) currentOpponentsList.get(i);
+        for (i = 0; i < currentOpponentsList.size(); i++) {
+            QBUser user = (QBUser) currentOpponentsList.get(i);
 //            long userLastRequestAtTime = user.getLastRequestAt().getTime();
 //            if((currentTime - userLastRequestAtTime) > 5*60*1000){
 //                // user is offline now
 //            }else{
-                tempList.add(user);
-           //}
+            tempList.add(user);
+            //}
 
         }
-        Log.e("check","");
+        Log.e("check", "");
 
         i = tempList.size();
         //long userLastRequestAtTime = c.getLastRequestAt().getTime();
-        int random = 0 + (int)(Math.random() * ((i - 1) + 1));
+        int random = 0 + (int) (Math.random() * ((i - 1) + 1));
 
         //tempList.add(currentOpponentsList.get(random));
 //        if(i>0) {
@@ -464,7 +522,7 @@ public class Home extends AppCompatActivity
 //
 //            opponentsListView.setAdapter(opponentsAdapter);
 
-        if(i>0) {
+        if (i > 0) {
             selectedUser = new QBUser();
             selectedUser = tempList.get(random);
             videoCallfunction();
@@ -478,7 +536,7 @@ public class Home extends AppCompatActivity
         }
     }
 
-    public void videoCallfunction(){
+    public void videoCallfunction() {
         if (isLoggedInChat()) {
             startCall(true);
         }
@@ -486,9 +544,11 @@ public class Home extends AppCompatActivity
             startPermissionsActivity(false);
         }
     }
+
     private void startPermissionsActivity(boolean checkOnlyAudio) {
         PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
     }
+
     private void startCall(boolean isVideoCall) {
 
         int idValue = selectedUser.getId();
@@ -508,6 +568,7 @@ public class Home extends AppCompatActivity
 
         CallActivity.start(this, false);
     }
+
     private boolean isLoggedInChat() {
         if (!QBChatService.getInstance().isLoggedIn()) {
             Toaster.shortToast(R.string.dlg_signal_error);
@@ -516,11 +577,11 @@ public class Home extends AppCompatActivity
         }
         return true;
     }
+
     private void tryReLoginToChat() {
         if (sharedPrefsHelper.hasQbUser()) {
             QBUser qbUser = sharedPrefsHelper.getQbUser();
             CallService.start(this, qbUser);
         }
     }
-
 }
