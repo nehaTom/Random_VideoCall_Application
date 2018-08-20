@@ -1,6 +1,7 @@
 package com.example.abc.random_videocall_application.VideoClasses.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -26,11 +27,11 @@ public class PermissionsActivity extends AppCompatActivity {
     private PermissionsChecker checker;
     private boolean requiresCheck;
 
-    public static void startActivity(Activity activity, boolean checkOnlyAudio, String... permissions) {
-        Intent intent = new Intent(activity, PermissionsActivity.class);
+    public static void startActivity(Context context, boolean checkOnlyAudio, String... permissions) {
+        Intent intent = new Intent(context, PermissionsActivity.class);
         intent.putExtra(EXTRA_PERMISSIONS, permissions);
         intent.putExtra(CHECK_ONLY_AUDIO, checkOnlyAudio);
-        ActivityCompat.startActivity(activity, intent, null);
+        ActivityCompat.startActivity(context, intent, null);
     }
 
     @Override

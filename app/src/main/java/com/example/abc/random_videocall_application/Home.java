@@ -122,9 +122,8 @@ public class Home extends AppCompatActivity
 
     private void setLogout() {
 
-        editor.putBoolean("hasLoggedIn", false);
-        LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
-        logOutClass.logout();
+       // editor.putBoolean("hasLoggedIn", false);
+
 
         String Video_AppUser = sharedPreferences.getString("App_User", "");
 //        if (Video_AppUser.equals("Simple_Login")) {
@@ -136,6 +135,10 @@ public class Home extends AppCompatActivity
         if (Video_AppUser.equals("gmail"))
         {
 gmailLogout();
+        }
+        else {
+            LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
+            logOutClass.logout();
         }
     }
 

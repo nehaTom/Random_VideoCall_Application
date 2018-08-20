@@ -98,6 +98,7 @@ public class New_Login extends AppCompatActivity {
 
     private void setfacebookLogin()
     {
+
         callbackManager = CallbackManager.Factory.create();
         FacebookLogin.setReadPermissions("email");
         FacebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -107,8 +108,9 @@ public class New_Login extends AppCompatActivity {
                 //getUserDetails(loginResult);
                 String Token=  loginResult.getAccessToken().getToken();
                //session maintenance
-                QBSessionManager.getInstance().createActiveSession(Token,null);
+//                QBSessionManager.getInstance().createActiveSession(Token,null);
                 String facebookAccessToken = Token;
+//                QBSession session=QBSessionManager.getInstance().getActiveSession();
 
                 StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
                 Tag_Name.add("chatUser");
@@ -122,10 +124,13 @@ public class New_Login extends AppCompatActivity {
                 QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK,  facebookAccessToken, null).performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle args) {
-
-//                        user.setPassword("1234567890");
-//                        editor.putString("user",facebookAccessToken);
-//                        editor.putString("password","1234567890");
+editor.putString("Facebook",QBProvider.FACEBOOK);
+String User =user.getLogin();
+Log.e("Login_Id",User);
+String Password="1234567890";
+                        user.setPassword(Password);
+                        editor.putString("user",User);
+                        editor.putString("password",Password);
                         editor.commit();
                         Intent intent=new Intent(getApplicationContext(),Home.class);
                         startActivity(intent);
@@ -143,6 +148,7 @@ public class New_Login extends AppCompatActivity {
                 });
 
             }
+
 
             @Override
             public void onCancel() {

@@ -76,9 +76,6 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Pic"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ChatMessage"
             android:screenOrientation="portrait" />
         <activity

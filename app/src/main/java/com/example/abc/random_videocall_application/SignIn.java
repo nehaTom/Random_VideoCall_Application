@@ -98,17 +98,7 @@ public class SignIn extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkifFieldsHaveValidValues()) {
-                    String email, password;
-                    email = userNameEditText.getText().toString().trim();
-                    password = userPasswordEditText.getText().toString().trim();
-                    if (checkBox.isChecked()) {
-                        editor.putString("userName", email);
-                        editor.putString("password", password);
-                        editor.apply();
-                    }
 
-                }
                 quickBloxValidation();
 
             }
@@ -194,7 +184,7 @@ public class SignIn extends AppCompatActivity {
         dialog1.show();
 
     }
-    @Override
+//    @Override
 //    public void onBackPressed() {
 //        moveTaskToBack(true);
 //    }

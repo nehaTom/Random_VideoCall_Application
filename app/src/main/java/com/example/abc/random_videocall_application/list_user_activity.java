@@ -12,14 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
@@ -198,7 +202,7 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         CallActivity.start(this, false);
     }
 
-    private void onClickChatIcon(int i){
+    public void onClickChatIcon(int i){
 
         final ProgressDialog mDialog = new ProgressDialog(list_user_activity.this);
         mDialog.setMessage("Loading...");
@@ -556,10 +560,10 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
 
-        String user,password;
+        String user,password,facebook_User;
         user=sharedPreferences.getString("user","");
         password=sharedPreferences.getString("password","");
-
+facebook_User=sharedPreferences.getString("Facebook","");
 
         ///Load All User and save cache
         QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
@@ -630,6 +634,190 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
 
     @Override
     public void processError(QBChatException e, QBChatMessage qbChatMessage) {
+
+    }
+
+    private class ListUsersAdapter extends BaseAdapter
+
+    {
+        private Context context;
+        private ArrayList<QBUser> qbUserArrayList;
+
+
+        public ListUsersAdapter(Context context, ArrayList<QBUser> qbUserArrayList) {
+            this.context=context;
+            this.qbUserArrayList = qbUserArrayList;
+        }
+
+
+        @Override
+        public int getCount() {
+            return qbUserArrayList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return qbUserArrayList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            view = inflater.inflate(R.layout.support_simple_spinner_dropdown_item, null);
+//            TextView textView = view.findViewById(android.R.id.text1);
+//            textView.setText(qbUserArrayList.get(position).getFullName());
+
+
+
+
+
+                view = inflater.inflate(R.layout.list_card, null);
+                TextView name = view.findViewById(R.id.name);
+
+                name.setText(qbUserArrayList.get(position).getFullName());
+
+                // ----------------
+                ImageView imv1=(ImageView)view.findViewById(R.id.User_chat1);
+                imv1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        Toast.makeText(context, "This is my Toast message! imv1",
+//                                Toast.LENGTH_LONG).show();
+//                     Intent intent=new Intent(context,ChatMessage.class);
+//                     context.startActivity(intent);
+
+                            //  selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
+
+                        selectedUser = (QBUser) qbUserArrayList.get(position);
+                        if (isLoggedInChat()) {
+                            startCall(false);
+                        }
+                        if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
+                            startPermissionsActivity(true);
+                        }
+
+                        }
+
+                });
+                ImageView imv2=(ImageView)view.findViewById(R.id.User_chat2);
+                imv2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        Toast.makeText(context, "This is my Toast message! imv2",
+//                                Toast.LENGTH_LONG).show();
+                        selectedUser = (QBUser) qbUserArrayList.get(position);
+                        videoCallfunction(position);
+
+                    }
+                });
+                ImageView imv3=(ImageView)view.findViewById(R.id.User_chat3);
+                imv3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                    Toast.makeText(context, "This is my Toast message! imv3",
+//                            Toast.LENGTH_LONG).show();
+                       /* list_user_activity list_user=new list_user_activity();
+                        list_user.onClickChatIcon(position);*/
+                       //******************************
+                        final ProgressDialog mDialog = new ProgressDialog(list_user_activity.this);
+                        mDialog.setMessage("Loading...");
+                        mDialog.setCanceledOnTouchOutside(false);
+                        mDialog.show();
+
+                        QBUser user =(QBUser)lstUsers.getItemAtPosition(position);
+                        String SenderName = user.getFullName();
+                        editor.putString("SenderName",SenderName);
+                        editor.commit();
+                        QBChatDialog dialog = DialogUtils.buildPrivateDialog(user.getId());
+
+                        QBRestChatService.createChatDialog(dialog).performAsync(new QBEntityCallback<QBChatDialog>() {
+                            @Override
+                            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
+                                mDialog.dismiss();
+
+                                Intent intent=new Intent(getApplication(),ChatMessage.class);
+                                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
+                                intent.putExtra("Activity_Name","List_User");
+                                startActivity(intent);
+
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(QBResponseException e) {
+                                Log.e("ERROR", ""+e.getMessage());
+                                mDialog.dismiss();
+                            }
+                        });
+
+
+
+                    }
+                });
+                //----------------------------------------------------------------------
+            }
+            return view;
+        }
+
+        private boolean isLoggedInChat() {
+            if (!QBChatService.getInstance().isLoggedIn()) {
+                Toaster.shortToast(R.string.dlg_signal_error);
+                tryReLoginToChat();
+                return false;
+            }
+            return true;
+        }
+
+        private void tryReLoginToChat() {
+            if (sharedPrefsHelper.hasQbUser()) {
+                QBUser qbUser = sharedPrefsHelper.getQbUser();
+                CallService.start(getApplicationContext(), qbUser);
+            }
+        }
+
+        private void videoCallfunction(int position) {
+            // selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
+
+            if (isLoggedInChat()) {
+                startCall(true);
+            }
+            if (checker.lacksPermissions(Consts.PERMISSIONS)) {
+                startPermissionsActivity(false);
+            }
+
+        }
+
+        private void startPermissionsActivity(boolean checkOnlyAudio) {
+            PermissionsActivity.startActivity(getApplicationContext(), checkOnlyAudio, Consts.PERMISSIONS);
+        }
+
+        private void startCall(boolean isVideoCall) {
+
+
+            int idValue = selectedUser.getId();
+            ArrayList<Integer> opponentsList = new ArrayList<>();
+            opponentsList.add(idValue);
+            QBRTCTypes.QBConferenceType conferenceType = isVideoCall
+                    ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
+                    : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+
+            QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
+
+            QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
+
+            WebRtcSessionManager.getInstance(getApplicationContext()).setCurrentSession(newQbRtcSession);
+
+            PushNotificationSender.sendPushMessage(opponentsList, sharedPrefsHelper.getQbUser().getFullName());
+
+            CallActivity.start(getApplicationContext(), false);
+        }
 
     }
 }

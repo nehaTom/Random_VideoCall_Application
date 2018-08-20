@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-             //Signed in successfully, show authenticated UI.
+           /*  //Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
             Log.e(TAG, "display name: " + acct.getDisplayName());
@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements
 //                    .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                    .into(imgProfilePic);
             boolean isSocialMedia=false;
+            */
             String User= result.getSignInAccount().getEmail();
             String Password= "1234567890";
             String Name=result.getSignInAccount().getGivenName();
@@ -164,11 +165,17 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onSuccess(QBUser user, Bundle args)
                 {
+                    StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
+                    Tag_Name.add("chatUser");
                     qbUser.setPassword(Password);
                     editor.putString("user",User);
                     editor.putString("password",Password);
                     editor.putString("App_User","gmail");
                     editor.commit();
+                    qbUser.getFullName();
+                    qbUser.setFullName(Name);
+                    qbUser.setPassword(Password);
+                    qbUser.setTags(Tag_Name);
                     SharedPrefsHelper.getInstance().saveQbUser(user);
                     Intent intent=new Intent(getApplicationContext(),Home.class);
                     startActivity(intent);
@@ -182,13 +189,15 @@ public class MainActivity extends AppCompatActivity implements
                     Tag_Name.add("chatUser");
 
                     QBUser qbUser = new QBUser(User, Password);
-//                    editor.putString("user",User);
-//                    editor.putString("password",Password);
+                    editor.putString("user",User);
+                    editor.putString("password",Password);
 
-//                    editor.putString("App_User","gmail");
-//                    editor.commit();
-//                    qbUser.getFullName();
-//                    qbUser.setTags(Tag_Name);
+                    editor.putString("App_User","gmail");
+                    editor.commit();
+                  qbUser.getFullName();
+                    qbUser.setFullName(Name);
+                    qbUser.setPassword(Password);
+                   qbUser.setTags(Tag_Name);
                     QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
                                                             @Override
                                                             public void onSuccess(QBUser qbUser, Bundle bundle) {
@@ -296,7 +305,7 @@ Log.e("Gmail_Error",errors.getMessage());
             mProgressDialog.setIndeterminate(true);
         }
 
-        mProgressDialog.show();
+        mProgressDialog.dismiss();
     }
 
     private void hideProgressDialog() {
