@@ -98,19 +98,19 @@ public class Register_Now extends AppCompatActivity {
 
 
 
-        RadioGroup rg = findViewById(R.id.genderRadioGroup);
+        RadioGroup genderGroup = findViewById(R.id.genderRadioGroup);
 
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.femaleGender:
-                        gender = "F";
+                        gender = "Female";
                         break;
                     case R.id.maleGender:
-                        gender = "M";
+                        gender = "Male";
                         break;
                     case R.id.otherGender:
-                        gender = "O";
+                        gender = "Other";
                         break;
 
                 }
@@ -228,6 +228,9 @@ public class Register_Now extends AppCompatActivity {
 
     {
         dialog.show();
+
+//        RadioGroup genderGroup = findViewById(R.id.genderRadioGroup);
+//        String gender = genderGroup.getCheckedRadioButtonId();
         StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
         Tag_Name.add("chatUser");
 
@@ -249,15 +252,21 @@ public class Register_Now extends AppCompatActivity {
 
                 saveUserData(qbUser);
                 Log.e("QuickBloxSuccess","Success");
+
+                editor.putString("Full_Name",Name);
+               editor.putString("Gender",gender);
                 editor.putString("user",User);
                 editor.putString("password",Password);
+                editor.putString("Birthday",birthday);
+                editor.putString("Email",email);
+                editor.putString("Phone",mobile);
                 editor.putString("App_User","Simple_Login");
                 editor.commit();
 
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
 
-                Intent i=new Intent(getApplicationContext(),Home.class);
+                Intent i=new Intent(getApplicationContext(),Profile.class);
 
                 startActivity(i);
 

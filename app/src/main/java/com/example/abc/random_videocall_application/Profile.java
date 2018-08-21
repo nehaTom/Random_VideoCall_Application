@@ -2,8 +2,10 @@ package com.example.abc.random_videocall_application;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,11 +56,18 @@ EditText name,phone,state,height,weight,Ethnicity,aboutYou;
 RadioGroup interestedRadioGroup;
 RadioButton male,female;
 ProgressDialog dialog;
+String Name, Email,Mobile,Password,Birthday,Gender;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         imv = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.imageview);
 
 
@@ -79,8 +88,76 @@ ProgressDialog dialog;
         male = findViewById(R.id.male);
         female = findViewById(R.id.female);
 
+        ///// Get values from Regertation
+
+
+        String Name = sharedPreferences.getString("Full_Name", "");
+        String Email = sharedPreferences.getString("Email", "");
+        String Mobile = sharedPreferences.getString("Phone", "");
+        String Password = sharedPreferences.getString("password", "");
+        String Birthday = sharedPreferences.getString("Birthday", "");
+        String Gender = sharedPreferences.getString("Gender", "");
+
+name.setText(Name);
+gmail.setText(Email);
+phone.setText(Mobile);
+gender.setText(Gender);
+
+        sumbitData();
+
+        imv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+    }
+
+    private void sumbitData()
+    {
+        String State_Profile = state.getText().toString().trim();
+        String Height_Profile = height.getText().toString().trim();
+        String Weight_Profile = weight.getText().toString().trim();
+        String ethinicity_Profile = Ethnicity.getText().toString().trim();
+        String About_You = aboutYou.getText().toString().trim();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+//            cursor.close();
+//            imv.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//        }
+            Uri selectedImage = data.getData();
+            try {
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePath[0]);
+                String images = cursor.getString(columnIndex);
+                //  imv.setImageURI(selectedImage);
+                //      Toast.makeText(getApplicationContext(), "This is my Toast message!"+,
+                //           Toast.LENGTH_LONG).show();
+                Log.d("Check",images);
+                // imv.setImageBitmap(null);
+                imv.setImageURI(selectedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
     }
+
+
+
+
+
 
     @Override
     public void onBackPressed() {

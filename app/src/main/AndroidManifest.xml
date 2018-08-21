@@ -30,7 +30,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Call_History" />
         <activity android:name=".Existing_User" />
-        <activity android:name=".New_Login" > </activity>
+        <activity android:name=".New_Login" ><intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter></activity>
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
@@ -133,11 +137,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Splash"><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+        <activity android:name=".Splash"> </activity>
     </application>
 
 </manifest>
