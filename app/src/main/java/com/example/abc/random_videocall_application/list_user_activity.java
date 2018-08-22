@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -66,7 +70,7 @@ import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
 
-public class list_user_activity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
+public class list_user_activity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
 
     //    ListView lstuser;
     ListView lstUsers;
@@ -91,6 +95,18 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         createSessionForChat();
         setAddMob();
 
@@ -104,46 +120,46 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         lstUsers = (ListView)findViewById(R.id.lstuser);
         lstUsers.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
-        lstUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final int position = i;
-                selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
-                popupMenu.getMenuInflater().inflate(R.menu.grid_menu,
-                        popupMenu.getMenu());
-                popupMenu
-                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                int id = item.getItemId();
-                                switch (id) {
-                                    case R.id.start_video_call:
-                                        videoCallfunction(position);
-                                        return true;
-
-                                    case R.id.start_audio_call:
-                                        if (isLoggedInChat()) {
-                                            startCall(false);
-                                        }
-                                        if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
-                                            startPermissionsActivity(true);
-                                        }
-                                        return true;
-
-                                    case R.id.start_chat:
-                                        onClickChatIcon(position);
-                                        return true;
-                                }
-
-                                return false;
-                            }
-                        });
-                popupMenu.show();
-            }
-        });
-
+//        lstUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                final int position = i;
+//                selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
+//                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
+//                popupMenu.getMenuInflater().inflate(R.menu.grid_menu,
+//                        popupMenu.getMenu());
+//                popupMenu
+//                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//
+//                            @Override
+//                            public boolean onMenuItemClick(MenuItem item) {
+//                                int id = item.getItemId();
+//                                switch (id) {
+//                                    case R.id.start_video_call:
+//                                        videoCallfunction(position);
+//                                        return true;
+//
+//                                    case R.id.start_audio_call:
+//                                        if (isLoggedInChat()) {
+//                                            startCall(false);
+//                                        }
+//                                        if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
+//                                            startPermissionsActivity(true);
+//                                        }
+//                                        return true;
+//
+//                                    case R.id.start_chat:
+//                                        onClickChatIcon(position);
+//                                        return true;
+//                                }
+//
+//                                return false;
+//                            }
+//                        });
+//                popupMenu.show();
+//            }
+//        });
+//
 
 
         retrieveAllUsers();
@@ -447,7 +463,7 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
 //                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
@@ -637,6 +653,11 @@ facebook_User=sharedPreferences.getString("Facebook","");
 
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
     private class ListUsersAdapter extends BaseAdapter
 
     {
@@ -820,4 +841,34 @@ facebook_User=sharedPreferences.getString("Facebook","");
         }
 
     }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+            // Handle the camera action
+            Toast.makeText(getApplicationContext(), "Profile Selected!",
+                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.setting) {
+            Toast.makeText(getApplicationContext(), "Setting Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.shareApp) {
+            Toast.makeText(getApplicationContext(), "Share Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.logout) {
+            Toast.makeText(getApplicationContext(), "Logout Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

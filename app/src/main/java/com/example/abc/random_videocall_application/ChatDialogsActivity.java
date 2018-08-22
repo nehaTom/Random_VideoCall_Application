@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +51,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener{
+public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
     ListView lstChatDialogs;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
             chatList_white, contact_white,logout;
@@ -102,8 +106,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_dialogs);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setAddMob();
 
@@ -121,6 +124,16 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         loadChatDialogs();
         setData();
         setOnClicks();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         lstChatDialogs=(ListView)findViewById(R.id.lstChatDialogs);
         registerForContextMenu(lstChatDialogs);
@@ -360,7 +373,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 //                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
@@ -439,4 +452,37 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         }, 2000);
 
     }
+    //--------------------------------------------------------------
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+            // Handle the camera action
+            Toast.makeText(getApplicationContext(), "Profile Selected!",
+                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.setting) {
+            Toast.makeText(getApplicationContext(), "Setting Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.shareApp) {
+            Toast.makeText(getApplicationContext(), "Share Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.logout) {
+            Toast.makeText(getApplicationContext(), "Logout Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+    //--------------------------------------------
+
 }

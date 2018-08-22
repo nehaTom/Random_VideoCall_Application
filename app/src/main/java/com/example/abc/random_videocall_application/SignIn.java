@@ -142,7 +142,7 @@ public class SignIn extends AppCompatActivity {
                 editor.commit();
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
-                Intent intent=new Intent(getApplicationContext(),Home.class);
+                Intent intent=new Intent(getApplicationContext(),Home2.class);
 //            intent.putExtra("user",User);
 //            intent.putExtra("password",Password);
                 startActivity(intent);

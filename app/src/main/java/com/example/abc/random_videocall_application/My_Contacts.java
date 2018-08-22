@@ -3,11 +3,16 @@ package com.example.abc.random_videocall_application;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,7 +28,7 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 
-public class My_Contacts extends AppCompatActivity {
+public class My_Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     RecyclerView Existing_RecyclerView;
     LinearLayoutManager layoutManager;
     ExistingUser_Card_Adapter adapter;
@@ -44,8 +49,16 @@ public class My_Contacts extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my__contacts);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setAddMob();
 
@@ -100,7 +113,7 @@ public class My_Contacts extends AppCompatActivity {
 //                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
@@ -220,5 +233,36 @@ public class My_Contacts extends AppCompatActivity {
             }
         });
     }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+            // Handle the camera action
+            Toast.makeText(getApplicationContext(), "Profile Selected!",
+                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.setting) {
+            Toast.makeText(getApplicationContext(), "Setting Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.shareApp) {
+            Toast.makeText(getApplicationContext(), "Share Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.logout) {
+            Toast.makeText(getApplicationContext(), "Logout Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
 
 }

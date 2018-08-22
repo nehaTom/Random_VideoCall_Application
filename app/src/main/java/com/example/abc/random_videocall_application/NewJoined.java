@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,7 +66,7 @@ import com.quickblox.videochat.webrtc.QBRTCTypes;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class NewJoined extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
+public class NewJoined extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
 
     GridView androidGridView;
     ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
@@ -81,8 +85,16 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_joined);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         setAddMob();
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -200,7 +212,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 //                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
@@ -508,4 +520,35 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             CallService.start(this, qbUser);
         }
     }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+            // Handle the camera action
+            Toast.makeText(getApplicationContext(), "Profile Selected!",
+                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.setting) {
+            Toast.makeText(getApplicationContext(), "Setting Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.shareApp) {
+            Toast.makeText(getApplicationContext(), "Share Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        } else if (id == R.id.logout) {
+            Toast.makeText(getApplicationContext(), "Logout Selected!",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
 }
