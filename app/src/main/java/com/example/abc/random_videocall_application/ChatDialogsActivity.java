@@ -110,13 +110,13 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setAddMob();
 
-      logout=findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLogout();
-            }
-        });
+//      logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setLogout();
+//            }
+//        });
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();

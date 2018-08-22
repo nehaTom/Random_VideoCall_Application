@@ -106,17 +106,17 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        //createSessionForFacebook();
         createSessionForChat();
         setAddMob();
 
-        logout=findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLogout();
-            }
-        });
+//        logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setLogout();
+//            }
+//        });
         lstUsers = (ListView)findViewById(R.id.lstuser);
         lstUsers.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
@@ -166,6 +166,46 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         setData();
         setOnClicks();
     }
+
+//    private void createSessionForFacebook()
+//    { String Provider =sharedPreferences.getString("Facebook","");
+//        final QBUser qbUser=new QBUser(Provider);
+//        QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
+//            @Override
+//            public void onSuccess(QBSession qbSession, Bundle bundle) {
+//                qbUser.setId(qbSession.getUserId());
+//                try {
+//                    qbUser.setPassword(String.valueOf(BaseService.getBaseService().getToken()));
+//                } catch (BaseServiceException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
+//                    @Override
+//                    public void onSuccess(Object o, Bundle bundle) {
+//
+//                        //mDialog.dismiss();
+//
+//                        QBSystemMessagesManager qbSystemMessagesManager=QBChatService.getInstance().getSystemMessagesManager();
+//                        qbSystemMessagesManager.addSystemMessageListener(list_user_activity.this);
+//
+//                        QBIncomingMessagesManager qbIncomingMessagesManager= QBChatService.getInstance().getIncomingMessagesManager();
+//                        qbIncomingMessagesManager.addDialogMessageListener(list_user_activity.this);
+//                    }
+//
+//                    @Override
+//                    public void onError(QBResponseException e) {
+//                       // mDialog.dismiss();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(QBResponseException e) {
+////                mDialog.dismiss();
+//            }
+//        });
+//    }
 
     private boolean isLoggedInChat() {
         if (!QBChatService.getInstance().isLoggedIn()) {

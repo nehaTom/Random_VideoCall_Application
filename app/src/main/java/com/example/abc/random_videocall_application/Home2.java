@@ -77,7 +77,7 @@ public class Home2 extends AppCompatActivity
         setContentView(R.layout.activity_home2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
-
+createSessionForFacebook();
         requestExecutor = App.getInstance().getQbResRequestExecutor();
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
@@ -101,15 +101,6 @@ public class Home2 extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-//        drawer_imv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                drawer.openDrawer(Gravity.LEFT);
-//            }
-//        });
-        //   toolbar.setNavigationIcon(null);          // to hide Navigation icon
-        //toolbar.setDisplayHomeAsUpEnabled(false); // to hide back button
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -117,20 +108,15 @@ public class Home2 extends AppCompatActivity
         toggle.syncState();
 
 
-//        toggle.setDrawerIndicatorEnabled(false);
-//
-//        // mDrawerToggle.setHomeAsUpIndicator(R.drawable.menu_icon);
-//        toolbar.setNavigationIcon(R.drawable.home);
-//
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                drawer.openDrawer(Gravity.LEFT);
-//            }
-//        });
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void createSessionForFacebook()
+    {
+
     }
 
 

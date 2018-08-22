@@ -103,13 +103,13 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         checker = new PermissionsChecker(getApplicationContext());
         createSessionForChat();
 
-        logout=findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLogout();
-            }
-        });
+//        logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setLogout();
+//            }
+//        });
         setGridView();
         setData();
         setOnClicks();
@@ -181,11 +181,11 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         });
     }
 
-    private void setLogout(){
-        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
-        logOutClass.logout();
-
-    }
+//    private void setLogout(){
+//        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+//        logOutClass.logout();
+//
+//    }
 
     private void setData() {
         home = findViewById(R.id.home);

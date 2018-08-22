@@ -229,6 +229,7 @@ gender.setText(Gender);
         object.putString("Gender",Gender);
         object.putString("Interested_In",Interested_In);
         object.putFile("Image",images);
+
         object.putInteger("Age",24);
         object.putString("Parent ID",Email);
 
@@ -239,7 +240,9 @@ gender.setText(Gender);
             @Override
             public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle)
             {
-                //QBUser qbUser = new QBUser(Email, Password);
+                QBUser qbUser = new QBUser(Email, Password);
+
+                qbUser.setFileId(Integer.valueOf(images));
 //                name.setText(Name_Profile);
 //                phone.setText(Mobile_Profile);
 //                gender.setText(Gender);

@@ -64,13 +64,13 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 
         Toast.makeText(getApplicationContext(), "Coming Soon", Toast.LENGTH_SHORT).show();
 
-        logout=findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               setLogout();
-            }
-        });
+//        logout=findViewById(R.id.logout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               setLogout();
+//            }
+//        });
         setRecyclerView();
         setData();
         setOnClicks();

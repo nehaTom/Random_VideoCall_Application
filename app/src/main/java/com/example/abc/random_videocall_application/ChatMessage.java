@@ -24,9 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bhargavms.dotloader.DotLoader;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.BaseService;
+import com.quickblox.auth.session.QBSession;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBIncomingMessagesManager;
 import com.quickblox.chat.QBRestChatService;
+import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
 import com.quickblox.chat.listeners.QBChatDialogTypingListener;
@@ -37,7 +41,9 @@ import com.quickblox.chat.request.QBMessageUpdateBuilder;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.model.QBUser;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -130,6 +136,7 @@ public class ChatMessage extends AppCompatActivity {
 
 
         date=findViewById(R.id.date);
+//        createSessionForFacebook();
         initView();
         initChatDialogs();
         retrieveAllMessages();
@@ -420,6 +427,42 @@ public class ChatMessage extends AppCompatActivity {
             });
         }
     }
+
+  //  private void createSessionForFacebook()
+//    { String Provider =sharedPreferences.getString("Facebook","");
+//        final QBUser qbUser=new QBUser(Provider);
+//        QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
+//            @Override
+//            public void onSuccess(QBSession qbSession, Bundle bundle) {
+//                qbUser.setId(qbSession.getUserId());
+//                try {
+//                    qbUser.setPassword(String.valueOf(BaseService.getBaseService().getToken()));
+//                } catch (BaseServiceException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
+//                    @Override
+//                    public void onSuccess(Object o, Bundle bundle) {
+//
+//                        //mDialog.dismiss();
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(QBResponseException e) {
+//                        // mDialog.dismiss();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(QBResponseException e) {
+////                mDialog.dismiss();
+//            }
+//        });
+//    }
 
     @Override
     public void onBackPressed()

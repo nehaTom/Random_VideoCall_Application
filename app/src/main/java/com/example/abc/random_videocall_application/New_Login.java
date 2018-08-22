@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -121,19 +122,43 @@ public class New_Login extends AppCompatActivity {
 
 
 
-                QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK,  facebookAccessToken, null).performAsync(new QBEntityCallback<QBUser>() {
+                QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK,  facebookAccessToken, "").performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle args) {
 editor.putString("Facebook",QBProvider.FACEBOOK);
 String User =user.getLogin();
-Log.e("Login_Id",User);
-String Password="1234567890";
-                        user.setPassword(Password);
-                        editor.putString("user",User);
-                        editor.putString("password",Password);
-                        editor.commit();
-                        Intent intent=new Intent(getApplicationContext(),Home.class);
-                        startActivity(intent);
+//Log.e("Login_Id",User);
+                        //String User ="a@gmail.com";
+
+                        SharedPrefsHelper.getInstance().saveQbUser(user);
+String Password=user.getPassword();
+                        Log.e("Login_Id",Password);
+
+                        QBUser qbUser = new QBUser(User, Password);
+                        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+                            @Override
+                            public void onSuccess(QBUser qbUser, Bundle bundle)
+                            {
+
+                                editor.putString("user",User);
+                                editor.putString("password",Password);
+                                editor.commit();
+
+                                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
+                                Intent intent=new Intent(getApplicationContext(),Home2.class);
+                                startActivity(intent);
+
+                            }
+
+                            @Override
+                            public void onError(QBResponseException e)
+                            {
+
+
+                                Log.e("Facebook_Error",e.toString());
+                            }
+                        });
+
 
                     }
 
