@@ -2,6 +2,7 @@ package com.example.abc.random_videocall_application;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -242,7 +243,7 @@ gender.setText(Gender);
             {
                 QBUser qbUser = new QBUser(Email, Password);
 
-                qbUser.setFileId(Integer.valueOf(images));
+//                qbUser.setFileId(Integer.valueOf(images));
 //                name.setText(Name_Profile);
 //                phone.setText(Mobile_Profile);
 //                gender.setText(Gender);
@@ -275,6 +276,8 @@ gender.setText(Gender);
 //            imv.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 //        }
             Uri selectedImage = data.getData();
+            Bitmap bmp;
+
             try {
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -284,16 +287,31 @@ gender.setText(Gender);
                 //  imv.setImageURI(selectedImage);
                 //      Toast.makeText(getApplicationContext(), "This is my Toast message!"+,
                 //           Toast.LENGTH_LONG).show();
-                Log.d("Check",images);
+                Log.d("Check", images);
                 // imv.setImageBitmap(null);
-                imv.setImageURI(selectedImage);
+                bmp=getScaledBitmap(selectedImage);
+                imv.setImageBitmap(bmp);
+                //  imv.setImageURI(selectedImage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
 
     }
 
+    private Bitmap getScaledBitmap(Uri selectedImage) {
+        Bitmap thumb = null;
+        try {
+            ContentResolver cr = getApplicationContext().getContentResolver();
+            InputStream in = cr.openInputStream(selectedImage);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            thumb = BitmapFactory.decodeStream(in, null, options);
+        } catch (FileNotFoundException e) {
+        }
+        return thumb;
+    }
 
 
 

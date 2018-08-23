@@ -91,15 +91,15 @@
 
         </ListView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/date"
-            android:text="Date"
-            android:textSize="@dimen/largeFont"
-            android:textColor="@color/black"
-            android:layout_below="@+id/chatTool"
-            android:layout_centerHorizontal="true" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/date"-->
+            <!--android:text="Date"-->
+            <!--android:textSize="@dimen/largeFont"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:layout_below="@+id/chatTool"-->
+            <!--android:layout_centerHorizontal="true" />-->
 
         <com.bhargavms.dotloader.DotLoader
             android:id="@+id/dot_loader"

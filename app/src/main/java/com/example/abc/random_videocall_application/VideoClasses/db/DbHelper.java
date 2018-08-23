@@ -21,6 +21,8 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String DB_COLUMN_USER_ID = "userID";
     public static final String DB_COLUMN_USER_PASSWORD = "userPass";
     public static final String DB_COLUMN_USER_TAG = "userTag";
+    public static final String DB_COLUMN_ACCESSTOKEN= "facebookToken";
+    public static final String DB_COLUMN_TWITTERKEY= "twitterToken";
 
 
     public DbHelper(Context context) {
@@ -36,7 +38,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 + DB_COLUMN_USER_LOGIN + " text,"
                 + DB_COLUMN_USER_PASSWORD + " text,"
                 + DB_COLUMN_USER_FULL_NAME + " text,"
-                + DB_COLUMN_USER_TAG + " text"
+                + DB_COLUMN_USER_TAG + " text,"
+                + DB_COLUMN_ACCESSTOKEN + " text,"
+                + DB_COLUMN_TWITTERKEY + " text"
                 + ");");
     }
 

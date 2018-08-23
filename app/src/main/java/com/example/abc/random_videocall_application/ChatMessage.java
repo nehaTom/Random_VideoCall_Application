@@ -141,7 +141,7 @@ public class ChatMessage extends AppCompatActivity {
         initChatDialogs();
         retrieveAllMessages();
         setUserName();
-        setDate();
+      //  setDate();
 
         ///// set date
 //        DatePickerDialog.OnDateSetListener setDate = new DatePickerDialog.OnDateSetListener() {

@@ -2,9 +2,14 @@ package com.example.abc.random_videocall_application.VideoClasses;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.quickblox.auth.model.QBProvider;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 public class SharedPrefsHelper {
@@ -15,8 +20,10 @@ public class SharedPrefsHelper {
     private static final String QB_USER_PASSWORD = "qb_user_password";
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "chatUser";
+    private static final String QB_USER_TOKEN = "facebookToken";
 
     private static SharedPrefsHelper instance;
+    private static QBUser user;
 
     private SharedPreferences sharedPreferences;
 
@@ -82,6 +89,7 @@ public class SharedPrefsHelper {
         save(QB_USER_PASSWORD, qbUser.getPassword());
         save(QB_USER_FULL_NAME, qbUser.getFullName());
         save(QB_USER_TAGS, qbUser.getTags().getItemsAsString());
+        save(QB_USER_TOKEN, qbUser.getExternalId());
     }
 
     public void removeQbUser() {
@@ -90,6 +98,7 @@ public class SharedPrefsHelper {
         delete(QB_USER_PASSWORD);
         delete(QB_USER_FULL_NAME);
         delete(QB_USER_TAGS);
+        delete(QB_USER_TOKEN);
     }
 
     public QBUser getQbUser() {
@@ -116,6 +125,49 @@ public class SharedPrefsHelper {
             return null;
         }
     }
+
+    public QBUser getQbUser(String usertype) {
+        if (hasQbUser()) {
+            Integer id = get(QB_USER_ID);
+            String login = get(QB_USER_LOGIN);
+            String accessToken = get(QB_USER_TOKEN);
+            String password = get(QB_USER_PASSWORD);
+            String fullName = get(QB_USER_FULL_NAME);
+            String tagsInString = get(QB_USER_TAGS);
+
+            StringifyArrayList<String> tags = null;
+
+            if (tagsInString != null) {
+                tags = new StringifyArrayList<>();
+                tags.add(tagsInString.split(","));
+            }
+
+
+            if (usertype.equals("facebook")) {
+                user=new QBUser(login, password);
+                user.setId(id);
+                user.setFullName(fullName);
+                user.setTags(tags);
+                user.setExternalId(accessToken);
+            }
+            else {
+                user= new QBUser(login, password);
+                user.setId(id);
+                user.setFullName(fullName);
+                user.setTags(tags);
+            }
+
+            return user;
+        } else {
+            return null;
+        }
+    }
+
+
+
+
+
+
 
     public boolean hasQbUser() {
         Log.e("username",has(QB_USER_LOGIN)+" 123 "+has(QB_USER_PASSWORD));

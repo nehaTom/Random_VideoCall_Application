@@ -80,18 +80,29 @@ public class Home2 extends AppCompatActivity
         setContentView(R.layout.activity_home2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
-        loginSession();
-
+        //loginSession();
+      requestExecutor = App.getInstance().getQbResRequestExecutor();
+       dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());
-        currentUser = sharedPrefsHelper.getQbUser();
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        String Login_User = sharedPreferences.getString("App_User", "");
+        if (Login_User.equals("Simple_Login")) {
+            currentUser = sharedPrefsHelper.getQbUser();
+        }
+        else
+        {
+            currentUser = sharedPrefsHelper.getQbUser(Login_User);
+        }
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setAddMob();
         setfooter();
         setOnClicks();
-        setOnclicksRandomButton();
+        setOnclicksRandomButton(currentUser);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -119,19 +130,22 @@ public class Home2 extends AppCompatActivity
         }
         else if (Login_User.equals("facebook"))
         {
-            String Facebook = sharedPreferences.getString("Facebook", "");
-            QBAuth.createSessionUsingSocialProvider(QBProvider.FACEBOOK, Facebook, "").performAsync(new QBEntityCallback<QBSession>() {
-                @Override
-                public void onSuccess(QBSession qbSession, Bundle bundle) {
-                    Log.e("Success", String.valueOf(qbSession));
+//            String Facebook = sharedPreferences.getString("Facebook", "");
+//            QBAuth.createSessionUsingSocialProvider(QBProvider.FACEBOOK, Facebook, "").performAsync(new QBEntityCallback<QBSession>() {
+//                @Override
+//                public void onSuccess(QBSession qbSession, Bundle bundle) {
+//                    Log.e("Success", String.valueOf(qbSession));
+//
+//                }
+//
+//                @Override
+//                public void onError(QBResponseException e) {
+//                    Log.e("Error", e.getMessage());
+//                }
+//            });
 
-                }
-
-                @Override
-                public void onError(QBResponseException e) {
-                    Log.e("Error", e.getMessage());
-                }
-            });
+            requestExecutor = App.getInstance().getQbResRequestExecutor();
+            dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         }
 
 
@@ -184,20 +198,23 @@ public class Home2 extends AppCompatActivity
         });
     }
 
-    private void setOnclicksRandomButton() {
+    private void setOnclicksRandomButton(QBUser quser) {
         randomCall = findViewById(R.id.randomCall);
         randomCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (sharedPrefsHelper.hasQbUser()) {
-                    startLoginService(sharedPrefsHelper.getQbUser());
-                    randomVideoCallFunctionality();
-                    //startOpponentsActivity();
-                    //OpponentsActivity.start(Home.this, false);
-                    //finish();
-                    return;
-                }
+                startLoginService(quser);
+                randomVideoCallFunctionality();
+                return;
+//                if (sharedPrefsHelper.hasQbUser()) {
+//                    startLoginService(sharedPrefsHelper.getQbUser());
+//                    randomVideoCallFunctionality();
+//                    //startOpponentsActivity();
+//                    //OpponentsActivity.start(Home.this, false);
+//                    //finish();
+//                    return;
+//                }
 
             }
         });
@@ -490,20 +507,7 @@ public class Home2 extends AppCompatActivity
         //long userLastRequestAtTime = c.getLastRequestAt().getTime();
         int random = 0 + (int) (Math.random() * ((i - 1) + 1));
 
-        //tempList.add(currentOpponentsList.get(random));
-//        if(i>0) {
-//            opponentsAdapter = new OpponentsAdapter(this, tempList);
-//            opponentsAdapter.selectItem(random);
-//            hideProgressDialog();
-//
-//            opponentsAdapter.setSelectedItemsCountsChangedListener(new OpponentsAdapter.SelectedItemsCountsChangedListener() {
-//                @Override
-//                public void onCountSelectedItemsChanged(int count) {
-//                    updateActionBar(count);
-//                }
-//            });
-//
-//            opponentsListView.setAdapter(opponentsAdapter);
+
 
         if (i > 0) {
             selectedUser = new QBUser();

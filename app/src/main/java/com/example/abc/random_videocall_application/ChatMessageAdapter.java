@@ -64,11 +64,15 @@ public class ChatMessageAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.list_send_message, null);
                 BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
                 TextView time=view.findViewById(R.id.time);
+                TextView date=view.findViewById(R.id.date);
+                long date_value = qbChatMessages.get(i).getDateSent();
+                String dateValue = Long.toString(date_value);
+                date.setText(dateValue);
                 bubbleTextView.setText(qbChatMessages.get(i).getBody());
-                long millis=qbChatMessages.get(i).getDateSent();
+                long millis=(qbChatMessages.get(i).getDateSent())/1000;
                 //long s = millis % 60;
                 long m = (millis / 60) % 60;
-                long h = (millis / (60 * 60)) % 24;
+                long h = (millis / (60 * 60))%24;
                 String hms = String.format("%02d:%02d", h,
                         m);
 
@@ -83,6 +87,13 @@ public class ChatMessageAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.list_rec_message, null);
                 BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
                TextView time=view.findViewById(R.id.time);
+
+                TextView date=view.findViewById(R.id.date);
+                long date_value = qbChatMessages.get(i).getDateSent();
+                String dateValue = Long.toString(date_value);
+                date.setText(dateValue);
+                //date.setText((int) qbChatMessages.get(i).getDateSent());
+
                 bubbleTextView.setText(qbChatMessages.get(i).getBody());
                 TextView txtName = (TextView)view.findViewById(R.id.message_user);
                 txtName.setText(QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName());
