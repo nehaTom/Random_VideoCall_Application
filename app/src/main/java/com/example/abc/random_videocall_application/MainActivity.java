@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements
                     qbUser.setPassword(Password);
                     qbUser.setTags(Tag_Name);
                     SharedPrefsHelper.getInstance().saveQbUser(user);
-                    Intent intent=new Intent(getApplicationContext(),Home.class);
+                    Intent intent=new Intent(getApplicationContext(),Home2.class);
                     startActivity(intent);
 
                 }

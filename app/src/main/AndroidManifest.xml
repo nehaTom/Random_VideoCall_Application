@@ -32,10 +32,6 @@
         <activity android:name=".Existing_User" />
         <activity android:name=".New_Login" ></activity>
         <activity
-            android:name=".Home"
-            android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".Home2"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />

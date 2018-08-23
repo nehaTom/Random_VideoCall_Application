@@ -35,7 +35,7 @@ public class Footer extends AppCompatActivity {
             public void onClick(View v) {
                 home.setBackgroundColor(Color.parseColor("#ffffff"));
                 home.setImageResource(R.drawable.home);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
