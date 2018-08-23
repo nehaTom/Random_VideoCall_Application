@@ -253,8 +253,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
                     Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.logout) {
-            Toast.makeText(getApplicationContext(), "Logout Selected!",
-                    Toast.LENGTH_LONG).show();
+            setLogout();
 
         }
 

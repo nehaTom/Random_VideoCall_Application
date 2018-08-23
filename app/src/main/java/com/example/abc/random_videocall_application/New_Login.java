@@ -37,6 +37,8 @@ import com.quickblox.users.model.QBUser;
 
 import org.json.JSONObject;
 
+import java.util.Date;
+
 public class New_Login extends AppCompatActivity {
     TextView login_textview;
     LoginButton FacebookLogin;
@@ -46,10 +48,10 @@ public class New_Login extends AppCompatActivity {
     ProgressDialog dialog;
     SharedPreferences.Editor editor;
 
-    static final String APP_ID="72405";
-    static final String AUTH_KEY="zCNmPJGEkrGyseU";
-    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
-    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
+    static final String APP_ID = "72405";
+    static final String AUTH_KEY = "zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET = "V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY = "qAx_5ERjtk6Fy_tBh1rs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,94 +81,127 @@ public class New_Login extends AppCompatActivity {
     }
 
 
-    private void setData()
-    {
-        login_textview=findViewById(R.id.login_textview);
-        FacebookLogin =findViewById(R.id.facebook_login_button);
+    private void setData() {
+        login_textview = findViewById(R.id.login_textview);
+        FacebookLogin = findViewById(R.id.facebook_login_button);
     }
 
 
-    private void setLoginOnClick()
-    {
+    private void setLoginOnClick() {
         login_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getApplication(),SignIn.class);
+                Intent intent = new Intent(getApplication(), SignIn.class);
                 startActivity(intent);
             }
         });
     }
 
-    private void setfacebookLogin()
-    {
+    private void setfacebookLogin() {
 
         callbackManager = CallbackManager.Factory.create();
         FacebookLogin.setReadPermissions("email");
         FacebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.e("Facebook_Success",loginResult.toString());
+                Log.e("Facebook_Success", loginResult.toString());
                 //getUserDetails(loginResult);
-                String Token=  loginResult.getAccessToken().getToken();
-               //session maintenance
+                String Token = loginResult.getAccessToken().getToken();
+                Date expirationDate = loginResult.getAccessToken().getExpires(); //getTokenExpirationDate();
+                //session maintenance
 //                QBSessionManager.getInstance().createActiveSession(Token,null);
                 String facebookAccessToken = Token;
 //                QBSession session=QBSessionManager.getInstance().getActiveSession();
 
                 StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
                 Tag_Name.add("chatUser");
-                QBUser user=new QBUser();
-                
+                QBUser user = new QBUser();
+
                 user.setTags(Tag_Name);
 
 
-
-
-                QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK,  facebookAccessToken, "").performAsync(new QBEntityCallback<QBUser>() {
+                QBUsers.signInUsingSocialProvider(QBProvider.FACEBOOK, facebookAccessToken, "").performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle args) {
-editor.putString("Facebook",QBProvider.FACEBOOK);
-String User =user.getLogin();
+                        editor.putString("Facebook", QBProvider.FACEBOOK);
+                        editor.putString("App_User","facebook");
+                        editor.commit();
+//String Facebook=
+                        // user.getId();
+//                        int User = user.getId();
+//                        user.setId(User);
+//                        user.setPassword(facebookAccessToken); //QBSessionManager.getInstance().getToken());
 //Log.e("Login_Id",User);
                         //String User ="a@gmail.com";
 
-                        SharedPrefsHelper.getInstance().saveQbUser(user);
-String Password=user.getPassword();
-                        Log.e("Login_Id",Password);
+                        // SharedPrefsHelper.getInstance().saveQbUser(user);
+//String Password=user.getPassword();
+                        // Log.e("Login_Id",Password);
 
-                        QBUser qbUser = new QBUser(User, Password);
-                        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+                        // QBSessionManager.getInstance().createActiveSession(facebookAccessToken,  expirationDate);
+
+                        QBAuth.createSessionUsingSocialProvider(QBProvider.FACEBOOK, facebookAccessToken, "").performAsync(new QBEntityCallback<QBSession>() {
                             @Override
-                            public void onSuccess(QBUser qbUser, Bundle bundle)
-                            {
+                            public void onSuccess(QBSession qbSession, Bundle bundle) {
+                                Log.e("Success", String.valueOf(qbSession));
 
-                                editor.putString("user",User);
-                                editor.putString("password",Password);
-                                editor.commit();
-
-                                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
-                                Intent intent=new Intent(getApplicationContext(),Home2.class);
+                                Intent intent = new Intent(getApplicationContext(), Home2.class);
                                 startActivity(intent);
-
                             }
 
                             @Override
-                            public void onError(QBResponseException e)
-                            {
-
-
-                                Log.e("Facebook_Error",e.toString());
+                            public void onError(QBResponseException e) {
+                                Log.e("Error", e.getMessage());
                             }
                         });
 
 
+//                        QBAuth.createSession(user).performAsync(new QBEntityCallback<QBSession>() {
+//                                                                    @Override
+//                                                                    public void onSuccess(QBSession qbSession, Bundle bundle)
+//                                                                    {
+//                                                                       Log.e("Success", String.valueOf(qbSession)) ;
+//                                                                    }
+//
+//                                                                    @Override
+//                                                                    public void onError(QBResponseException e)
+//                                                                    {
+//                                                                        Log.e("Success", e.getMessage()) ;
+//                                                                    }
+//                                                                });
+
+                        // QBUser qbUser = new QBUser(User, Password);
+//                        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+//                            @Override
+//                            public void onSuccess(QBUser qbUser, Bundle bundle)
+//                            {
+//
+//                                editor.putString("user",User);
+//                                editor.putString("password",Password);
+//                                editor.commit();
+//
+//                                SharedPrefsHelper.getInstance().saveQbUser(qbUser);
+//                                Intent intent=new Intent(getApplicationContext(),Home2.class);
+//                                startActivity(intent);
+//
+//                            }
+//
+//                            @Override
+//                            public void onError(QBResponseException e)
+//                            {
+//
+//
+//                                Log.e("Facebook_Error",e.toString());
+//                            }
+//                        });
+//
+//
                     }
 
                     @Override
-                    public void onError(QBResponseException errors)
-                    {
+                    public void onError(QBResponseException errors) {
 
-                        Log.e("Facebook_Error",errors.toString());
+                        Log.e("Facebook_Error", errors.toString());
 
 
                     }
@@ -183,7 +218,7 @@ String Password=user.getPassword();
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Log.e("Facebook_Error",exception.getMessage());
+                Log.e("Facebook_Error", exception.getMessage());
             }
         });
     }
@@ -219,6 +254,7 @@ String Password=user.getPassword();
         // Logs 'install' and 'app activate' App Events.
         AppEventsLogger.activateApp(this);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -227,24 +263,21 @@ String Password=user.getPassword();
     }
 
 
-    private void setGoogleLogin()
-    {
+    private void setGoogleLogin() {
 
         SignInButton signInButton = findViewById(R.id.gmail_sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
 
             }
         });
     }
 
-    private void initializeQuickBlox()
-    {
+    private void initializeQuickBlox() {
 //
         QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
         // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);

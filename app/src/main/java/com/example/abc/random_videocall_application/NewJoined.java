@@ -181,11 +181,11 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         });
     }
 
-//    private void setLogout(){
-//        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
-//        logOutClass.logout();
-//
-//    }
+    private void setLogout(){
+        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+        logOutClass.logout();
+
+    }
 
     private void setData() {
         home = findViewById(R.id.home);
@@ -540,8 +540,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
                     Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.logout) {
-            Toast.makeText(getApplicationContext(), "Logout Selected!",
-                    Toast.LENGTH_LONG).show();
+            setLogout();
 
         }
 

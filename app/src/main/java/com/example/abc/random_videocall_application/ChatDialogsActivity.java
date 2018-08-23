@@ -472,8 +472,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
                     Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.logout) {
-            Toast.makeText(getApplicationContext(), "Logout Selected!",
-                    Toast.LENGTH_LONG).show();
+            setLogout();
 
         }
 

@@ -901,8 +901,7 @@ facebook_User=sharedPreferences.getString("Facebook","");
                     Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.logout) {
-            Toast.makeText(getApplicationContext(), "Logout Selected!",
-                    Toast.LENGTH_LONG).show();
+            setLogout();
 
         }
 

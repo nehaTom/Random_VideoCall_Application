@@ -43,6 +43,9 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.model.QBProvider;
+import com.quickblox.auth.session.QBSession;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -77,9 +80,8 @@ public class Home2 extends AppCompatActivity
         setContentView(R.layout.activity_home2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
-createSessionForFacebook();
-        requestExecutor = App.getInstance().getQbResRequestExecutor();
-        dbManager = QbUsersDbManager.getInstance(getApplicationContext());
+        loginSession();
+
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());
         currentUser = sharedPrefsHelper.getQbUser();
@@ -87,14 +89,6 @@ createSessionForFacebook();
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setAddMob();
-//        logout = findViewById(R.id.logout);
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setLogout();
-//            }
-//        });
-        //setData();
         setfooter();
         setOnClicks();
         setOnclicksRandomButton();
@@ -114,10 +108,36 @@ createSessionForFacebook();
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void createSessionForFacebook()
+    private void loginSession()
     {
 
+        String Login_User = sharedPreferences.getString("App_User", "");
+        if (Login_User.equals("Simple_Login"))
+        {
+            requestExecutor = App.getInstance().getQbResRequestExecutor();
+            dbManager = QbUsersDbManager.getInstance(getApplicationContext());
+        }
+        else if (Login_User.equals("facebook"))
+        {
+            String Facebook = sharedPreferences.getString("Facebook", "");
+            QBAuth.createSessionUsingSocialProvider(QBProvider.FACEBOOK, Facebook, "").performAsync(new QBEntityCallback<QBSession>() {
+                @Override
+                public void onSuccess(QBSession qbSession, Bundle bundle) {
+                    Log.e("Success", String.valueOf(qbSession));
+
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e("Error", e.getMessage());
+                }
+            });
+        }
+
+
     }
+
+
 
 
     private void setLogout() {
@@ -322,8 +342,7 @@ createSessionForFacebook();
                     Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.logout) {
-            Toast.makeText(getApplicationContext(), "Logout Selected!",
-                    Toast.LENGTH_LONG).show();
+            setLogout();
 
         }
 
