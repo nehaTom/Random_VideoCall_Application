@@ -62,6 +62,7 @@ import com.quickblox.chat.utils.DialogUtils;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBPagedRequestBuilder;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCClient;
@@ -306,7 +307,13 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
             mDialog.setMessage("Loading...");
             mDialog.setCanceledOnTouchOutside(false);
             mDialog.show();
-            QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+            QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
+            pagedRequestBuilder.setPage(1);
+            pagedRequestBuilder.setPerPage(100);
+
+            Bundle params = new Bundle();
+
+            QBUsers.getUsers(pagedRequestBuilder, params).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
                 @Override
                 public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
                     mDialog.dismiss();

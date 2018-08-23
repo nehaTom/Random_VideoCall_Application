@@ -49,6 +49,11 @@ import com.quickblox.auth.session.QBSession;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBPagedRequestBuilder;
+import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.core.server.Performer;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCClient;
@@ -56,6 +61,7 @@ import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Home2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -110,36 +116,6 @@ public class Home2 extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void loginSession()
-    {
-
-        String Login_User = sharedPreferences.getString("App_User", "");
-        if (Login_User.equals("Simple_Login"))
-        {
-            requestExecutor = App.getInstance().getQbResRequestExecutor();
-            dbManager = QbUsersDbManager.getInstance(getApplicationContext());
-        }
-        else if (Login_User.equals("facebook"))
-        {
-            String Facebook = sharedPreferences.getString("Facebook", "");
-            QBAuth.createSessionUsingSocialProvider(QBProvider.FACEBOOK, Facebook, "").performAsync(new QBEntityCallback<QBSession>() {
-                @Override
-                public void onSuccess(QBSession qbSession, Bundle bundle) {
-                    Log.e("Success", String.valueOf(qbSession));
-
-                }
-
-                @Override
-                public void onError(QBResponseException e) {
-                    Log.e("Error", e.getMessage());
-                }
-            });
-        }
-
-
-    }
-
-
 
 
     private void setLogout() {
@@ -147,11 +123,6 @@ public class Home2 extends AppCompatActivity
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
         String Video_AppUser = sharedPreferences.getString("App_User", "");
-//        if (Video_AppUser.equals("Simple_Login")) {
-//
-//            LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
-//            logOutClass.logout();
-//        }
         if (Video_AppUser.equals("gmail")) {
             gmailLogout();
         }
@@ -195,9 +166,6 @@ public class Home2 extends AppCompatActivity
                 if (sharedPrefsHelper.hasQbUser()) {
                     startLoginService(sharedPrefsHelper.getQbUser());
                     randomVideoCallFunctionality();
-                    //startOpponentsActivity();
-                    //OpponentsActivity.start(Home.this, false);
-                    //finish();
                     return;
                 }
 
@@ -213,25 +181,7 @@ public class Home2 extends AppCompatActivity
     protected void startLoginService(QBUser qbUser) {
         CallService.start(this, qbUser);
     }
-//
-//            private void setLogout()
-//    {
-//        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
-//        logOutClass.logout();
-//    }
 
-
-//    private void setData() {
-//
-//        //startLoadUsers();
-//        home_icon = findViewById(R.id.home_icon);
-//        home_icon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //setAppMenu();
-//            }
-//        });
-//    }
 
     private void setfooter() {
         home = findViewById(R.id.home);
@@ -394,7 +344,14 @@ public class Home2 extends AppCompatActivity
     private void startLoadUsers() {
         showProgressDialog(R.string.dlg_loading_opponents);
         String currentRoomName = SharedPrefsHelper.getInstance().get("chatUser");
-        requestExecutor.loadUsersByTag(currentRoomName, new QBEntityCallback<ArrayList<QBUser>>() {
+        //requestExecutor.loadUsersByTag(currentRoomName, new QBEntityCallback<ArrayList<QBUser>>() {
+        QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
+        pagedRequestBuilder.setPage(1);
+        pagedRequestBuilder.setPerPage(100);
+
+        Bundle params = new Bundle();
+
+        QBUsers.getUsers(pagedRequestBuilder, params).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> result, Bundle params) {
                 hideProgressDialog();
@@ -435,15 +392,9 @@ public class Home2 extends AppCompatActivity
     }
 
     private void initUsersList() {
-//      checking whether currentOpponentsList is actual, if yes - return
-//        if (currentOpponentsList != null) {
-//            ArrayList<QBUser> actualCurrentOpponentsList = dbManager.getAllUsers();
-//            actualCurrentOpponentsList.remove(sharedPrefsHelper.getQbUser());
-//            if (isCurrentOpponentsListActual(actualCurrentOpponentsList)) {
-//                return;
-//            }
-//        }
-        proceedInitUsersList();
+        String interestedIn = sharedPreferences.getString("Interested_In","");
+        setIntersetedIds(interestedIn);
+
     }
 
     void showProgressDialog(@StringRes int messageId) {
@@ -469,49 +420,114 @@ public class Home2 extends AppCompatActivity
 
     }
 
-    private void proceedInitUsersList() {
+
+    public void getProfileById(String id) {
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.eq("userId", id);
+        Performer<ArrayList<QBCustomObject>> performer =  QBCustomObjects.getObjects("Profile",requestBuilder);
+        performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+            @Override
+            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
+                if(qbCustomObjects.size()>0) {
+                    String id = qbCustomObjects.get(0).getCustomObjectId();
+                    HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
+                    Log.e("Check",fields.get("Interested_In").toString());
+                    Log.e("Check",fields.get("Gender").toString());
+                    editor.putString("Interested_In",fields.get("Interested_In").toString());
+                    editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
+                    editor.commit();
+                    Intent intent=new Intent(getApplicationContext(),Home2.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e("TAG","checking");
+                editor.putString("Interested_In","");
+                editor.putString("Profile_Id","");
+                editor.commit();
+                Intent intent=new Intent(getApplicationContext(),Home2.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void proceedInitUsersList(ArrayList<String> idsList) {
         ArrayList<QBUser> tempList = new ArrayList<>();
         int i = 0;
         currentOpponentsList = dbManager.getAllUsers();
         Log.d("TAG", "proceedInitUsersList currentOpponentsList= " + currentOpponentsList);
         currentOpponentsList.remove(sharedPrefsHelper.getQbUser());
-        long currentTime = System.currentTimeMillis();
+//       long currentTime = System.currentTimeMillis();
         for (i = 0; i < currentOpponentsList.size(); i++) {
             QBUser user = (QBUser) currentOpponentsList.get(i);
 //            long userLastRequestAtTime = user.getLastRequestAt().getTime();
 //            if((currentTime - userLastRequestAtTime) > 5*60*1000){
 //                // user is offline now
-//            }else{
-            tempList.add(user);
-            //}
+//            }
+            if(idsList.isEmpty()) {
+                tempList.add(user);
+            }else {
+                String id = user.getId().toString();
+                if(idsList.contains(id)){
+                    tempList.add(user);
+                }
+            }
+
 
         }
-        Log.e("check", "");
-
         i = tempList.size();
         //long userLastRequestAtTime = c.getLastRequestAt().getTime();
         int random = 0 + (int) (Math.random() * ((i - 1) + 1));
-
-        //tempList.add(currentOpponentsList.get(random));
-//        if(i>0) {
-//            opponentsAdapter = new OpponentsAdapter(this, tempList);
-//            opponentsAdapter.selectItem(random);
-//            hideProgressDialog();
-//
-//            opponentsAdapter.setSelectedItemsCountsChangedListener(new OpponentsAdapter.SelectedItemsCountsChangedListener() {
-//                @Override
-//                public void onCountSelectedItemsChanged(int count) {
-//                    updateActionBar(count);
-//                }
-//            });
-//
-//            opponentsListView.setAdapter(opponentsAdapter);
 
         if (i > 0) {
             selectedUser = new QBUser();
             selectedUser = tempList.get(random);
             videoCallfunction();
+        }else {
+            Toast.makeText(getApplicationContext(), "No user Available", Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    private void setIntersetedIds(String interestedIn) {
+        ArrayList<String> idsList = new ArrayList<String>();
+        if(interestedIn.equals("")){
+            proceedInitUsersList(idsList);
+        }else {
+            QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+            requestBuilder.eq("Gender", interestedIn);
+            Performer<ArrayList<QBCustomObject>> performer = QBCustomObjects.getObjects("Profile", requestBuilder);
+
+            performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+                @Override
+                public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
+                    if (qbCustomObjects.size() > 0) {
+                        for (int i = 0; i < qbCustomObjects.size(); i++) {
+                            String id = qbCustomObjects.get(i).getUserId().toString();
+                            HashMap<String, Object> fields = qbCustomObjects.get(i).getFields();
+                            String gender = fields.get("Gender").toString();
+                            if (interestedIn.equalsIgnoreCase(gender)) {
+                                idsList.add(id);
+                            }
+                        }
+
+
+                    }
+                    proceedInitUsersList(idsList);
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e("TAG", "checking");
+                    proceedInitUsersList(idsList);
+
+                }
+            });
+        }
+
 
     }
 
