@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.abc.random_videocall_application.Home;
 import com.example.abc.random_videocall_application.New_Login;
 import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
 import com.example.abc.random_videocall_application.VideoClasses.util.App;
@@ -15,7 +14,6 @@ import com.example.abc.random_videocall_application.VideoClasses.utils.UsersUtil
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.messages.services.SubscribeService;
-import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import static org.webrtc.ContextUtils.getApplicationContext;

@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 public class UserProfile extends AppCompatActivity {
     JSONObject response, profile_pic_data, profile_pic_url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +34,7 @@ public class UserProfile extends AppCompatActivity {
                     .into(user_picture);
 
 //            Picasso.get(this).load(profile_pic_url("url")).into(user_picture);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp">
 
         <ImageView
-            android:layout_alignParentLeft="true"
             android:id="@+id/image_chatDialog"
             android:layout_width="45dp"
-            android:layout_height="45dp" />
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true" />
 
         <LinearLayout
-            android:layout_toRightOf="@+id/image_chatDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="15dp">
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/image_chatDialog"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/list_chat_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/largeFont"/>
+                android:textSize="@dimen/largeFont" />
 
             <TextView
                 android:id="@+id/list_chat_dialog_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/list_chat_last_msg"
@@ -39,11 +40,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp" />
         </LinearLayout>
+
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:id="@+id/image_unread"
             android:layout_width="15dp"
-            android:layout_height="15dp" />
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

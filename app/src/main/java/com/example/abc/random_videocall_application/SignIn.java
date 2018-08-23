@@ -17,29 +17,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
-import com.facebook.login.Login;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.ServiceZone;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.core.server.Performer;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class SignIn extends AppCompatActivity {
     TextView regiterNow_text;
@@ -49,14 +42,7 @@ public class SignIn extends AppCompatActivity {
     SharedPreferences.Editor editor;
     ProgressDialog dialog;
     CheckBox agree_checkbox,checkBox;
-    Map<String, String> header1;
-    String email, password;
-
-
-//    static final String APP_ID="72648";
-//    static final String AUTH_KEY="5ZyyFJzKUdh2kjN";
-//    static final String AUTH_SECRET="wJaJMKJqqq5bznN";
-//    static final String ACCOUNT_KEY="jmDTjvqNm4zi2JfyrTYm";
+    String email;
 
     static final String APP_ID="72405";
     static final String AUTH_KEY="zCNmPJGEkrGyseU";
@@ -79,11 +65,6 @@ public class SignIn extends AppCompatActivity {
         userPasswordEditText = findViewById(R.id.userPasswordEditText);
         agree_checkbox = findViewById(R.id.agree_checkbox);
         checkBox = findViewById(R.id.checkbox);
-        //userNameEditText.setText(sharedPreferences.getString("userName",""));
-        //userPasswordEditText.setText(sharedPreferences.getString("password",""));
-
-
-
 
         initializeQuickBlox();
         setLoginButton();
@@ -137,17 +118,11 @@ public class SignIn extends AppCompatActivity {
                 editor.putString("user",User);
                 editor.putString("password",Password);
                 editor.putBoolean("hasLoggedIn", true);
-
                 editor.putString("App_User","Simple_Login");
                 editor.commit();
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
-                Intent intent=new Intent(getApplicationContext(),Home2.class);
-//            intent.putExtra("user",User);
-//            intent.putExtra("password",Password);
-                startActivity(intent);
-
-
+                getProfileById(qbUser.getId().toString());
 
             }
 
@@ -159,6 +134,40 @@ public class SignIn extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),e.getMessage(),
                         Toast.LENGTH_LONG).show();
 
+            }
+        });
+
+    }
+
+
+    public void getProfileById(String id) {
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.eq("userId", id);
+        Performer<ArrayList<QBCustomObject>> performer =  QBCustomObjects.getObjects("Profile",requestBuilder);
+        performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+            @Override
+            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
+                if(qbCustomObjects.size()>0) {
+                    String id = qbCustomObjects.get(0).getCustomObjectId();
+                    HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
+                    Log.e("Check",fields.get("Interested_In").toString());
+                    Log.e("Check",fields.get("Gender").toString());
+                    editor.putString("Interested_In",fields.get("Interested_In").toString());
+                    editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
+                    editor.commit();
+                    Intent intent=new Intent(getApplicationContext(),Home2.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e("TAG","checking");
+                editor.putString("Interested_In","");
+                editor.putString("Profile_Id","");
+                editor.commit();
+                Intent intent=new Intent(getApplicationContext(),Home2.class);
+                startActivity(intent);
             }
         });
 

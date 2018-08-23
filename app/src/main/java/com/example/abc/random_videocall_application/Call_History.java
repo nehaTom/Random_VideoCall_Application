@@ -20,14 +20,14 @@ import com.quickblox.chat.listeners.QBSystemMessageListener;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 
-public class Call_History extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener {
+public class Call_History extends AppCompatActivity implements QBSystemMessageListener, QBChatDialogMessageListener {
 
     RecyclerView CallHistory_RecyclerView;
     LinearLayoutManager layoutManager;
     ExistingUser_Card_Adapter adapter;
 
-    ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white,logout;
+    ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
+            chatList_white, contact_white, logout;
     int[] images = {
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
@@ -50,7 +50,7 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
         setOnClicks();
         createSessionForChat();
         loadChatDialogs();
-        logout=findViewById(R.id.logout);
+        logout = findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,19 +59,16 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
         });
 
 
-
         /////////////////////
 
-        CallHistory_RecyclerView=findViewById(R.id.CallHistory_RecyclerView);
+        CallHistory_RecyclerView = findViewById(R.id.CallHistory_RecyclerView);
 
     }
 
-    private void setLogout()
-    {
-        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+    private void setLogout() {
+        LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
     }
-
 
 
     private void setData() {
@@ -97,7 +94,7 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
 //                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
@@ -151,14 +148,14 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
             }
         });
     }
-    private void setRecyclerView()
-    {
-        CallHistory_RecyclerView=findViewById(R.id.CallHistory_RecyclerView);
+
+    private void setRecyclerView() {
+        CallHistory_RecyclerView = findViewById(R.id.CallHistory_RecyclerView);
         // CallHistory_RecyclerView.setHasFixedSize(true);
-        layoutManager=new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         CallHistory_RecyclerView.setLayoutManager(layoutManager);
-        adapter = new ExistingUser_Card_Adapter(this,"Call_History",images);
+        adapter = new ExistingUser_Card_Adapter(this, "Call_History", images);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
         CallHistory_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
         CallHistory_RecyclerView.setAdapter(adapter);
@@ -191,8 +188,7 @@ public class Call_History extends AppCompatActivity implements QBSystemMessageLi
     }
 
 
-    private void loadChatDialogs()
-    {
+    private void loadChatDialogs() {
 
     }
 

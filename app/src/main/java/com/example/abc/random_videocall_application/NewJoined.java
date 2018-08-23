@@ -66,11 +66,11 @@ import com.quickblox.videochat.webrtc.QBRTCTypes;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class NewJoined extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
+public class NewJoined extends AppCompatActivity implements QBSystemMessageListener, QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
 
     GridView androidGridView;
-    ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white,logout;
+    ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
+            chatList_white, contact_white, logout;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     boolean doubleBackToExitPressedOnce = false;
@@ -90,7 +90,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -117,16 +117,15 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
     }
 
-    private void createSessionForChat()
-    {
+    private void createSessionForChat() {
         ProgressDialog mDialog = new ProgressDialog(this);
         mDialog.setMessage("Please waiting....");
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
 
-        String user,password;
-        user=sharedPreferences.getString("user","");
-        password=sharedPreferences.getString("password","");
+        String user, password;
+        user = sharedPreferences.getString("user", "");
+        password = sharedPreferences.getString("password", "");
 
 
         ///Load All User and save cache
@@ -143,7 +142,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         });
 
 
-        final QBUser qbUser=new QBUser(user,password);
+        final QBUser qbUser = new QBUser(user, password);
         QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
             @Override
             public void onSuccess(QBSession qbSession, Bundle bundle) {
@@ -160,10 +159,10 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
                         mDialog.dismiss();
 
-                        QBSystemMessagesManager qbSystemMessagesManager=QBChatService.getInstance().getSystemMessagesManager();
+                        QBSystemMessagesManager qbSystemMessagesManager = QBChatService.getInstance().getSystemMessagesManager();
                         qbSystemMessagesManager.addSystemMessageListener(NewJoined.this);
 
-                        QBIncomingMessagesManager qbIncomingMessagesManager= QBChatService.getInstance().getIncomingMessagesManager();
+                        QBIncomingMessagesManager qbIncomingMessagesManager = QBChatService.getInstance().getIncomingMessagesManager();
                         qbIncomingMessagesManager.addDialogMessageListener(NewJoined.this);
                     }
 
@@ -255,20 +254,15 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             }
         });
     }
-    private void setGridView()
-    {
+
+    private void setGridView() {
 
         getUserList();
 
     }
 
 
-
-
-
-
-    private void getUserList()
-    {
+    private void getUserList() {
         QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
         pagedRequestBuilder.setPage(1);
         pagedRequestBuilder.setPerPage(100);
@@ -276,12 +270,12 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         Bundle params = new Bundle();
 
 
-        if(dbManager.getAllUsers().size()<=0) {
+        if (dbManager.getAllUsers().size() <= 0) {
             QBUsers.getUsers(pagedRequestBuilder, params).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
                 @Override
                 public void onSuccess(ArrayList<QBUser> users, Bundle params) {
                     Log.e("Users: ", users.toString());
-                    dbManager.saveAllUsers(users,true);
+                    dbManager.saveAllUsers(users, true);
                     manupulateUserList();
 
                 }
@@ -291,7 +285,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
                 }
             });
-        }else {
+        } else {
             manupulateUserList();
         }
     }
@@ -321,7 +315,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedUser = qbUserWithoutCurrent.get(position);
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(),view);
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
                 popupMenu.getMenuInflater().inflate(R.menu.grid_menu,
                         popupMenu.getMenu());
                 popupMenu
@@ -357,7 +351,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         });
     }
 
-    private void onClickChatIcon(){
+    private void onClickChatIcon() {
 
         final ProgressDialog mDialog = new ProgressDialog(NewJoined.this);
         mDialog.setMessage("Loading...");
@@ -365,7 +359,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         mDialog.show();
 
         String SenderName = selectedUser.getFullName();
-        editor.putString("SenderName",SenderName);
+        editor.putString("SenderName", SenderName);
         editor.commit();
         QBChatDialog dialog = DialogUtils.buildPrivateDialog(selectedUser.getId());
 
@@ -374,9 +368,9 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
                 mDialog.dismiss();
 
-                Intent intent=new Intent(getApplication(),ChatMessage.class);
-                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
-                intent.putExtra("Activity_Name","List_User");
+                Intent intent = new Intent(getApplication(), ChatMessage.class);
+                intent.putExtra(Common.DIALOG_EXTRA, qbChatDialog);
+                intent.putExtra("Activity_Name", "List_User");
                 startActivity(intent);
 
                 finish();
@@ -384,7 +378,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
             @Override
             public void onError(QBResponseException e) {
-                Log.e("ERROR", ""+e.getMessage());
+                Log.e("ERROR", "" + e.getMessage());
                 mDialog.dismiss();
             }
         });
@@ -410,15 +404,14 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
 
     }
 
 
-    private void setAddMob()
-    {
+    private void setAddMob() {
         AdView mAdView;
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
@@ -476,7 +469,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
     }
 
-    public void videoCallfunction(){
+    public void videoCallfunction() {
         if (isLoggedInChat()) {
             startCall(true);
         }
@@ -484,9 +477,11 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             startPermissionsActivity(false);
         }
     }
+
     private void startPermissionsActivity(boolean checkOnlyAudio) {
         PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
     }
+
     private void startCall(boolean isVideoCall) {
 
         int idValue = selectedUser.getId();
@@ -506,6 +501,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
         CallActivity.start(this, false);
     }
+
     private boolean isLoggedInChat() {
         if (!QBChatService.getInstance().isLoggedIn()) {
             Toaster.shortToast(R.string.dlg_signal_error);
@@ -514,6 +510,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         }
         return true;
     }
+
     private void tryReLoginToChat() {
         if (sharedPrefsHelper.hasQbUser()) {
             QBUser qbUser = sharedPrefsHelper.getQbUser();

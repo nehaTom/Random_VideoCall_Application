@@ -61,7 +61,7 @@ public class ChatMessage extends AppCompatActivity {
     EditText editContent;
     ChatMessageAdapter adapter;
     DotLoader dotLoader;
-    TextView userName,date;
+    TextView userName, date;
     ImageView BackArrow;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -135,7 +135,7 @@ public class ChatMessage extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
 
-        date=findViewById(R.id.date);
+        date = findViewById(R.id.date);
 //        createSessionForFacebook();
         initView();
         initChatDialogs();
@@ -157,13 +157,7 @@ public class ChatMessage extends AppCompatActivity {
 //            }
 
 
-
-
-
-
-
-
-        BackArrow=findViewById(R.id.BackArrow);
+        BackArrow = findViewById(R.id.BackArrow);
         BackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,64 +166,63 @@ public class ChatMessage extends AppCompatActivity {
         });
 
 
-
         submitButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
 
             public void onClick(View v) {
                 if (!editContent.getText().toString().isEmpty()) {
-                   //
-                        QBChatMessage chatMessage = new QBChatMessage();
-                        chatMessage.setBody(editContent.getText().toString());
-                        chatMessage.setSenderId(QBChatService.getInstance().getUser().getId());
-                        chatMessage.setSaveToHistory(true);
+                    //
+                    QBChatMessage chatMessage = new QBChatMessage();
+                    chatMessage.setBody(editContent.getText().toString());
+                    chatMessage.setSenderId(QBChatService.getInstance().getUser().getId());
+                    chatMessage.setSaveToHistory(true);
 
                     chatMessage.setDateSent(Calendar.getInstance().getTime().getTime());
                     Log.e("SysT", String.valueOf(Calendar.getInstance().getTime()));
                     chatMessage.setMarkable(true);
-                        try {
-                            qbChatDialog.sendMessage(chatMessage);
-                        } catch (SmackException.NotConnectedException e) {
-                            e.printStackTrace();
-                        }
-                        //// put messages to cache
-                        QBChatMessagesHolder.getInstance().putMessage(qbChatDialog.getDialogId(), chatMessage);
-                        ArrayList<QBChatMessage> messages = QBChatMessagesHolder.getInstance().getChatMessgesByDilogId(qbChatDialog.getDialogId());
-                        adapter = new ChatMessageAdapter(getBaseContext(), messages);
-                        lstChatMessages.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                        //setUserName();
-
-                        ///// Removetext from edit text
-                        editContent.setText(" ");
-                        editContent.setFocusable(true);
-                    } else {
-                        final ProgressDialog updateDialog = new ProgressDialog(ChatMessage.this);
-                        updateDialog.setMessage("Plese wait....");
-                        updateDialog.show();
-                        QBMessageUpdateBuilder messageUpdateBuilder = new QBMessageUpdateBuilder();
-                        messageUpdateBuilder.updateText(editContent.getText().toString()).markDelivered().markRead();
-
-                        QBRestChatService.updateMessage(editMessage.getId(), qbChatDialog.getDialogId(), messageUpdateBuilder).performAsync(new QBEntityCallback<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid, Bundle bundle) {
-                                //// Refresh data
-                                retrieveAllMessages();
-                                isEditMode = false;
-                                updateDialog.dismiss();
-
-                            }
-
-                            @Override
-                            public void onError(QBResponseException e) {
-                                Toast.makeText(getBaseContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    try {
+                        qbChatDialog.sendMessage(chatMessage);
+                    } catch (SmackException.NotConnectedException e) {
+                        e.printStackTrace();
                     }
+                    //// put messages to cache
+                    QBChatMessagesHolder.getInstance().putMessage(qbChatDialog.getDialogId(), chatMessage);
+                    ArrayList<QBChatMessage> messages = QBChatMessagesHolder.getInstance().getChatMessgesByDilogId(qbChatDialog.getDialogId());
+                    adapter = new ChatMessageAdapter(getBaseContext(), messages);
+                    lstChatMessages.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    //setUserName();
 
+                    ///// Removetext from edit text
+                    editContent.setText(" ");
+                    editContent.setFocusable(true);
+                } else {
+                    final ProgressDialog updateDialog = new ProgressDialog(ChatMessage.this);
+                    updateDialog.setMessage("Plese wait....");
+                    updateDialog.show();
+                    QBMessageUpdateBuilder messageUpdateBuilder = new QBMessageUpdateBuilder();
+                    messageUpdateBuilder.updateText(editContent.getText().toString()).markDelivered().markRead();
+
+                    QBRestChatService.updateMessage(editMessage.getId(), qbChatDialog.getDialogId(), messageUpdateBuilder).performAsync(new QBEntityCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid, Bundle bundle) {
+                            //// Refresh data
+                            retrieveAllMessages();
+                            isEditMode = false;
+                            updateDialog.dismiss();
+
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+                            Toast.makeText(getBaseContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-          //  }
+
+            }
+            //  }
 
         });
     }
@@ -243,34 +236,29 @@ public class ChatMessage extends AppCompatActivity {
     }
 
 
-    private void setBackArrow()
-    {
-        Intent intent=getIntent();
-        String Activity_Name =intent.getStringExtra("Activity_Name");
-        if(Activity_Name.equals("Chat_Dialog"))
-        {
-            intent =new Intent(this,ChatDialogsActivity.class);
+    private void setBackArrow() {
+        Intent intent = getIntent();
+        String Activity_Name = intent.getStringExtra("Activity_Name");
+        if (Activity_Name.equals("Chat_Dialog")) {
+            intent = new Intent(this, ChatDialogsActivity.class);
             startActivity(intent);
-        }
-        else if (Activity_Name.equals("List_User"))
-        {
-            intent =new Intent(this,list_user_activity.class);
+        } else if (Activity_Name.equals("List_User")) {
+            intent = new Intent(this, list_user_activity.class);
             startActivity(intent);
         }
 
 
     }
 
-    private void setUserName()
-    {
-        userName=findViewById(R.id.userName);
-        String SenderName=  sharedPreferences.getString("SenderName","");
+    private void setUserName() {
+        userName = findViewById(R.id.userName);
+        String SenderName = sharedPreferences.getString("SenderName", "");
         userName.setText(SenderName);
     }
 
 
     private void initView() {
-        dotLoader=findViewById(R.id.dot_loader);
+        dotLoader = findViewById(R.id.dot_loader);
         lstChatMessages = findViewById(R.id.list_of_messages);
         submitButton = findViewById(R.id.send_button);
         editContent = findViewById(R.id.edit_content);
@@ -287,15 +275,13 @@ public class ChatMessage extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 try {
                     qbChatDialog.sendStopTypingNotification();
                 } catch (XMPPException e) {
@@ -382,10 +368,9 @@ public class ChatMessage extends AppCompatActivity {
     }
 
     private void reisterTypingForChatDialog(QBChatDialog qbChatDialog) {
-        QBChatDialogTypingListener typingListener= new QBChatDialogTypingListener() {
+        QBChatDialogTypingListener typingListener = new QBChatDialogTypingListener() {
             @Override
-            public void processUserIsTyping(String dialogId, Integer integer)
-            {
+            public void processUserIsTyping(String dialogId, Integer integer) {
                 if (dotLoader.getVisibility() != View.VISIBLE)
                     dotLoader.setVisibility(View.INVISIBLE);
             }
@@ -403,18 +388,15 @@ public class ChatMessage extends AppCompatActivity {
     }
 
 
-
-    private void retrieveAllMessages()
-    {
+    private void retrieveAllMessages() {
         QBMessageGetBuilder messageGetBuilder = new QBMessageGetBuilder();
         messageGetBuilder.setLimit(500);
-        if (qbChatDialog != null)
-        {
-            QBRestChatService.getDialogMessages(qbChatDialog,messageGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBChatMessage>>() {
+        if (qbChatDialog != null) {
+            QBRestChatService.getDialogMessages(qbChatDialog, messageGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBChatMessage>>() {
                 @Override
                 public void onSuccess(ArrayList<QBChatMessage> qbChatMessages, Bundle bundle) {
-                    QBChatMessagesHolder.getInstance().putMessage(qbChatDialog.getDialogId(),qbChatMessages);
-                    adapter = new ChatMessageAdapter(getBaseContext(),qbChatMessages);
+                    QBChatMessagesHolder.getInstance().putMessage(qbChatDialog.getDialogId(), qbChatMessages);
+                    adapter = new ChatMessageAdapter(getBaseContext(), qbChatMessages);
                     lstChatMessages.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
@@ -428,7 +410,7 @@ public class ChatMessage extends AppCompatActivity {
         }
     }
 
-  //  private void createSessionForFacebook()
+    //  private void createSessionForFacebook()
 //    { String Provider =sharedPreferences.getString("Facebook","");
 //        final QBUser qbUser=new QBUser(Provider);
 //        QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
@@ -465,8 +447,7 @@ public class ChatMessage extends AppCompatActivity {
 //    }
 
     @Override
-    public void onBackPressed()
-    {
-return;
+    public void onBackPressed() {
+        return;
     }
 }

@@ -32,9 +32,9 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
     RecyclerView Existing_RecyclerView;
     LinearLayoutManager layoutManager;
     ExistingUser_Card_Adapter adapter;
-    ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white,logout;
-    SharedPrefsHelper  sharedPrefsHelper;
+    ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
+            chatList_white, contact_white, logout;
+    SharedPrefsHelper sharedPrefsHelper;
 
     boolean doubleBackToExitPressedOnce = false;
     int[] images = {
@@ -44,7 +44,8 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background
     };
-//    Footer footer=new Footer();
+
+    //    Footer footer=new Footer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -80,7 +81,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void setLogout() {
-        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+        LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
 
     }
@@ -157,18 +158,17 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-        private void setRecyclerView ()
-        {
-            Existing_RecyclerView = findViewById(R.id.Existing_RecyclerView);
+    private void setRecyclerView() {
+        Existing_RecyclerView = findViewById(R.id.Existing_RecyclerView);
 //        Existing_RecyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(this);
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            Existing_RecyclerView.setLayoutManager(layoutManager);
-            adapter = new ExistingUser_Card_Adapter(this, "My_Contact", images);
-            int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
-            Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
-            Existing_RecyclerView.setAdapter(adapter);
-        }
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        Existing_RecyclerView.setLayoutManager(layoutManager);
+        adapter = new ExistingUser_Card_Adapter(this, "My_Contact", images);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
+        Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
+        Existing_RecyclerView.setAdapter(adapter);
+    }
 
     @Override
     public void onBackPressed() {
@@ -190,13 +190,13 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
 
     }
-    private void setAddMob()
-    {
+
+    private void setAddMob() {
         AdView mAdView;
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
@@ -261,7 +261,6 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
 }

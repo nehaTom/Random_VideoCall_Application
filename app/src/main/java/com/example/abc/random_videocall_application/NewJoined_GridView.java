@@ -52,12 +52,12 @@ class NewJoined_GridView extends BaseAdapter {
             CircleImageView profile_image = (CircleImageView) gridViewAndroid.findViewById(R.id.profile_image);
             String[] names = new String[qbUserWithoutCurrent.size()];
 //            for( i = 0;i<qbUserWithoutCurrent.size();i++) {
-                QBUser qbUser = new QBUser();
-                qbUser = qbUserWithoutCurrent.get(i);
-                names[i] = qbUser.getFullName();
-                name.setText(names[i]);
+            QBUser qbUser = new QBUser();
+            qbUser = qbUserWithoutCurrent.get(i);
+            names[i] = qbUser.getFullName();
+            name.setText(names[i]);
 
-                //uploadphoto.setImageDrawable(roundedBitmapDrawable);
+            //uploadphoto.setImageDrawable(roundedBitmapDrawable);
             profile_image.setImageResource(R.drawable.profile);
         } else {
             gridViewAndroid = (View) convertView;

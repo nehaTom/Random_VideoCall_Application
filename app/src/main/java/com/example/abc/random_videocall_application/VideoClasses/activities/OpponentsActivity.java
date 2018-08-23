@@ -9,10 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.example.abc.random_videocall_application.Home;
+import com.example.abc.random_videocall_application.Home2;
 import com.example.abc.random_videocall_application.R;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.example.abc.random_videocall_application.VideoClasses.Toaster;
@@ -66,7 +65,7 @@ public class OpponentsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(getApplicationContext(), Home.class);
+        Intent intent = new Intent(getApplicationContext(), Home2.class);
         startActivity(intent);
     }
     @Override

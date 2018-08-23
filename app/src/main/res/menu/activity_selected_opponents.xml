@@ -5,21 +5,21 @@
 
     <item
         android:id="@+id/start_video_call"
-        android:title="@string/action_start_video_call"
         android:icon="@drawable/video"
+        android:title="@string/action_start_video_call"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/start_audio_call"
-        android:title="Call"
         android:icon="@drawable/call"
+        android:title="Call"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/start_chat"
-        android:title="Message"
         android:icon="@drawable/chat"
+        android:title="Message"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 

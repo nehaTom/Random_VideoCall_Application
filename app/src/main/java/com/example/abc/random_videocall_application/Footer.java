@@ -35,7 +35,7 @@ public class Footer extends AppCompatActivity {
             public void onClick(View v) {
                 home.setBackgroundColor(Color.parseColor("#ffffff"));
                 home.setImageResource(R.drawable.home);
-                Intent intent = new Intent(getApplication(), Home.class);
+                Intent intent = new Intent(getApplication(), Home2.class);
                 startActivity(intent);
             }
         });
@@ -43,7 +43,7 @@ public class Footer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 newUser.setBackgroundColor(Color.parseColor("#ffffff"));
-                newUser.setImageResource(R.drawable.newlyadded);
+                newUser.setImageResource(R.drawable.adduser);
                 Intent intent = new Intent(getApplication(), NewJoined.class);
                 startActivity(intent);
             }
@@ -53,7 +53,7 @@ public class Footer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 existingUser.setBackgroundColor(Color.parseColor("#ffffff"));
-                existingUser.setImageResource(R.drawable.existinguser);
+                existingUser.setImageResource(R.drawable.checkeduser);
                 Intent intent = new Intent(getApplication(), Existing_User.class);
                 startActivity(intent);
             }
@@ -71,7 +71,7 @@ public class Footer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 contact.setBackgroundColor(Color.parseColor("#ffffff"));
-                contact.setImageResource(R.drawable.contacts);
+                contact.setImageResource(R.drawable.mycontacts);
                 Intent intent = new Intent(getApplication(), My_Contacts.class);
                 startActivity(intent);
             }

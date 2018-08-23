@@ -16,37 +16,33 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 //s
 
-class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_Adapter.MyViewHolder>{
+class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_Adapter.MyViewHolder> {
 
     private final Context context;
     private final int[] images;
     private final String fromWhere;
-    private  String[] names = null;
+    private String[] names = null;
 
-    public ExistingUser_Card_Adapter(Context context,String fromWhere, int[] images)
-    {
-        this.context=context;
-        this.fromWhere=fromWhere;
-        this.images=images;
+    public ExistingUser_Card_Adapter(Context context, String fromWhere, int[] images) {
+        this.context = context;
+        this.fromWhere = fromWhere;
+        this.images = images;
     }
 
-    public ExistingUser_Card_Adapter(Context context,String fromWhere,String[]names, int[] images)
-    {
-        this.context=context;
-        this.fromWhere=fromWhere;
-        this.images=images;
+    public ExistingUser_Card_Adapter(Context context, String fromWhere, String[] names, int[] images) {
+        this.context = context;
+        this.fromWhere = fromWhere;
+        this.images = images;
         this.names = names;
     }
 
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profile_image;
-        TextView name, User_chitchat, History_chitchat,History_time;
-        ImageView User_video,User_call,User_chat,User_fav;
+        TextView name, User_chitchat, History_chitchat, History_time;
+        ImageView User_video, User_call, User_chat, User_fav;
         SharedPreferences sharedPreferences;
         SharedPreferences.Editor editor;
-
 
 
         public MyViewHolder(final View itemView) {
@@ -92,7 +88,7 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
                 @Override
                 public void onClick(View v) {
 
-                    String tagValve=User_fav.getTag().toString();
+                    String tagValve = User_fav.getTag().toString();
                     if (tagValve.equals("filled")) {
                         User_fav.setBackgroundResource(R.drawable.heart);
                         User_fav.setTag("blank");
@@ -105,7 +101,8 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
                         //isFavourite = false;
                         //saveState(isFavourite);
 
-                    }}
+                    }
+                }
             });
 
 //
@@ -136,8 +133,7 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
                 User_call.setVisibility(View.GONE);
                 User_chat.setVisibility(View.GONE);
                 User_video.setVisibility(View.GONE);
-            } else if (fromWhere.equals("My_Contact"))
-            {
+            } else if (fromWhere.equals("My_Contact")) {
                 profile_image.setVisibility(View.GONE);
                 name.setVisibility(View.GONE);
                 User_chitchat.setVisibility(View.GONE);
@@ -153,25 +149,23 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
 
         }
     }
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
-    {
-        View view;
-        LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-      view = inflater.inflate(R.layout.existing_joined_card, null);
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        view = inflater.inflate(R.layout.existing_joined_card, null);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
     }
 
 
-
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int i)
-    {
+    public void onBindViewHolder(MyViewHolder holder, int i) {
 
         holder.profile_image.setImageResource(images[i]);
-        if(fromWhere.equalsIgnoreCase("Existing_User")){
+        if (fromWhere.equalsIgnoreCase("Existing_User")) {
             holder.name.setText(names[i]);
         }
 //        holder.name.setText();
@@ -179,14 +173,11 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
     }
 
 
-
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
 
         return images.length;
     }
-
 
 
 }

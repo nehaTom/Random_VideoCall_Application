@@ -2,17 +2,14 @@ package com.example.abc.random_videocall_application;
 
 import android.os.Bundle;
 
-public class QBUnreadMessageHolder
-{
+public class QBUnreadMessageHolder {
     private static QBUnreadMessageHolder instance;
     private Bundle bundle;
 
-    public static synchronized QBUnreadMessageHolder getInstance()
-    {
+    public static synchronized QBUnreadMessageHolder getInstance() {
         QBUnreadMessageHolder qbUnreadMessageHolder;
-        synchronized (QBUnreadMessageHolder.class)
-        {
-            if(instance==null)
+        synchronized (QBUnreadMessageHolder.class) {
+            if (instance == null)
                 instance = new QBUnreadMessageHolder();
             qbUnreadMessageHolder = instance;
 
@@ -20,23 +17,19 @@ public class QBUnreadMessageHolder
         return qbUnreadMessageHolder;
     }
 
-private QBUnreadMessageHolder()
-{
-     bundle= new Bundle();
-}
+    private QBUnreadMessageHolder() {
+        bundle = new Bundle();
+    }
 
-public void setBundle(Bundle bundle)
-{
-    this.bundle = bundle;
-}
+    public void setBundle(Bundle bundle) {
+        this.bundle = bundle;
+    }
 
-public Bundle getBundle()
-{
-    return this.bundle;
-}
+    public Bundle getBundle() {
+        return this.bundle;
+    }
 
-public int getUnreadMessageByDialogId(String id)
-{
-    return this.bundle.getInt(id);
-}
+    public int getUnreadMessageByDialogId(String id) {
+        return this.bundle.getInt(id);
+    }
 }
