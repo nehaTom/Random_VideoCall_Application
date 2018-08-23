@@ -51,26 +51,26 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMessageListener,QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
+public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMessageListener, QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
     ListView lstChatDialogs;
-    ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
-            chatList_white, contact_white,logout;
+    ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
+            chatList_white, contact_white, logout;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     SharedPrefsHelper sharedPrefsHelper;
 
     boolean doubleBackToExitPressedOnce = false;
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.chat_dialog_context_menu,menu);
+        getMenuInflater().inflate(R.menu.chat_dialog_context_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.context_delete_dialog:
                 deleteDialog(info.position);
                 break;
@@ -78,17 +78,16 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         return true;
     }
 
-    private void deleteDialog(int index)
-    {
+    private void deleteDialog(int index) {
         ProgressDialog deleteDialog = new ProgressDialog(ChatDialogsActivity.this);
         deleteDialog.setMessage("Plese wait....");
         deleteDialog.show();
-        QBChatDialog chatDialog=(QBChatDialog)lstChatDialogs.getAdapter().getItem(index);
-        QBRestChatService.deleteDialog(chatDialog.getDialogId(),false).performAsync(new QBEntityCallback<Void>() {
+        QBChatDialog chatDialog = (QBChatDialog) lstChatDialogs.getAdapter().getItem(index);
+        QBRestChatService.deleteDialog(chatDialog.getDialogId(), false).performAsync(new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 QBChatDialogHolder.getInstance().removeDialog(chatDialog.getDialogId());
-                ChatDialogsAdapters adapters= new ChatDialogsAdapters(getBaseContext(),QBChatDialogHolder.getInstance().getAllChatDialogs());
+                ChatDialogsAdapters adapters = new ChatDialogsAdapters(getBaseContext(), QBChatDialogHolder.getInstance().getAllChatDialogs());
                 lstChatDialogs.setAdapter(adapters);
                 adapters.notifyDataSetChanged();
                 loadChatDialogs();
@@ -129,27 +128,27 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        lstChatDialogs=(ListView)findViewById(R.id.lstChatDialogs);
+        lstChatDialogs = (ListView) findViewById(R.id.lstChatDialogs);
         registerForContextMenu(lstChatDialogs);
         lstChatDialogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                QBChatDialog qbChatDialog= (QBChatDialog) lstChatDialogs.getAdapter().getItem(position);
-                String Sender_Name=qbChatDialog.getName();
-                editor.putString("SenderName",Sender_Name);
+                QBChatDialog qbChatDialog = (QBChatDialog) lstChatDialogs.getAdapter().getItem(position);
+                String Sender_Name = qbChatDialog.getName();
+                editor.putString("SenderName", Sender_Name);
                 editor.commit();
 
-                Intent intent=new Intent(ChatDialogsActivity.this,ChatMessage.class);
+                Intent intent = new Intent(ChatDialogsActivity.this, ChatMessage.class);
 
-                intent.putExtra(Common.DIALOG_EXTRA,qbChatDialog);
+                intent.putExtra(Common.DIALOG_EXTRA, qbChatDialog);
 
-                intent.putExtra("Activity_Name","Chat_Dialog");
+                intent.putExtra("Activity_Name", "Chat_Dialog");
                 startActivity(intent);
 
             }
@@ -157,14 +156,13 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
 
     }
-    private void setLogout()
-    {
-        LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
+
+    private void setLogout() {
+        LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
     }
 
-    private void setAddMob()
-    {
+    private void setAddMob() {
         AdView mAdView;
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
@@ -203,16 +201,15 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
     }
 
 
-    private void createSessionForChat()
-    {
+    private void createSessionForChat() {
         ProgressDialog mDialog = new ProgressDialog(this);
         mDialog.setMessage("Please waiting....");
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
 
-        String user,password;
-        user=sharedPreferences.getString("user","");
-        password=sharedPreferences.getString("password","");
+        String user, password;
+        user = sharedPreferences.getString("user", "");
+        password = sharedPreferences.getString("password", "");
 
 
         ///Load All User and save cache
@@ -229,7 +226,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         });
 
 
-        final QBUser qbUser=new QBUser(user,password);
+        final QBUser qbUser = new QBUser(user, password);
         QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
             @Override
             public void onSuccess(QBSession qbSession, Bundle bundle) {
@@ -246,10 +243,10 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
                         mDialog.dismiss();
 
-                        QBSystemMessagesManager qbSystemMessagesManager=QBChatService.getInstance().getSystemMessagesManager();
+                        QBSystemMessagesManager qbSystemMessagesManager = QBChatService.getInstance().getSystemMessagesManager();
                         qbSystemMessagesManager.addSystemMessageListener(ChatDialogsActivity.this);
 
-                        QBIncomingMessagesManager qbIncomingMessagesManager= QBChatService.getInstance().getIncomingMessagesManager();
+                        QBIncomingMessagesManager qbIncomingMessagesManager = QBChatService.getInstance().getIncomingMessagesManager();
                         qbIncomingMessagesManager.addDialogMessageListener(ChatDialogsActivity.this);
                     }
 
@@ -273,25 +270,23 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         loadChatDialogs();
     }
 
-    private void loadChatDialogs()
-    {
+    private void loadChatDialogs() {
         ProgressDialog loadChatdialog = new ProgressDialog(ChatDialogsActivity.this);
         loadChatdialog.setMessage("Plese wait....");
         loadChatdialog.show();
-        QBRequestGetBuilder requestGetBuilder=new QBRequestGetBuilder();
+        QBRequestGetBuilder requestGetBuilder = new QBRequestGetBuilder();
         requestGetBuilder.setLimit(100);
 
-        QBRestChatService.getChatDialogs(null,requestGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBChatDialog>>() {
+        QBRestChatService.getChatDialogs(null, requestGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBChatDialog>>() {
             @Override
-            public void onSuccess(final ArrayList<QBChatDialog> qbChatDialogs, Bundle bundle)
-            {
+            public void onSuccess(final ArrayList<QBChatDialog> qbChatDialogs, Bundle bundle) {
 
 //                ChatDialogsAdapters adapters=new ChatDialogsAdapters(getBaseContext(),qbChatDialogs);
 //                adapters.notifyDataSetChanged();
 
                 /// Unread Settings
                 Set<String> setIds = new HashSet<>();
-                for (QBChatDialog chatDialog:qbChatDialogs)
+                for (QBChatDialog chatDialog : qbChatDialogs)
                     setIds.add(chatDialog.getDialogId());
 
 
@@ -306,10 +301,11 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
                         /// Refresh List Dialog
 
 //                        ChatDialogsAdapters adapters = new ChatDialogsAdapters(getBaseContext(),QBChatDialogHolder.getInstance().getAllChatDialogs());
-                        ChatDialogsAdapters adapters = new ChatDialogsAdapters(getBaseContext(),qbChatDialogs);
+                        ChatDialogsAdapters adapters = new ChatDialogsAdapters(getBaseContext(), qbChatDialogs);
                         lstChatDialogs.setAdapter((adapters));
                         adapters.notifyDataSetChanged();
-                        loadChatdialog.dismiss();                   }
+                        loadChatdialog.dismiss();
+                    }
 
                     @Override
                     public void onError(QBResponseException e) {
@@ -321,7 +317,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
             @Override
             public void onError(QBResponseException e) {
 
-                Log.e("error",e.getMessage());
+                Log.e("error", e.getMessage());
             }
         });
     }
@@ -427,6 +423,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
             }
         });
     }
+
     @Override
     public void onBackPressed() {
 
@@ -447,11 +444,12 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
 
     }
+
     //--------------------------------------------------------------
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

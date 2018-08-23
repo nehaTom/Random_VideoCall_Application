@@ -21,11 +21,11 @@ import java.util.Map;
 
 public class VolleyAPICallJsonObject {
 
-    String JsonURL ;
+    String JsonURL;
     Context context;
     RequestQueue requestQueue;
     private Map<String, String> header;
-    SharedPreferences sharedpreferences ;
+    SharedPreferences sharedpreferences;
 
     public VolleyAPICallJsonObject(Context context, String JsonURL) {
         this.JsonURL = JsonURL;
@@ -49,31 +49,30 @@ public class VolleyAPICallJsonObject {
     }
 
     public void executeRequest(int method, final VolleyAPICallJsonObject.VolleyCallback callback) {
-        Log.e("info",(new JSONObject(header)).toString());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, JsonURL,new JSONObject(header), new Response.Listener<JSONObject>() {
+        Log.e("info", (new JSONObject(header)).toString());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, JsonURL, new JSONObject(header), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                  callback.getResponse(response);
+                callback.getResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                  Log.e("ONI","INSIDE ERROR CALLBACK");
+                Log.e("ONI", "INSIDE ERROR CALLBACK");
                 callback.getError(error);
             }
-        }){
+        }) {
 
-                @Override
-                public Map<String, String> getHeaders() {
+            @Override
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> headers1 = new HashMap<String, String>();
                 headers1.put("Content-Type", "application/json; charset=utf-8");
-               // headers1.put("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+                // headers1.put("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 
                 return headers1;
             }
- 
-        }
-        ;
+
+        };
 
         requestQueue.add(jsonObjectRequest);
 
@@ -108,6 +107,7 @@ public class VolleyAPICallJsonObject {
 
     public interface VolleyCallback {
         public void getResponse(JSONObject response);
+
         public void getError(VolleyError error);
     }
 }

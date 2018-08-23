@@ -36,9 +36,9 @@
         android:layout_marginStart="@dimen/element_fragment_margin"
         android:background="@drawable/call_cam_toggle_background"
         android:checked="true"
-        android:visibility="gone"
         android:textOff=""
-        android:textOn="" />
+        android:textOn=""
+        android:visibility="gone" />
 
     <ToggleButton
         android:id="@+id/toggle_speaker"
@@ -49,8 +49,8 @@
         android:layout_marginStart="@dimen/element_fragment_margin"
         android:background="@drawable/call_speaker_toggle_background"
         android:checked="true"
-        android:visibility="gone"
         android:textOff=""
-        android:textOn="" />
+        android:textOn=""
+        android:visibility="gone" />
 
 </LinearLayout>

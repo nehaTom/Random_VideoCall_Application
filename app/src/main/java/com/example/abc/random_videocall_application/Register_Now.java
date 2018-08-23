@@ -54,25 +54,26 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Register_Now extends AppCompatActivity {
-    RadioButton maleGender,femaleGender,otherGender;
+    RadioButton maleGender, femaleGender, otherGender;
     RadioGroup genderRadioGroup;
-    EditText nameEdit,mobileEdit,passwordEdit,birthEdit,emailEdit;
+    EditText nameEdit, mobileEdit, passwordEdit, birthEdit, emailEdit;
     Button registrationBtn;
     SharedPreferences sharedPreferences;
     ProgressDialog dialog;
     SharedPreferences.Editor editor;
     Map<String, String> header;
-    String name, mobile, password, birthday, gender,email;
+    String name, mobile, password, birthday, gender, email;
 
 //    static final String APP_ID="72648";
 //    static final String AUTH_KEY="5ZyyFJzKUdh2kjN";
 //    static final String AUTH_SECRET="wJaJMKJqqq5bznN";
 //    static final String ACCOUNT_KEY="jmDTjvqNm4zi2JfyrTYm";
 
-    static final String APP_ID="72405";
-    static final String AUTH_KEY="zCNmPJGEkrGyseU";
-    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
-    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
+    static final String APP_ID = "72405";
+    static final String AUTH_KEY = "zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET = "V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY = "qAx_5ERjtk6Fy_tBh1rs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,19 +84,18 @@ public class Register_Now extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        maleGender=findViewById(R.id.maleGender);
-        femaleGender =findViewById(R.id.femaleGender);
-        otherGender =findViewById(R.id.otherGender);
+        maleGender = findViewById(R.id.maleGender);
+        femaleGender = findViewById(R.id.femaleGender);
+        otherGender = findViewById(R.id.otherGender);
 
-        nameEdit =findViewById(R.id.nameEdit);
-        mobileEdit =findViewById(R.id.mobileEdit);
-        passwordEdit =findViewById(R.id.passwordEdit);
-        birthEdit =findViewById(R.id.birthEdit);
-        emailEdit=findViewById(R.id.emailEdit);
+        nameEdit = findViewById(R.id.nameEdit);
+        mobileEdit = findViewById(R.id.mobileEdit);
+        passwordEdit = findViewById(R.id.passwordEdit);
+        birthEdit = findViewById(R.id.birthEdit);
+        emailEdit = findViewById(R.id.emailEdit);
 
         initializeQuickBlox();
         registerQuickBlox();
-
 
 
         RadioGroup genderGroup = findViewById(R.id.genderRadioGroup);
@@ -129,8 +129,7 @@ public class Register_Now extends AppCompatActivity {
                 updateLabel();
             }
 
-            private void updateLabel()
-            {
+            private void updateLabel() {
                 String myFormat = "dd/MM/yy"; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
@@ -150,9 +149,6 @@ public class Register_Now extends AppCompatActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
-
-
 
 
         registrationBtn = findViewById(R.id.registrationBtn);
@@ -222,24 +218,19 @@ public class Register_Now extends AppCompatActivity {
     }
 
 
-
-
     private void quickBloxValidation()
 
     {
         dialog.show();
-
-//        RadioGroup genderGroup = findViewById(R.id.genderRadioGroup);
-//        String gender = genderGroup.getCheckedRadioButtonId();
         StringifyArrayList<String> Tag_Name = new StringifyArrayList<String>();
         Tag_Name.add("chatUser");
 
-        String Name= nameEdit.getText().toString().trim();
-        String  User =  emailEdit.getText().toString().trim();
-        String  Password =passwordEdit.getText().toString().trim();
-        String  birthday = birthEdit.getText().toString().trim();
+        String Name = nameEdit.getText().toString().trim();
+        String User = emailEdit.getText().toString().trim();
+        String Password = passwordEdit.getText().toString().trim();
+        String birthday = birthEdit.getText().toString().trim();
         String email = emailEdit.getText().toString().trim();
-        String  mobile = mobileEdit.getText().toString().trim();
+        String mobile = mobileEdit.getText().toString().trim();
 
         QBUser qbUser = new QBUser(User, Password);
         qbUser.setFullName(Name);
@@ -251,22 +242,22 @@ public class Register_Now extends AppCompatActivity {
 
 
                 saveUserData(qbUser);
-                Log.e("QuickBloxSuccess","Success");
+                Log.e("QuickBloxSuccess", "Success");
 
-                editor.putString("Full_Name",Name);
-               editor.putString("Gender",gender);
-                editor.putString("user",User);
-                editor.putString("password",Password);
-                editor.putString("Birthday",birthday);
-                editor.putString("Email",email);
-                editor.putString("Phone",mobile);
-                editor.putString("App_User","Simple_Login");
+                editor.putString("Full_Name", Name);
+                editor.putString("Gender", gender);
+                editor.putString("user", User);
+                editor.putString("password", Password);
+                editor.putString("Birthday", birthday);
+                editor.putString("Email", email);
+                editor.putString("Phone", mobile);
+                editor.putString("App_User", "Simple_Login");
                 editor.commit();
 
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
 
-                Intent i=new Intent(getApplicationContext(),Profile.class);
+                Intent i = new Intent(getApplicationContext(), Profile.class);
 
                 startActivity(i);
 
@@ -276,8 +267,8 @@ public class Register_Now extends AppCompatActivity {
             @Override
             public void onError(QBResponseException e) {
                 dialog.dismiss();
-                Log.e("QuickBlox_Error",e.getMessage());
-                Toast.makeText(getApplicationContext(),e.getMessage(),
+                Log.e("QuickBlox_Error", e.getMessage());
+                Toast.makeText(getApplicationContext(), e.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -321,13 +312,12 @@ public class Register_Now extends AppCompatActivity {
 
             @Override
             public void onError(QBResponseException e) {
-                Log.e("Error",e.getMessage());
+                Log.e("Error", e.getMessage());
             }
         });
     }
 
-    private void initializeQuickBlox()
-    {
+    private void initializeQuickBlox() {
         //
         QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
         // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);

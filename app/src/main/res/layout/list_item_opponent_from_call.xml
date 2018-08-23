@@ -13,8 +13,7 @@
             android:id="@+id/opponentView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            />
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/connectionStatus"
@@ -47,7 +46,7 @@
     <ProgressBar
         android:id="@+id/progress_bar_adapter"
         style="@style/MatchWidth"
-        android:visibility="visible"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="visible" />
 
 </FrameLayout>

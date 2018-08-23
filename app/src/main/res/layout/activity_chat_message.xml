@@ -92,14 +92,14 @@
         </ListView>
 
         <TextView
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/date"
-            android:text="Date"
-            android:textSize="@dimen/largeFont"
-            android:textColor="@color/black"
             android:layout_below="@+id/chatTool"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:text="Date"
+            android:textColor="@color/black"
+            android:textSize="@dimen/largeFont" />
 
         <com.bhargavms.dotloader.DotLoader
             android:id="@+id/dot_loader"

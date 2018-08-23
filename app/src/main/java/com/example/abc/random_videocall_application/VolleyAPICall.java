@@ -21,13 +21,13 @@ import java.util.Map;
  */
 
 public class VolleyAPICall {
-        String JsonURL ;
-        Context context;
-        RequestQueue requestQueue;
-        private Map<String, String> header;
-    SharedPreferences sharedpreferences ;
+    String JsonURL;
+    Context context;
+    RequestQueue requestQueue;
+    private Map<String, String> header;
+    SharedPreferences sharedpreferences;
 
-public VolleyAPICall(Context context, String JsonURL) {
+    public VolleyAPICall(Context context, String JsonURL) {
         this.JsonURL = JsonURL;
         this.context = context;
         requestQueue = Volley.newRequestQueue(context);
@@ -47,16 +47,16 @@ public VolleyAPICall(Context context, String JsonURL) {
 
 
     public void executeRequest(int method, final VolleyCallback callback, Response.ErrorListener errorListener) {
-        JSONArray array = new JSONArray() ;
+        JSONArray array = new JSONArray();
         try {
             array = new JSONArray(header);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("gdhg",array.toString()+"vhe");
+        Log.e("gdhg", array.toString() + "vhe");
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(method, JsonURL,array, new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(method, JsonURL, array, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 callback.getResponse(response);
@@ -65,23 +65,21 @@ public VolleyAPICall(Context context, String JsonURL) {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                  Log.e("ONI","INSIDE ERROR CALLBACK");
+                Log.e("ONI", "INSIDE ERROR CALLBACK");
             }
-        }){
+        }) {
 
 
             @Override
-            public Map<String, String> getHeaders()  {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> headers1 = new HashMap<String, String>();
                 headers1.put("Content-Type", "application/json; charset=utf-8; application/x-www-form-urlencoded");
-                headers1.put("X-CSRF-Token",sharedpreferences.getString("TOKEN",""));
+                headers1.put("X-CSRF-Token", sharedpreferences.getString("TOKEN", ""));
                 return headers1;
             }
 //        public String getBodyContentType() {
 //    return "application/x-www-form-urlencoded;" ;
-}
-
-        ;
+        };
         requestQueue.add(jsonArrayRequest);
 
     }

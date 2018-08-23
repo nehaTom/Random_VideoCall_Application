@@ -52,20 +52,20 @@ public class ChatMessageAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         View view = convertView;
-        if (convertView == null){
+        if (convertView == null) {
 
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             Log.d("myTag", " " + qbChatMessages.get(i).getSenderId());
             Log.d("myTag", " " + QBChatService.getInstance().getUser().getId());
 
-            if (qbChatMessages.get(i).getSenderId().equals(QBChatService.getInstance().getUser().getId())){
+            if (qbChatMessages.get(i).getSenderId().equals(QBChatService.getInstance().getUser().getId())) {
 
                 view = inflater.inflate(R.layout.list_send_message, null);
-                BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
-                TextView time=view.findViewById(R.id.time);
+                BubbleTextView bubbleTextView = (BubbleTextView) view.findViewById(R.id.message_content);
+                TextView time = view.findViewById(R.id.time);
                 bubbleTextView.setText(qbChatMessages.get(i).getBody());
-                long millis=qbChatMessages.get(i).getDateSent();
+                long millis = qbChatMessages.get(i).getDateSent();
                 //long s = millis % 60;
                 long m = (millis / 60) % 60;
                 long h = (millis / (60 * 60)) % 24;
@@ -74,21 +74,21 @@ public class ChatMessageAdapter extends BaseAdapter {
 
                 time.setText(hms);
                 time.setTextColor(Color.BLACK);
-                Log.e("time", String.valueOf(qbChatMessages.get(i).getDateSent()/1000));
+                Log.e("time", String.valueOf(qbChatMessages.get(i).getDateSent() / 1000));
 
             } else {
 
                 sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                 editor = sharedPreferences.edit();
                 view = inflater.inflate(R.layout.list_rec_message, null);
-                BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
-               TextView time=view.findViewById(R.id.time);
+                BubbleTextView bubbleTextView = (BubbleTextView) view.findViewById(R.id.message_content);
+                TextView time = view.findViewById(R.id.time);
                 bubbleTextView.setText(qbChatMessages.get(i).getBody());
-                TextView txtName = (TextView)view.findViewById(R.id.message_user);
+                TextView txtName = (TextView) view.findViewById(R.id.message_user);
                 txtName.setText(QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName());
-                time.setText(""+qbChatMessages.get(i).getDateSent());
+                time.setText("" + qbChatMessages.get(i).getDateSent());
                 time.setTextColor(Color.BLACK);
-                String SenderName= QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName();
+                String SenderName = QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName();
                 //editor.putString("SenderName",SenderName);
                 //editor.commit();
             }

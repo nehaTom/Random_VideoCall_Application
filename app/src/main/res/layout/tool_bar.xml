@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/home_toolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:orientation="vertical"
         android:background="@color/white"
-        >
+        android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,55 +19,55 @@
                 android:id="@+id/home_icon"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginBottom="4dp"
                 android:layout_alignParentLeft="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
-                android:scaleType="fitCenter"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/menu_white"
-                android:visibility="invisible"/>
+                android:scaleType="fitCenter"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="7dp"
                 android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
+                android:layout_marginBottom="7dp"
                 android:layout_marginTop="7dp"
-                android:text="Live Video Chat"
-                android:textStyle="italic"
+                android:gravity="center_horizontal"
                 android:scaleType="fitCenter"
+                android:text="Live Video Chat"
                 android:textColor="@color/white"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textStyle="italic" />
 
 
             <!--<ImageView-->
-                <!--android:id="@+id/search"-->
-                <!--android:layout_width="25dp"-->
-                <!--android:layout_height="25dp"-->
-                <!--android:layout_marginBottom="7dp"-->
-                <!--android:layout_marginLeft="30dp"-->
-                <!--android:layout_marginTop="7dp"-->
-                <!--android:layout_toRightOf="@id/app_name"-->
-                <!--android:background="@drawable/search"-->
-                <!--android:scaleType="fitCenter"-->
-                <!--android:visibility="gone"/>-->
+            <!--android:id="@+id/search"-->
+            <!--android:layout_width="25dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:layout_marginBottom="7dp"-->
+            <!--android:layout_marginLeft="30dp"-->
+            <!--android:layout_marginTop="7dp"-->
+            <!--android:layout_toRightOf="@id/app_name"-->
+            <!--android:background="@drawable/search"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:visibility="gone"/>-->
 
             <!--<SearchView-->
-                <!--android:id="@+id/serchView"-->
-                <!--android:layout_width="250dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_marginBottom="7dp"-->
-                <!--android:layout_marginLeft="80dp"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:layout_marginTop="7dp"-->
-                <!--android:queryHint="Search Contact"-->
-                <!--android:textStyle="italic"-->
-                <!--android:scaleType="fitCenter"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:visibility="gone"/>-->
+            <!--android:id="@+id/serchView"-->
+            <!--android:layout_width="250dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginBottom="7dp"-->
+            <!--android:layout_marginLeft="80dp"-->
+            <!--android:gravity="center_horizontal"-->
+            <!--android:layout_marginTop="7dp"-->
+            <!--android:queryHint="Search Contact"-->
+            <!--android:textStyle="italic"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:visibility="gone"/>-->
 
             <ImageView
                 android:id="@+id/logout"
@@ -74,8 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/logout_white"
                 android:scaleType="fitCenter" />
         </RelativeLayout>

@@ -56,15 +56,15 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Profile extends AppCompatActivity {
-TextView id,age,gmail,gender,submit;
-    String Interested_In,images ;
+    TextView id, age, gmail, gender, submit;
+    String Interested_In, images;
     CircleImageView imv;
     private static int RESULT_LOAD_IMAGE = 1;
-EditText name,phone,state,height,weight,Ethnicity,aboutYou;
-RadioGroup interestedRadioGroup;
-RadioButton male,female;
-ProgressDialog dialog;
-String Name, Email,Mobile,Password,Birthday,Gender;
+    EditText name, phone, state, height, weight, Ethnicity, aboutYou;
+    RadioGroup interestedRadioGroup;
+    RadioButton male, female;
+    ProgressDialog dialog;
+    String Name, Email, Mobile, Password, Birthday, Gender;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -122,14 +122,13 @@ String Name, Email,Mobile,Password,Birthday,Gender;
         String Birthday = sharedPreferences.getString("Birthday", "");
         String Gender = sharedPreferences.getString("Gender", "");
 
-name.setText(Name);
-gmail.setText(Email);
-phone.setText(Mobile);
-gender.setText(Gender);
+        name.setText(Name);
+        gmail.setText(Email);
+        phone.setText(Mobile);
+        gender.setText(Gender);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 sumbitData();
             }
         });
@@ -146,12 +145,11 @@ gender.setText(Gender);
         });
     }
 
-    private void createSessionForChat()
-    {
-        String user,password,facebook_User;
-        user=sharedPreferences.getString("user","");
-        password=sharedPreferences.getString("password","");
-        facebook_User=sharedPreferences.getString("Facebook","");
+    private void createSessionForChat() {
+        String user, password, facebook_User;
+        user = sharedPreferences.getString("user", "");
+        password = sharedPreferences.getString("password", "");
+        facebook_User = sharedPreferences.getString("Facebook", "");
 
         ///Load All User and save cache
         QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
@@ -167,7 +165,7 @@ gender.setText(Gender);
         });
 
 
-        final QBUser qbUser=new QBUser(user,password);
+        final QBUser qbUser = new QBUser(user, password);
         QBAuth.createSession(qbUser).performAsync(new QBEntityCallback<QBSession>() {
             @Override
             public void onSuccess(QBSession qbSession, Bundle bundle) {
@@ -205,8 +203,7 @@ gender.setText(Gender);
         });
     }
 
-    private void sumbitData()
-    {
+    private void sumbitData() {
         String Name_Profile = name.getText().toString().trim();
         String Mobile_Profile = phone.getText().toString().trim();
         String State_Profile = state.getText().toString().trim();
@@ -217,51 +214,48 @@ gender.setText(Gender);
 
         String Gender = sharedPreferences.getString("Gender", "");
         //// put fields
-        QBCustomObject object= new QBCustomObject();
-        object.putString("Full_Name",Name_Profile);
+        QBCustomObject object = new QBCustomObject();
+        object.putString("Full_Name", Name_Profile);
         object.putInteger("Phone", Integer.parseInt(Mobile_Profile));
-        object.putString("State",State_Profile);
+        object.putString("State", State_Profile);
 //        object.putFloat("Height", Float.parseFloat(Height_Profile));
         object.putFloat("Height", 12232);
         object.putFloat("Weight", 5336);
-        object.putString("Nationality",ethinicity_Profile);
-        object.putString("About_Me",About_You_Profile);
-        object.putString("Gender",Gender);
-        object.putString("Interested_In",Interested_In);
-        object.putFile("Image",images);
+        object.putString("Nationality", ethinicity_Profile);
+        object.putString("About_Me", About_You_Profile);
+        object.putString("Gender", Gender);
+        object.putString("Interested_In", Interested_In);
+        object.putFile("Image", images);
 
-        object.putInteger("Age",24);
-        object.putString("Parent ID",Email);
+        object.putInteger("Age", 24);
+        object.putString("Parent ID", Email);
 
         /////////
 
         object.setClassName("Profile");
         QBCustomObjects.createObject(object).performAsync(new QBEntityCallback<QBCustomObject>() {
             @Override
-            public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle)
-            {
+            public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle) {
                 QBUser qbUser = new QBUser(Email, Password);
 
-                qbUser.setFileId(Integer.valueOf(images));
+               // qbUser.setFileId(Integer.valueOf(images));
 //                name.setText(Name_Profile);
 //                phone.setText(Mobile_Profile);
 //                gender.setText(Gender);
 //                age.setText("24");
 //                state.setText(State_Profile);
-                Intent intent= new Intent(Profile.this,Home2.class);
+                Intent intent = new Intent(Profile.this, Home2.class);
                 startActivity(intent);
-                Log.e("Success","Success");
+                Log.e("Success", "Success");
 
             }
 
             @Override
-            public void onError(QBResponseException e)
-            {
-                Log.e("Error",e.getMessage());
+            public void onError(QBResponseException e) {
+                Log.e("Error", e.getMessage());
 
             }
         });
-
 
 
     }
@@ -284,7 +278,7 @@ gender.setText(Gender);
                 //  imv.setImageURI(selectedImage);
                 //      Toast.makeText(getApplicationContext(), "This is my Toast message!"+,
                 //           Toast.LENGTH_LONG).show();
-                Log.d("Check",images);
+                Log.d("Check", images);
                 // imv.setImageBitmap(null);
                 imv.setImageURI(selectedImage);
             } catch (Exception e) {
@@ -293,10 +287,6 @@ gender.setText(Gender);
         }
 
     }
-
-
-
-
 
 
     @Override

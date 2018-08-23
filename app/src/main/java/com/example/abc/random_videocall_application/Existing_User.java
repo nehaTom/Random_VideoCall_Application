@@ -28,7 +28,7 @@ public class Existing_User extends AppCompatActivity {
     LinearLayoutManager layoutManager;
     ExistingUser_Card_Adapter adapter;
 
-    ImageView home, newUser, existingUser, chatList, contact,home_white, newUser_white, existingUser_white,
+    ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
             chatList_white, contact_white;
     int[] images = {
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
@@ -37,7 +37,8 @@ public class Existing_User extends AppCompatActivity {
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background
     };
-//    Footer footer=new Footer();
+
+    //    Footer footer=new Footer();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,16 +53,15 @@ public class Existing_User extends AppCompatActivity {
 
     }
 
-    private void setRecyclerView()
-    {
+    private void setRecyclerView() {
 
-        Existing_RecyclerView=findViewById(R.id.Existing_RecyclerView);
+        Existing_RecyclerView = findViewById(R.id.Existing_RecyclerView);
         getUserList();
 //        Existing_RecyclerView.setHasFixedSize(true);
 
     }
-    private void getUserList()
-    {
+
+    private void getUserList() {
         QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
         pagedRequestBuilder.setPage(1);
         pagedRequestBuilder.setPerPage(50);
@@ -74,6 +74,7 @@ public class Existing_User extends AppCompatActivity {
                 Log.e("Users: ", users.toString());
                 setDaaToAdapter(users);
             }
+
             @Override
             public void onError(QBResponseException errors) {
 
@@ -83,18 +84,18 @@ public class Existing_User extends AppCompatActivity {
 
     private void setDaaToAdapter(ArrayList<QBUser> users) {
 
-        layoutManager=new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         Existing_RecyclerView.setLayoutManager(layoutManager);
 
         String[] names = new String[users.size()];
-        for(int i = 0;i<users.size();i++){
+        for (int i = 0; i < users.size(); i++) {
             QBUser qbUser = new QBUser();
-            qbUser=users.get(i);
+            qbUser = users.get(i);
             names[i] = qbUser.getFullName();
         }
 
-        adapter = new ExistingUser_Card_Adapter(this,"Existing_User",names,images);
+        adapter = new ExistingUser_Card_Adapter(this, "Existing_User", names, images);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
         Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
         Existing_RecyclerView.setAdapter(adapter);
@@ -179,8 +180,7 @@ public class Existing_User extends AppCompatActivity {
         });
     }
 
-    private void getRecyclerViewId()
-    {
+    private void getRecyclerViewId() {
         Existing_RecyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,8 +189,7 @@ public class Existing_User extends AppCompatActivity {
         });
     }
 
-    private void setAddMob()
-    {
+    private void setAddMob() {
         AdView mAdView;
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 

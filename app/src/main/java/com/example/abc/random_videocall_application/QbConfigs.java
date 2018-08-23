@@ -1,4 +1,5 @@
 package com.example.abc.random_videocall_application;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

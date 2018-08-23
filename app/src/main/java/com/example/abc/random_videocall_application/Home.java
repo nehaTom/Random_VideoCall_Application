@@ -122,7 +122,7 @@ public class Home extends AppCompatActivity
 
     private void setLogout() {
 
-       // editor.putBoolean("hasLoggedIn", false);
+        // editor.putBoolean("hasLoggedIn", false);
 
 
         String Video_AppUser = sharedPreferences.getString("App_User", "");
@@ -132,11 +132,9 @@ public class Home extends AppCompatActivity
 //            logOutClass.logout();
 //        }
 
-        if (Video_AppUser.equals("gmail"))
-        {
-gmailLogout();
-        }
-        else {
+        if (Video_AppUser.equals("gmail")) {
+            gmailLogout();
+        } else {
             LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
             logOutClass.logout();
         }
@@ -145,12 +143,10 @@ gmailLogout();
     private void gmailLogout() {
         QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
             @Override
-            public void onSuccess(Void aVoid, Bundle bundle)
-            {
+            public void onSuccess(Void aVoid, Bundle bundle) {
                 QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid, Bundle bundle)
-                    {
+                    public void onSuccess(Void aVoid, Bundle bundle) {
                         Toast.makeText(getApplicationContext(), "You Are Logout from Gmail !!! ", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), New_Login.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

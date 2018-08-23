@@ -80,7 +80,9 @@ public class Home2 extends AppCompatActivity
         setContentView(R.layout.activity_home2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
-        loginSession();
+        requestExecutor = App.getInstance().getQbResRequestExecutor();
+        dbManager = QbUsersDbManager.getInstance(getApplicationContext());
+       // loginSession();
 
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());

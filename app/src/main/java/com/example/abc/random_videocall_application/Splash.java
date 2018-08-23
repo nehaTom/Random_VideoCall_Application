@@ -11,6 +11,7 @@ public class Splash extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,19 +25,18 @@ public class Splash extends AppCompatActivity {
             public void run() {
 
                 boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", false);
-                if(hasLoggedIn)
-                {
-                    Intent intent=new Intent(Splash.this,New_Login.class);
-                    editor.putString("user"," ");
-                    editor.putString("password"," ");
+                if (hasLoggedIn) {
+                    Intent intent = new Intent(Splash.this, New_Login.class);
+                    editor.putString("user", " ");
+                    editor.putString("password", " ");
                     startActivity(intent);
                     finish();
                 }
-                Intent intent=new Intent(Splash.this,New_Login.class);
+                Intent intent = new Intent(Splash.this, New_Login.class);
                 startActivity(intent);
                 finish();
             }
-        },3000);
+        }, 3000);
 
     }
 }
