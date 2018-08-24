@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.TextView;
 
 import com.quickblox.core.QBEntityCallback;
@@ -42,6 +43,18 @@ public class ProfileView extends AppCompatActivity {
 
         initWidgets();
         getProfileById();
+        setOnClickEditProfile();
+    }
+
+    private void setOnClickEditProfile() {
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), Profile.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     void showProgressDialog() {
@@ -86,15 +99,26 @@ public class ProfileView extends AppCompatActivity {
                     Log.e("Check",fields.get("Interested_In").toString());
                     Log.e("Check",fields.get("Gender").toString());
                     name.setText(fields.get("Full_Name").toString());
+                    editor.putString("NAME",fields.get("Full_Name").toString());
                     interestedIn.setText(fields.get("Interested_In").toString());
+                    editor.putString("INTERESTEDIN",fields.get("Interested_In").toString());
                     aboutYou.setText(fields.get("About_Me").toString());
+                    editor.putString("About_Me",fields.get("About_Me").toString());
                     phone.setText(fields.get("Phone").toString());
+                    editor.putString("Phone",fields.get("Phone").toString());
                     state.setText(fields.get("State").toString());
+                    editor.putString("State",fields.get("State").toString());
                     height.setText(fields.get("Height").toString());
+                    editor.putString("Height",fields.get("Height").toString());
                     gender.setText(fields.get("Gender").toString());
+                    editor.putString("Gender",fields.get("Gender").toString());
                     age.setText(fields.get("Age").toString());
+                    editor.putString("Age",fields.get("Age").toString());
                     Ethnicity.setText(fields.get("Nationality").toString());
+                    editor.putString("Nationality",fields.get("Nationality").toString());
                     weight.setText(fields.get("Weight").toString());
+                    editor.putString("Weight",fields.get("Weight").toString());
+                    editor.commit();
                     gmail.setText(sharedPreferences.getString("user",""));
                     hideProgressDialog();
 
@@ -118,7 +142,6 @@ public class ProfileView extends AppCompatActivity {
         gmail = findViewById(R.id.gmail);
         gender = findViewById(R.id.gender);
         submit = findViewById(R.id.submit);
-
         age = findViewById(R.id.age);
         state = findViewById(R.id.state);
         height = findViewById(R.id.height);
