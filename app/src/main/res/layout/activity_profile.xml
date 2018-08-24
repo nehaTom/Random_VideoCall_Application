@@ -73,14 +73,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:inputType="text"
                     android:text="Harpreet Kaur"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
@@ -158,14 +160,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/phone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="48dp"
                     android:inputType="phone"
                     android:text="8080808880"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
@@ -215,14 +219,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/state"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:inputType="text"
                     android:text="UP"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
@@ -285,14 +291,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/height"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:hint="_ft_inch"
+                    android:hint="_cm"
                     android:inputType="text"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
@@ -314,14 +322,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/weight"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:hint="_Kg"
                     android:inputType="text"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
@@ -343,14 +353,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/Ethnicity"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:hint=""
                     android:inputType="text"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
@@ -372,14 +384,16 @@
 
 
                 <EditText
+                    android:padding="5dp"
                     android:id="@+id/aboutYou"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:hint="Tell About Yourself"
                     android:inputType="text"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont" />
+                    android:textSize="@dimen/mediumFont"
+                    android:background="@drawable/edittextbg"/>
 
             </LinearLayout>
 
