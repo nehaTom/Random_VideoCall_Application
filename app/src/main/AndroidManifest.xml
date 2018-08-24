@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Call_History" />
         <activity android:name=".Existing_User" />
-        <activity android:name=".New_Login" ></activity>
+        <activity android:name=".New_Login" />
         <activity
             android:name=".Home2"
             android:label="@string/title_activity_home"
@@ -54,15 +54,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Profile"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Register_Now"
-            android:screenOrientation="portrait" ></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SignIn"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".UserProfile"
             android:screenOrientation="portrait" />
@@ -93,7 +91,7 @@
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat"/>
+            android:theme="@style/Theme.AppCompat" />
         <activity android:name=".VideoClasses.activities.PermissionsActivity" />
         <activity
             android:name=".VideoClasses.activities.CallActivity"
@@ -133,11 +131,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Splash"><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter> </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ProfileView"></activity>
     </application>
 
 </manifest>

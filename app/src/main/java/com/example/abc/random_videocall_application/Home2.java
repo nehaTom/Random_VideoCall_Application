@@ -283,8 +283,10 @@ public class Home2 extends AppCompatActivity
 
         if (id == R.id.profile) {
             // Handle the camera action
-            Toast.makeText(getApplicationContext(), "Profile Selected!",
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Profile Selected!",
+                    //Toast.LENGTH_LONG).show();
+            Intent i = new Intent(getApplicationContext(), ProfileView.class);
+            startActivity(i);
         } else if (id == R.id.setting) {
             Toast.makeText(getApplicationContext(), "Setting Selected!",
                     Toast.LENGTH_LONG).show();
@@ -417,40 +419,6 @@ public class Home2 extends AppCompatActivity
         progressDialog.setMessage("Searching available user");
 
         progressDialog.show();
-
-    }
-
-
-    public void getProfileById(String id) {
-        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
-        requestBuilder.eq("userId", id);
-        Performer<ArrayList<QBCustomObject>> performer =  QBCustomObjects.getObjects("Profile",requestBuilder);
-        performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
-            @Override
-            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
-                if(qbCustomObjects.size()>0) {
-                    String id = qbCustomObjects.get(0).getCustomObjectId();
-                    HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
-                    Log.e("Check",fields.get("Interested_In").toString());
-                    Log.e("Check",fields.get("Gender").toString());
-                    editor.putString("Interested_In",fields.get("Interested_In").toString());
-                    editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
-                    editor.commit();
-                    Intent intent=new Intent(getApplicationContext(),Home2.class);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Log.e("TAG","checking");
-                editor.putString("Interested_In","");
-                editor.putString("Profile_Id","");
-                editor.commit();
-                Intent intent=new Intent(getApplicationContext(),Home2.class);
-                startActivity(intent);
-            }
-        });
 
     }
 

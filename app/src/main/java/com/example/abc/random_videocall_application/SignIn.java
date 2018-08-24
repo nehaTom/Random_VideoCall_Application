@@ -119,6 +119,7 @@ public class SignIn extends AppCompatActivity {
                 editor.putString("password",Password);
                 editor.putBoolean("hasLoggedIn", true);
                 editor.putString("App_User","Simple_Login");
+                editor.putString("ID",qbUser.getId().toString());
                 editor.commit();
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
