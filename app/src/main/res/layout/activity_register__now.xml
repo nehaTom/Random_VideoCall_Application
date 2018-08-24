@@ -63,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:hint="Mobile no."
+                android:maxLength="10"
                 android:inputType="number" />
 
             <EditText

@@ -79,9 +79,10 @@ public class SignIn extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                quickBloxValidation();
-
+if(checkifFieldsHaveValidValues())
+{
+    quickBloxValidation();
+}
             }
 
 
@@ -242,6 +243,7 @@ public class SignIn extends AppCompatActivity {
             }
         });
     }
+
 
 }
 

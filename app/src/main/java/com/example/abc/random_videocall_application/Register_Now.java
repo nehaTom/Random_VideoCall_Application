@@ -10,6 +10,7 @@ import android.content.res.AssetManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -59,14 +60,14 @@ import java.util.Map;
 
 public class Register_Now extends AppCompatActivity {
     RadioButton maleGender, femaleGender, otherGender;
-    RadioGroup genderRadioGroup;
+    RadioGroup genderGroup;
     EditText nameEdit, mobileEdit, passwordEdit, birthEdit, emailEdit;
     Button registrationBtn;
     SharedPreferences sharedPreferences;
     ProgressDialog dialog;
     SharedPreferences.Editor editor;
     Map<String, String> header;
-    String name, mobile, password, birthday, gender, email;
+    String name, mobile, password, Birthday, gender, email;
 
 //    static final String APP_ID="72648";
 //    static final String AUTH_KEY="5ZyyFJzKUdh2kjN";
@@ -102,7 +103,7 @@ public class Register_Now extends AppCompatActivity {
         registerQuickBlox();
 
 
-        RadioGroup genderGroup = findViewById(R.id.genderRadioGroup);
+        genderGroup = findViewById(R.id.genderRadioGroup);
 
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -162,7 +163,7 @@ public class Register_Now extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkValidation()) {
                     quickBloxValidation();
-                    //RegisterationApi();
+
                 }
             }
         });
@@ -214,9 +215,11 @@ public class Register_Now extends AppCompatActivity {
         } else if (birthEdit.getText().toString().equals("")) {
             birthEdit.setError("field Cannot be empty");
             return false;
-//        } else if (genderRadioGroup.getCheckedRadioButtonId() == -1) {
-//            otherGender.setError("field Cannot be empty");
-//            return false;
+        } else if (genderGroup.getCheckedRadioButtonId() == -1) {
+            //otherGender.setError("field Cannot be empty");
+            showMessage("Error","Please select gender");
+
+            return false;
         }
         return true;
     }
@@ -232,7 +235,7 @@ public class Register_Now extends AppCompatActivity {
         String Name = nameEdit.getText().toString().trim();
         String User = emailEdit.getText().toString().trim();
         String Password = passwordEdit.getText().toString().trim();
-        String birthday = birthEdit.getText().toString().trim();
+        String Birthday= birthEdit.getText().toString();
         String email = emailEdit.getText().toString().trim();
         String mobile = mobileEdit.getText().toString().trim();
 
@@ -252,7 +255,7 @@ public class Register_Now extends AppCompatActivity {
                 editor.putString("Gender", gender);
                 editor.putString("user", User);
                 editor.putString("password", Password);
-                editor.putString("Birthday", birthday);
+               editor.putString("Birthday", String.valueOf(Birthday));
                 editor.putString("Email", email);
                 editor.putString("Phone", mobile);
                 editor.putString("App_User", "Simple_Login");

@@ -167,6 +167,7 @@
                     android:layout_marginLeft="48dp"
                     android:inputType="phone"
                     android:text="8080808880"
+                    android:maxLength="10"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont"
                     android:background="@drawable/edittextbg"/>

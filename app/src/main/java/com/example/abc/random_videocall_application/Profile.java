@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -40,7 +41,6 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.QBProgressCallback;
 import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.core.helper.FileHelper;
 import com.quickblox.core.model.QBBaseCustomObject;
 import com.quickblox.core.server.Performer;
 import com.quickblox.customobjects.QBCustomObjects;
@@ -58,6 +58,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,6 +79,7 @@ public class Profile extends AppCompatActivity {
     ProgressDialog dialog;
     String Name, Email, Mobile, Password, Birthday, Gender;
     Uri photoToUpload;
+    Date date;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -95,9 +98,7 @@ public class Profile extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         imv = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.imageview);
-        photoToUpload = null;
         createSessionForChat();
-
         phone = findViewById(R.id.phone);
         name = findViewById(R.id.name);
         gmail = findViewById(R.id.gmail);
@@ -114,6 +115,7 @@ public class Profile extends AppCompatActivity {
 
         male = findViewById(R.id.male);
         female = findViewById(R.id.female);
+        date =Calendar.getInstance().getTime();
 
         RadioGroup genderGroup = findViewById(R.id.interestedRadioGroup);
 
@@ -140,7 +142,18 @@ public class Profile extends AppCompatActivity {
          Password = sharedPreferences.getString("password", "");
          Birthday = sharedPreferences.getString("Birthday", "");
          Gender = sharedPreferences.getString("Gender", "");
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/mm/yy");
 
+        try {
+            date = new Date();
+            date =simpleDateFormat.parse(Birthday);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String Gender = sharedPreferences.getString("Gender", "");
+        String dateValue = getAge(date.getDay(),date.getMonth(),date.getYear())+"";
+        age.setText(dateValue);
         name.setText(Name);
         gmail.setText(Email);
         phone.setText(Mobile);
@@ -148,12 +161,13 @@ public class Profile extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setVaribales();
-                if(getIntent().getStringExtra("FromWhere").equals("Profile")){
-                    updateProfile();
-                }
-                else {
-                    sumbitData();
+                if (checkValidation()) {
+                    setVaribales();
+                    if (getIntent().getStringExtra("FromWhere").equals("Profile")) {
+                        updateProfile();
+                    } else {
+                        sumbitData();
+                    }
                 }
 
             }
@@ -316,10 +330,12 @@ public class Profile extends AppCompatActivity {
         object.putString("About_Me", About_You_Profile);
         object.putString("Gender", Gender);
         object.putString("Interested_In", Interested_In);
-        //object.putFile("Image", images);
+        object.putFile("Image", images);
 
         object.putInteger("Age", 24);
         object.putString("Parent ID", Email);
+
+        /////////
 
         object.setClassName("Profile");
         QBCustomObjects.createObject(object).performAsync(new QBEntityCallback<QBCustomObject>() {
@@ -335,6 +351,7 @@ public class Profile extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onError(QBResponseException e) {
                 Log.e("Error3", e.getMessage());
@@ -441,6 +458,7 @@ public class Profile extends AppCompatActivity {
         });
     }
 
+
     private Bitmap getScaledBitmap(Uri selectedImage) {
 
         Bitmap thumb = null;
@@ -457,7 +475,7 @@ public class Profile extends AppCompatActivity {
     }
 
     private void setDataIfExist(){
-        name.setText(sharedPreferences.getString("NAME",""));
+        name.setText(sharedPreferences.getString("Full_Name",""));
         //editor.putString("INTERESTEDIN",fields.get("Interested_In").toString());
         if(sharedPreferences.getString("INTERESTEDIN","").equalsIgnoreCase("male")){
             male.setSelected(true);
@@ -478,6 +496,78 @@ public class Profile extends AppCompatActivity {
 
     }
 
+    private boolean checkValidation() {
+
+
+        if (phone.getText().toString().equals("")) {
+            phone.setError("field Cannot be empty");
+            return false;
+        } else if (name.getText().toString().equals("")) {
+            name.setError("field Cannot be empty");
+            return false;
+        } else if (gmail.getText().toString().equals("")) {
+            gmail.setError("field Cannot be empty");
+            return false;
+        } else if (age.getText().toString().equals("")) {
+            age.setError("field Cannot be empty");
+            return false;
+        } else if (state.getText().toString().equals("")) {
+            state.setError("field Cannot be empty");
+            return false;
+        } else if (height.getText().toString().equals("")) {
+            height.setError("field Cannot be empty");
+            return false;
+        } else if (weight.getText().toString().equals("")) {
+            weight.setError("field Cannot be empty");
+            return false;
+        } else if (Ethnicity.getText().toString().equals("")) {
+            Ethnicity.setError("field Cannot be empty");
+            return false;
+        } else if (gender.getText().toString().equals("")) {
+            gender.setError("field Cannot be empty");
+            return false;
+        }
+        else if (interestedRadioGroup.getCheckedRadioButtonId() == -1) {
+            showMessage("Error","Please select gender");
+            return false;
+        }
+        return true;
+    }
+    public void showMessage(String title, String message) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getApplication());
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        //builder.set
+        builder.setMessage(message);
+        //builder.show();
+        android.support.v7.app.AlertDialog dialog1 = builder.create();
+        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Window view = ((android.support.v7.app.AlertDialog) dialog).getWindow();
+                view.setBackgroundDrawableResource(R.color.white);
+            }
+        });
+        dialog1.show();
+
+    }
+    private int getAge(int day, int month, int year){
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(day, month,year );
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        // String ageS = ageInt.toString();
+
+        return ageInt;
+    }
 
     @Override
     public void onBackPressed() {

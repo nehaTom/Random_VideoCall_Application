@@ -33,7 +33,7 @@
             app:arrowHeight="10dp"
             app:arrowLocation="right"
             app:arrowCenter="true"
-            app:bubbleColor="ffffff"/>
+            app:bubbleColor="#ffffff"/>
 
         <TextView
             android:layout_width="wrap_content"
