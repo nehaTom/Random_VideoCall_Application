@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
+            android:id="@+id/date"
+            android:text="Date"
+            android:textSize="@dimen/largeFont"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true" />
 
+        <com.github.library.bubbleview.BubbleTextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/message_content"
+            android:layout_alignParentEnd="true"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            app:arrowWidth="8dp"
+            app:angle="8dp"
+            app:arrowHeight="10dp"
+            app:arrowLocation="right"
+            app:arrowCenter="true"
+            app:bubbleColor="#ce004b"/>
 
-            <com.github.library.bubbleview.BubbleTextView
-                android:id="@+id/message_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:padding="10dp"
-                android:textColor="@color/white"
-                app:angle="8dp"
-                app:arrowCenter="true"
-                app:arrowHeight="10dp"
-                app:arrowLocation="right"
-                app:arrowWidth="8dp"
-                app:bubbleColor="#ce004b" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/message_content"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:text="2:00" />
-        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:text="2:00"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/message_content"/>
     </RelativeLayout>
+</RelativeLayout>
 </android.support.constraint.ConstraintLayout>

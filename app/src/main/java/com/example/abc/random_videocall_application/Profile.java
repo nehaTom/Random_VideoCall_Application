@@ -1,5 +1,6 @@
 package com.example.abc.random_videocall_application;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -7,15 +8,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,11 +37,16 @@ import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.QBProgressCallback;
 import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.FileHelper;
 import com.quickblox.core.model.QBBaseCustomObject;
+import com.quickblox.core.server.Performer;
 import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.QBCustomObjectsFiles;
 import com.quickblox.customobjects.model.QBCustomObject;
+import com.quickblox.customobjects.model.QBCustomObjectFileField;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
@@ -52,6 +61,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -66,9 +76,16 @@ public class Profile extends AppCompatActivity {
     RadioButton male, female;
     ProgressDialog dialog;
     String Name, Email, Mobile, Password, Birthday, Gender;
+    Uri photoToUpload;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    ProgressDialog progressDialog;
+    private String Name_Profile,Mobile_Profile ,
+    State_Profile ,
+    Height_Profile ,
+    Weight_Profile ,
+    ethinicity_Profile,About_You_Profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +95,7 @@ public class Profile extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         imv = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.imageview);
+        photoToUpload = null;
         createSessionForChat();
 
         phone = findViewById(R.id.phone);
@@ -116,12 +134,12 @@ public class Profile extends AppCompatActivity {
         ///// Get values from Regertation
 
 
-        String Name = sharedPreferences.getString("Full_Name", "");
-        String Email = sharedPreferences.getString("Email", "");
-        String Mobile = sharedPreferences.getString("Phone", "");
-        String Password = sharedPreferences.getString("password", "");
-        String Birthday = sharedPreferences.getString("Birthday", "");
-        String Gender = sharedPreferences.getString("Gender", "");
+         Name = sharedPreferences.getString("Full_Name", "");
+         Email = sharedPreferences.getString("Email", "");
+         Mobile = sharedPreferences.getString("Phone", "");
+         Password = sharedPreferences.getString("password", "");
+         Birthday = sharedPreferences.getString("Birthday", "");
+         Gender = sharedPreferences.getString("Gender", "");
 
         name.setText(Name);
         gmail.setText(Email);
@@ -130,7 +148,14 @@ public class Profile extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sumbitData();
+                setVaribales();
+                if(getIntent().getStringExtra("FromWhere").equals("Profile")){
+                    updateProfile();
+                }
+                else {
+                    sumbitData();
+                }
+
             }
         });
 
@@ -145,6 +170,73 @@ public class Profile extends AppCompatActivity {
             }
         });
         setDataIfExist();
+        checkPermissions();
+    }
+
+    private void updateProfile() {
+        QBCustomObject record = new QBCustomObject();
+        record.setClassName("Profile");
+        HashMap<String, Object> object = new HashMap<String, Object>();
+        object.put("Full_Name", Name_Profile);
+        if(!Mobile_Profile.isEmpty()) {
+            object.put("Phone", Integer.parseInt(Mobile_Profile));
+        }
+        object.put("State", State_Profile);
+//        object.putFloat("Height", Float.parseFloat(Height_Profile));
+        object.put("Height", 12232);
+        object.put("Weight", 5336);
+        object.put("Nationality", ethinicity_Profile);
+        object.put("About_Me", About_You_Profile);
+        object.put("Gender", Gender);
+        object.put("Interested_In", Interested_In);
+        record.setFields(object);
+        record.setCustomObjectId(sharedPreferences.getString("Profile_Id",""));
+        Performer<QBCustomObject> performer =  QBCustomObjects.updateObject(record);
+        showProgressDialog();
+        performer.performAsync(new QBEntityCallback<QBCustomObject>() {
+            @Override
+            public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle) {
+                if(photoToUpload == null){
+                    hideProgressDialog();
+                    Intent i = new Intent(getApplicationContext(), Home2.class);
+                    startActivity(i);
+                }else {
+                    upload_check();
+                }
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                hideProgressDialog();
+            }
+        });
+
+    }
+
+    private void checkPermissions() {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("yes","yes");
+
+                } else {
+                    Log.d("yes","no");
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private void createSessionForChat() {
@@ -182,13 +274,6 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
 
-//                            mDialog.dismiss();
-//
-//                            QBSystemMessagesManager qbSystemMessagesManager=QBChatService.getInstance().getSystemMessagesManager();
-//                            qbSystemMessagesManager.addSystemMessageListener(Profile.this);
-//
-//                            QBIncomingMessagesManager qbIncomingMessagesManager= QBChatService.getInstance().getIncomingMessagesManager();
-//                            qbIncomingMessagesManager.addDialogMessageListener(list_user_activity.this);
                     }
 
                     @Override
@@ -204,17 +289,21 @@ public class Profile extends AppCompatActivity {
             }
         });
     }
+    public void setVaribales(){
+         Name_Profile = name.getText().toString().trim();
+         Mobile_Profile = phone.getText().toString().trim();
+         State_Profile = state.getText().toString().trim();
+         Height_Profile = height.getText().toString().trim();
+         Weight_Profile = weight.getText().toString().trim();
+         ethinicity_Profile = Ethnicity.getText().toString().trim();
+         About_You_Profile = aboutYou.getText().toString().trim();
+    }
 
     private void sumbitData() {
-        String Name_Profile = name.getText().toString().trim();
-        String Mobile_Profile = phone.getText().toString().trim();
-        String State_Profile = state.getText().toString().trim();
-        String Height_Profile = height.getText().toString().trim();
-        String Weight_Profile = weight.getText().toString().trim();
-        String ethinicity_Profile = Ethnicity.getText().toString().trim();
-        String About_You_Profile = aboutYou.getText().toString().trim();
+        showProgressDialog();
 
-        String Gender = sharedPreferences.getString("Gender", "");
+
+         Gender = sharedPreferences.getString("Gender", "");
         //// put fields
         QBCustomObject object = new QBCustomObject();
         object.putString("Full_Name", Name_Profile);
@@ -227,37 +316,33 @@ public class Profile extends AppCompatActivity {
         object.putString("About_Me", About_You_Profile);
         object.putString("Gender", Gender);
         object.putString("Interested_In", Interested_In);
-        object.putFile("Image", images);
+        //object.putFile("Image", images);
 
         object.putInteger("Age", 24);
         object.putString("Parent ID", Email);
 
-        /////////
-
         object.setClassName("Profile");
         QBCustomObjects.createObject(object).performAsync(new QBEntityCallback<QBCustomObject>() {
             @Override
-            public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle) {
-                QBUser qbUser = new QBUser(Email, Password);
-
-               // qbUser.setFileId(Integer.valueOf(images));
-//                name.setText(Name_Profile);
-//                phone.setText(Mobile_Profile);
-//                gender.setText(Gender);
-//                age.setText("24");
-//                state.setText(State_Profile);
-                Intent intent = new Intent(Profile.this, Home2.class);
-                startActivity(intent);
-                Log.e("Success", "Success");
+            public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle)
+            {
+                if(photoToUpload == null){
+                     hideProgressDialog();
+                    Intent i = new Intent(getApplicationContext(), Home2.class);
+                    startActivity(i);
+                }else {
+                    upload_check();
+                }
 
             }
-
             @Override
             public void onError(QBResponseException e) {
-                Log.e("Error", e.getMessage());
+                Log.e("Error3", e.getMessage());
+                hideProgressDialog();
 
             }
         });
+
 
 
     }
@@ -286,6 +371,8 @@ public class Profile extends AppCompatActivity {
                 // imv.setImageBitmap(null);
                 bmp=getScaledBitmap(selectedImage);
                 imv.setImageBitmap(bmp);
+
+                Log.e("Image",bmp.toString());
                 //imv.setImageURI(selectedImage);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -294,11 +381,71 @@ public class Profile extends AppCompatActivity {
         }
 
     }
+    void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+
+            // Disable the back button
+            DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    return keyCode == KeyEvent.KEYCODE_BACK;
+                }
+            };
+            progressDialog.setOnKeyListener(keyListener);
+        }
+
+        progressDialog.setMessage("Loading Profile");
+
+        progressDialog.show();
+
+    }
+    void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+    public void upload_check(){
+        File file = new File(photoToUpload.getPath());
+        String Profile_Id = sharedPreferences.getString("Profile_Id","");
+        QBCustomObject customObject = new QBCustomObject();
+        customObject.setClassName("Profile");
+        //int id =0;
+        //id = Integer.parseInt(Profile_Id);
+        customObject.setCustomObjectId(Profile_Id);
+
+        QBCustomObjectsFiles.uploadFile(file, customObject, "Image", new QBProgressCallback() {
+            @Override
+            public void onProgressUpdate(int progress) {
+
+            }
+        }).performAsync(new QBEntityCallback<QBCustomObjectFileField>() {
+            @Override
+            public void onSuccess(QBCustomObjectFileField uploadFileResult, Bundle params) {
+                Log.e("Check1","success");
+                Toast.makeText(getApplicationContext(), "Profile Updated",
+                        Toast.LENGTH_LONG).show();
+                hideProgressDialog();
+                Intent i = new Intent(getApplicationContext(), Home2.class);
+                startActivity(i);
+            }
+
+            @Override
+            public void onError(QBResponseException errors) {
+                Log.e("Check2",errors.getMessage());
+                hideProgressDialog();
+            }
+        });
+    }
 
     private Bitmap getScaledBitmap(Uri selectedImage) {
 
         Bitmap thumb = null;
         try {
+            photoToUpload = selectedImage;
             ContentResolver cr = getApplicationContext().getContentResolver();
             InputStream in = cr.openInputStream(selectedImage);
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -310,9 +457,9 @@ public class Profile extends AppCompatActivity {
     }
 
     private void setDataIfExist(){
-        name.setText(sharedPreferences.getString("Full_Name",""));
+        name.setText(sharedPreferences.getString("NAME",""));
         //editor.putString("INTERESTEDIN",fields.get("Interested_In").toString());
-        if(sharedPreferences.getString("Interested_In","").equalsIgnoreCase("male")){
+        if(sharedPreferences.getString("INTERESTEDIN","").equalsIgnoreCase("male")){
             male.setSelected(true);
             female.setSelected(false);
         }else{

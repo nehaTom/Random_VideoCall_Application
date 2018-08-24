@@ -120,6 +120,7 @@ public class QbUsersDbManager {
         cv.put(DbHelper.DB_COLUMN_USER_ID, qbUser.getId());
         cv.put(DbHelper.DB_COLUMN_USER_PASSWORD, qbUser.getPassword());
         cv.put(DbHelper.DB_COLUMN_USER_TAG, qbUser.getTags().getItemsAsString());
+        cv.put(DbHelper.DB_COLUMN_ACCESSTOKEN, qbUser.getExternalId());
 
         db.insert(DbHelper.DB_TABLE_NAME, null, cv);
         dbHelper.close();

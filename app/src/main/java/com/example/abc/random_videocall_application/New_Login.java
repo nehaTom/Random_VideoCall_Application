@@ -128,9 +128,14 @@ public class New_Login extends AppCompatActivity {
                         editor.commit();
 //String Facebook=
                         // user.getId();
-//                        int User = user.getId();
-//                        user.setId(User);
-//                        user.setPassword(facebookAccessToken); //QBSessionManager.getInstance().getToken());
+                        user.setTags(Tag_Name);
+                        int User = user.getId();
+                        user.setId(User);
+                        user.setPassword(facebookAccessToken);
+                        user.setExternalId(facebookAccessToken);
+
+                        SharedPrefsHelper.getInstance().saveQbUser(user);
+                        //QBSessionManager.getInstance().getToken());
 //Log.e("Login_Id",User);
                         //String User ="a@gmail.com";
 

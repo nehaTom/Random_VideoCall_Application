@@ -51,6 +51,7 @@ public class ProfileView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), Profile.class);
+                i.putExtra("FromWhere","Profile");
                 startActivity(i);
             }
         });
