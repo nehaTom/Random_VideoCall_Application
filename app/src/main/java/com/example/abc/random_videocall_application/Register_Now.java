@@ -295,6 +295,7 @@ public class Register_Now extends AppCompatActivity {
                     editor.putString("PName",fields.get("Full_Name").toString());
                     editor.commit();
                     Intent i = new Intent(getApplicationContext(), Profile.class);
+                    i.putExtra("FromWhere","Register");
                     startActivity(i);
                 }
             }
@@ -307,6 +308,7 @@ public class Register_Now extends AppCompatActivity {
                 editor.putString("PName","");
                 editor.commit();
                 Intent i = new Intent(getApplicationContext(), Profile.class);
+                i.putExtra("FromWhere","Register");
                 startActivity(i);
             }
         });
