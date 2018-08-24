@@ -26,18 +26,21 @@
         <com.facebook.login.widget.LoginButton
             android:id="@+id/facebook_login_button"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="100dp"
             android:layout_below="@+id/applogo"
             android:layout_gravity="center_horizontal"
+            android:background="@color/fb"
             android:layout_marginTop="50dp" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/gmail_sign_in_button"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="37dp"
             android:layout_below="@+id/facebook_login_button"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp" />
+            android:layout_marginTop="30dp"
+            android:visibility="gone"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,13 +53,14 @@
             <TextView
                 android:id="@+id/login_textview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:padding="2dp"
                 android:text="Login/Sign Up"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textColor="@color/text_color_medium_dark_grey"
+                android:textStyle="bold"
+                android:textSize="14dp" />
 
 
         </LinearLayout>

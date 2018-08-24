@@ -292,6 +292,7 @@ public class Register_Now extends AppCompatActivity {
                     Log.e("Check",fields.get("Gender").toString());
                     editor.putString("Interested_In",fields.get("Interested_In").toString());
                     editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
+                    editor.putString("PName",fields.get("Full_Name").toString());
                     editor.commit();
                     Intent i = new Intent(getApplicationContext(), Profile.class);
                     startActivity(i);
@@ -303,6 +304,7 @@ public class Register_Now extends AppCompatActivity {
                 Log.e("TAG","checking");
                 editor.putString("Interested_In","");
                 editor.putString("Profile_Id","");
+                editor.putString("PName","");
                 editor.commit();
                 Intent i = new Intent(getApplicationContext(), Profile.class);
                 startActivity(i);

@@ -30,16 +30,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-
-                </LinearLayout>
-
-                <RelativeLayout
+                    <RelativeLayout
                     android:id="@+id/Profile_circleRelativeLayout"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -64,13 +59,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Name"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -90,13 +88,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Email"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -115,13 +116,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Age"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -140,13 +144,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Phone"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -166,13 +173,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Gender"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -191,13 +201,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="State"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -217,13 +230,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Interseted In"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
                 <RadioGroup
@@ -255,13 +271,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Height"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -281,13 +300,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Weight"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -307,13 +329,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Ethnicity"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 
@@ -333,13 +358,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="About You"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/mediumFont" />
 
 

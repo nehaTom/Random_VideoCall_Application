@@ -79,6 +79,7 @@ public class Home2 extends AppCompatActivity
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     QBUser currentUser;
+    TextView user_name_appmenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class Home2 extends AppCompatActivity
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
         setAddMob();
         setfooter();
         setOnClicks();
@@ -114,8 +116,15 @@ public class Home2 extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        user_name_appmenu = navigationView.getHeaderView(0).findViewById(R.id.user_name_appmenu);
+        setUserName();
     }
 
+    private void setUserName() {
+
+      //  user_name_appmenu.setText("");
+        user_name_appmenu.setText(sharedPreferences.getString("PName",""));
+    }
 
 
     private void setLogout() {
