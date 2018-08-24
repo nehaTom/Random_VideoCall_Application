@@ -18,22 +18,26 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        //editor = sharedPreferences.edit();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", false);
+                boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", true);
                 if (hasLoggedIn) {
-                    Intent intent = new Intent(Splash.this, New_Login.class);
-                    editor.putString("user", " ");
-                    editor.putString("password", " ");
+
+                    Intent intent = new Intent(Splash.this, Home2.class);
                     startActivity(intent);
                     finish();
                 }
                 Intent intent = new Intent(Splash.this, New_Login.class);
+                editor = sharedPreferences.edit();
+                editor.putString("user", " ");
+                editor.putString("password", " ");
+
                 startActivity(intent);
+
                 finish();
             }
         }, 3000);

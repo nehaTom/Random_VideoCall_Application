@@ -194,6 +194,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         user_name_appmenu.setText(sharedPreferences.getString("PName",""));
     }
     private void setLogout(){
+        editor.putBoolean("hasLoggedIn", false);
         LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
         logOutClass.logout();
 

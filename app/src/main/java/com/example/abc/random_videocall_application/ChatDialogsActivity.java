@@ -168,6 +168,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
     }
 
     private void setLogout() {
+      editor.putBoolean("hasLoggedIn", false);
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
     }

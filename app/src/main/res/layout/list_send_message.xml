@@ -27,7 +27,7 @@
             android:id="@+id/message_content"
             android:layout_alignParentEnd="true"
             android:padding="10dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:arrowWidth="8dp"
             app:angle="8dp"
             app:arrowHeight="10dp"

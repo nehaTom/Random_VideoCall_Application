@@ -1,5 +1,6 @@
 package com.example.abc.random_videocall_application;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -37,6 +38,8 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
     ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
             chatList_white, contact_white, logout;
   SharedPrefsHelper sharedPrefsHelper;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 //    SharedPreferences sharedPreferences;
 //    SharedPreferences.Editor editor;
     TextView user_name_appmenu;
@@ -57,6 +60,8 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
 
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,6 +94,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 //        String name = sharedPreferences.getString("PName", "");
 //    }
     private void setLogout() {
+        editor.putBoolean("hasLoggedIn", false);
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
 
