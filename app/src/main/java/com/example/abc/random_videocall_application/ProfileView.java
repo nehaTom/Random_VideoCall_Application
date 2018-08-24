@@ -5,21 +5,27 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.QBProgressCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.core.server.Performer;
 import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.QBCustomObjectsFiles;
 import com.quickblox.customobjects.model.QBCustomObject;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,6 +39,7 @@ public class ProfileView extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String  profileId;
     private ProgressDialog progressDialog;
+    ImageView BackArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,19 @@ public class ProfileView extends AppCompatActivity {
         initWidgets();
         getProfileById();
         setOnClickEditProfile();
+        onClckBack();
+    }
+
+    private void onClckBack() {
+        BackArrow = findViewById(R.id.BackArrow);
+        BackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), Home2.class);
+                startActivity(i);
+
+            }
+        });
     }
 
     private void setOnClickEditProfile() {
@@ -121,7 +141,8 @@ public class ProfileView extends AppCompatActivity {
                     editor.putString("Weight",fields.get("Weight").toString());
                     editor.commit();
                     gmail.setText(sharedPreferences.getString("user",""));
-                    hideProgressDialog();
+                    //hideProgressDialog();
+                    setImageIfexist();
 
                 }
             }
@@ -129,6 +150,27 @@ public class ProfileView extends AppCompatActivity {
             @Override
             public void onError(QBResponseException e) {
                 Log.e("TAG","checking");
+                hideProgressDialog();
+            }
+        });
+
+    }
+
+    public void setImageIfexist(){
+        QBCustomObject customObject = new QBCustomObject("Profile", profileId);
+        Performer<InputStream> performer = QBCustomObjectsFiles.downloadFile(customObject,"Image");
+        performer.performAsync(new QBEntityCallback<InputStream>() {
+            @Override
+            public void onSuccess(InputStream inputStream, Bundle bundle) {
+                if(inputStream != null) {
+                    Bitmap bitmap1 = BitmapFactory.decodeStream(inputStream);
+                    imv.setImageBitmap(bitmap1);
+                }
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
                 hideProgressDialog();
             }
         });

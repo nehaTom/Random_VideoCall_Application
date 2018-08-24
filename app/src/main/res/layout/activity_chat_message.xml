@@ -14,7 +14,7 @@
         <RelativeLayout
             android:id="@+id/chatTool"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:background="@color/dark_blue">
 
@@ -24,7 +24,8 @@
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/back_arrow" />
 
             <TextView

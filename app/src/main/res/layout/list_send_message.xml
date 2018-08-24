@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true">
         <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/date"
@@ -32,7 +33,7 @@
             app:arrowHeight="10dp"
             app:arrowLocation="right"
             app:arrowCenter="true"
-            app:bubbleColor="#ce004b"/>
+            app:bubbleColor="ffffff"/>
 
         <TextView
             android:layout_width="wrap_content"
