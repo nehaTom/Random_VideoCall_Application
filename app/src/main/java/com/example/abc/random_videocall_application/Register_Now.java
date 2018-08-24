@@ -37,6 +37,10 @@ import com.quickblox.core.ServiceZone;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.core.request.QBPagedRequestBuilder;
+import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.core.server.Performer;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
@@ -252,14 +256,13 @@ public class Register_Now extends AppCompatActivity {
                 editor.putString("Email", email);
                 editor.putString("Phone", mobile);
                 editor.putString("App_User", "Simple_Login");
+                editor.putString("ID",qbUser.getId().toString());
                 editor.commit();
 
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
+                getProfileById(qbUser.getId().toString());
 
-                Intent i = new Intent(getApplicationContext(), Profile.class);
-
-                startActivity(i);
 
             }
 
@@ -270,6 +273,39 @@ public class Register_Now extends AppCompatActivity {
                 Log.e("QuickBlox_Error", e.getMessage());
                 Toast.makeText(getApplicationContext(), e.getMessage(),
                         Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    public void getProfileById(String id) {
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.eq("userId", id);
+        Performer<ArrayList<QBCustomObject>> performer =  QBCustomObjects.getObjects("Profile",requestBuilder);
+        performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+            @Override
+            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
+                if(qbCustomObjects.size()>0) {
+                    String id = qbCustomObjects.get(0).getCustomObjectId();
+                    HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
+                    Log.e("Check",fields.get("Interested_In").toString());
+                    Log.e("Check",fields.get("Gender").toString());
+                    editor.putString("Interested_In",fields.get("Interested_In").toString());
+                    editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
+                    editor.commit();
+                    Intent i = new Intent(getApplicationContext(), Profile.class);
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e("TAG","checking");
+                editor.putString("Interested_In","");
+                editor.putString("Profile_Id","");
+                editor.commit();
+                Intent i = new Intent(getApplicationContext(), Profile.class);
+                startActivity(i);
             }
         });
 

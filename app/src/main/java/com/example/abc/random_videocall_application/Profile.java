@@ -144,6 +144,7 @@ public class Profile extends AppCompatActivity {
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
+        setDataIfExist();
     }
 
     private void createSessionForChat() {
@@ -306,6 +307,28 @@ public class Profile extends AppCompatActivity {
         } catch (FileNotFoundException e) {
         }
         return thumb;
+    }
+
+    private void setDataIfExist(){
+        name.setText(sharedPreferences.getString("Full_Name",""));
+        //editor.putString("INTERESTEDIN",fields.get("Interested_In").toString());
+        if(sharedPreferences.getString("Interested_In","").equalsIgnoreCase("male")){
+            male.setSelected(true);
+            female.setSelected(false);
+        }else{
+            male.setSelected(false);
+            female.setSelected(true);
+        }
+        aboutYou.setText(sharedPreferences.getString("About_Me",""));
+        phone.setText(sharedPreferences.getString("Phone",""));
+        state.setText(sharedPreferences.getString("State",""));
+        height.setText(sharedPreferences.getString("Height",""));
+        gender.setText(sharedPreferences.getString("Gender",""));
+        age.setText(sharedPreferences.getString("Age",""));
+        Ethnicity.setText(sharedPreferences.getString("Nationality",""));
+        weight.setText(sharedPreferences.getString("Weight",""));
+        gmail.setText(sharedPreferences.getString("user",""));
+
     }
 
 
