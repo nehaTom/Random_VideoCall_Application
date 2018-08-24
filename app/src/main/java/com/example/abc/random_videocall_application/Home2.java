@@ -290,21 +290,30 @@ public class Home2 extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.profile) {
-            // Handle the camera action
-            //Toast.makeText(getApplicationContext(), "Profile Selected!",
-                    //Toast.LENGTH_LONG).show();
+        if (id == R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), Home2.class);
+            startActivity(intent);
+        } else if (id == R.id.profile) {
             Intent i = new Intent(getApplicationContext(), ProfileView.class);
             startActivity(i);
-        } else if (id == R.id.setting) {
-            Toast.makeText(getApplicationContext(), "Setting Selected!",
-                    Toast.LENGTH_LONG).show();
 
-        } else if (id == R.id.shareApp) {
-            Toast.makeText(getApplicationContext(), "Share Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.newelyadded) {
+            Intent i = new Intent(getApplicationContext(),  NewJoined.class);
+            startActivity(i);
 
-        } else if (id == R.id.logout) {
+        } else if (id == R.id.existingUser) {
+            Intent i = new Intent(getApplicationContext(), list_user_activity.class);
+            startActivity(i);
+
+        }else if (id == R.id.chat) {
+            Intent i = new Intent(getApplicationContext(),  ChatDialogsActivity.class);
+            startActivity(i);
+
+        }else if (id == R.id.mycontacts) {
+            Intent i = new Intent(getApplicationContext(),  My_Contacts.class);
+            startActivity(i);
+
+        }else if (id == R.id.logout) {
             setLogout();
 
         }

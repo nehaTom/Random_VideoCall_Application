@@ -1,6 +1,7 @@
 package com.example.abc.random_videocall_application;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
@@ -34,8 +36,10 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
     ExistingUser_Card_Adapter adapter;
     ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
             chatList_white, contact_white, logout;
-    SharedPrefsHelper sharedPrefsHelper;
-
+  SharedPrefsHelper sharedPrefsHelper;
+//    SharedPreferences sharedPreferences;
+//    SharedPreferences.Editor editor;
+    TextView user_name_appmenu;
     boolean doubleBackToExitPressedOnce = false;
     int[] images = {
             R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background,
@@ -60,6 +64,8 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+//        user_name_appmenu = navigationView.getHeaderView(0).findViewById(R.id.user_name_appmenu);
+//        setUserName();
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         setAddMob();
 
@@ -79,7 +85,9 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 
 
     }
-
+//    private void setUserName() {
+//        String name = sharedPreferences.getString("PName", "");
+//    }
     private void setLogout() {
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
@@ -239,20 +247,30 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if (id == R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), Home2.class);
+            startActivity(intent);
+        } else if (id == R.id.profile) {
+            Intent i = new Intent(getApplicationContext(), ProfileView.class);
+            startActivity(i);
 
-        if (id == R.id.profile) {
-            // Handle the camera action
-            Toast.makeText(getApplicationContext(), "Profile Selected!",
-                    Toast.LENGTH_LONG).show();
-        } else if (id == R.id.setting) {
-            Toast.makeText(getApplicationContext(), "Setting Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.newelyadded) {
+            Intent i = new Intent(getApplicationContext(),  NewJoined.class);
+            startActivity(i);
 
-        } else if (id == R.id.shareApp) {
-            Toast.makeText(getApplicationContext(), "Share Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.existingUser) {
+            Intent i = new Intent(getApplicationContext(), list_user_activity.class);
+            startActivity(i);
 
-        } else if (id == R.id.logout) {
+        }else if (id == R.id.chat) {
+            Intent i = new Intent(getApplicationContext(),  ChatDialogsActivity.class);
+            startActivity(i);
+
+        }else if (id == R.id.mycontacts) {
+            Intent i = new Intent(getApplicationContext(),  My_Contacts.class);
+            startActivity(i);
+
+        }else if (id == R.id.logout) {
             setLogout();
 
         }

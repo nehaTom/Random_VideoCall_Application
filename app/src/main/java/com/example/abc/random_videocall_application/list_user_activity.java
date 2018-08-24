@@ -87,12 +87,15 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
     boolean doubleBackToExitPressedOnce = false;
     private QbUsersDbManager dbManager;
 
+    TextView user_name_appmenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user_activity);
+
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
@@ -107,6 +110,10 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        user_name_appmenu = navigationView.getHeaderView(0).findViewById(R.id.user_name_appmenu);
+        setUserName();
+
         //createSessionForFacebook();
         createSessionForChat();
         setAddMob();
@@ -215,6 +222,10 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
             return false;
         }
         return true;
+    }
+
+    private void setUserName() {
+        String name = sharedPreferences.getString("PName", "");
     }
 
     private void tryReLoginToChat() {
@@ -890,19 +901,30 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.profile) {
-            // Handle the camera action
-            Toast.makeText(getApplicationContext(), "Profile Selected!",
-                    Toast.LENGTH_LONG).show();
-        } else if (id == R.id.setting) {
-            Toast.makeText(getApplicationContext(), "Setting Selected!",
-                    Toast.LENGTH_LONG).show();
+        if (id == R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), Home2.class);
+            startActivity(intent);
+        } else if (id == R.id.profile) {
+            Intent i = new Intent(getApplicationContext(), ProfileView.class);
+            startActivity(i);
 
-        } else if (id == R.id.shareApp) {
-            Toast.makeText(getApplicationContext(), "Share Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.newelyadded) {
+            Intent i = new Intent(getApplicationContext(),  NewJoined.class);
+            startActivity(i);
 
-        } else if (id == R.id.logout) {
+        } else if (id == R.id.existingUser) {
+            Intent i = new Intent(getApplicationContext(), list_user_activity.class);
+            startActivity(i);
+
+        }else if (id == R.id.chat) {
+            Intent i = new Intent(getApplicationContext(),  ChatDialogsActivity.class);
+            startActivity(i);
+
+        }else if (id == R.id.mycontacts) {
+            Intent i = new Intent(getApplicationContext(),  My_Contacts.class);
+            startActivity(i);
+
+        }else if (id == R.id.logout) {
             setLogout();
 
         }

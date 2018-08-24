@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
@@ -58,7 +59,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     SharedPrefsHelper sharedPrefsHelper;
-
+    TextView user_name_appmenu;
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -119,6 +120,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
         createSessionForChat();
         loadChatDialogs();
         setData();
@@ -131,8 +133,12 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        user_name_appmenu = navigationView.getHeaderView(0).findViewById(R.id.user_name_appmenu);
+        setUserName();
 
         lstChatDialogs = (ListView) findViewById(R.id.lstChatDialogs);
         registerForContextMenu(lstChatDialogs);
@@ -155,6 +161,10 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         });
 
 
+    }
+
+    private void setUserName() {
+        String name = sharedPreferences.getString("PName", "");
     }
 
     private void setLogout() {
@@ -456,24 +466,33 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if (id == R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), Home2.class);
+            startActivity(intent);
+        } else if (id == R.id.profile) {
+            Intent i = new Intent(getApplicationContext(), ProfileView.class);
+            startActivity(i);
 
-        if (id == R.id.profile) {
-            // Handle the camera action
-            Toast.makeText(getApplicationContext(), "Profile Selected!",
-                    Toast.LENGTH_LONG).show();
-        } else if (id == R.id.setting) {
-            Toast.makeText(getApplicationContext(), "Setting Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.newelyadded) {
+            Intent i = new Intent(getApplicationContext(),  NewJoined.class);
+            startActivity(i);
 
-        } else if (id == R.id.shareApp) {
-            Toast.makeText(getApplicationContext(), "Share Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.existingUser) {
+            Intent i = new Intent(getApplicationContext(), list_user_activity.class);
+            startActivity(i);
 
-        } else if (id == R.id.logout) {
+        }else if (id == R.id.chat) {
+            Intent i = new Intent(getApplicationContext(),  ChatDialogsActivity.class);
+            startActivity(i);
+
+        }else if (id == R.id.mycontacts) {
+            Intent i = new Intent(getApplicationContext(),  My_Contacts.class);
+            startActivity(i);
+
+        }else if (id == R.id.logout) {
             setLogout();
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

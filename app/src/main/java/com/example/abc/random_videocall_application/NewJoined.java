@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
@@ -80,13 +81,16 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
     SharedPrefsHelper sharedPrefsHelper;
     private PermissionsChecker checker;
     QbUsersDbManager dbManager;
-
+    TextView user_name_appmenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_joined);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
+
+        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -95,11 +99,16 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        user_name_appmenu = navigationView.getHeaderView(0).findViewById(R.id.user_name_appmenu);
+        setUserName();
+
         setAddMob();
-        sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+
+
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
+
         checker = new PermissionsChecker(getApplicationContext());
         createSessionForChat();
 
@@ -179,7 +188,11 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
             }
         });
     }
+    private void setUserName() {
 
+        //  user_name_appmenu.setText("");
+        user_name_appmenu.setText(sharedPreferences.getString("PName",""));
+    }
     private void setLogout(){
         LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
         logOutClass.logout();
@@ -523,20 +536,30 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if (id == R.id.home) {
+            Intent intent = new Intent(getApplicationContext(), Home2.class);
+            startActivity(intent);
+        } else if (id == R.id.profile) {
+            Intent i = new Intent(getApplicationContext(), ProfileView.class);
+            startActivity(i);
 
-        if (id == R.id.profile) {
-            // Handle the camera action
-            Toast.makeText(getApplicationContext(), "Profile Selected!",
-                    Toast.LENGTH_LONG).show();
-        } else if (id == R.id.setting) {
-            Toast.makeText(getApplicationContext(), "Setting Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.newelyadded) {
+            Intent i = new Intent(getApplicationContext(),  NewJoined.class);
+            startActivity(i);
 
-        } else if (id == R.id.shareApp) {
-            Toast.makeText(getApplicationContext(), "Share Selected!",
-                    Toast.LENGTH_LONG).show();
+        } else if (id == R.id.existingUser) {
+            Intent i = new Intent(getApplicationContext(), list_user_activity.class);
+            startActivity(i);
 
-        } else if (id == R.id.logout) {
+        }else if (id == R.id.chat) {
+            Intent i = new Intent(getApplicationContext(),  ChatDialogsActivity.class);
+            startActivity(i);
+
+        }else if (id == R.id.mycontacts) {
+            Intent i = new Intent(getApplicationContext(),  My_Contacts.class);
+            startActivity(i);
+
+        }else if (id == R.id.logout) {
             setLogout();
 
         }

@@ -5,20 +5,32 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/home"
+            android:icon="@drawable/home"
+            android:title="Home" />
+        <item
             android:id="@+id/profile"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="My Profile" />
+            android:icon="@drawable/profile"
+            android:title="Profile" />
         <item
-            android:id="@+id/setting"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Settings" />
+            android:id="@+id/newelyadded"
+            android:icon="@drawable/adduser"
+            android:title="Newly Joined" />
         <item
-            android:id="@+id/shareApp"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Share Application" />
+            android:id="@+id/existingUser"
+            android:icon="@drawable/checkeduser"
+            android:title="Existing Users" />
+        <item
+            android:id="@+id/chat"
+            android:icon="@drawable/chat"
+            android:title="Chat History" />
+        <item
+            android:id="@+id/mycontacts"
+            android:icon="@drawable/mycontacts"
+            android:title="My Contacts" />
         <item
             android:id="@+id/logout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/logout"
             android:title="Logout" />
     </group>
 
