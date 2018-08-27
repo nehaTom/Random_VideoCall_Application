@@ -259,6 +259,8 @@ public class Register_Now extends AppCompatActivity {
                 editor.putString("Email", email);
                 editor.putString("Phone", mobile);
                 editor.putString("App_User", "Simple_Login");
+
+                editor.putBoolean("hasLoggedIn", true);
                 editor.putString("ID",qbUser.getId().toString());
                 editor.commit();
 

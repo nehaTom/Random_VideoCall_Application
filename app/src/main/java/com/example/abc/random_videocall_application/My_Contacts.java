@@ -95,6 +95,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 //    }
     private void setLogout() {
         editor.putBoolean("hasLoggedIn", false);
+        editor.commit();
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
 

@@ -305,7 +305,8 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
     }
 
     private void setLogout() {
-      //  editor.putBoolean("hasLoggedIn", false);
+        editor.putBoolean("hasLoggedIn", false);
+        editor.commit();
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
     }

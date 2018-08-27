@@ -24,21 +24,24 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
 
-                boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", true);
+                boolean hasLoggedIn = sharedPreferences.getBoolean("hasLoggedIn", false);
+               // boolean hasLoggedIn = sharedPreferences.getString("hasLoggedIn", "");
                 if (hasLoggedIn) {
 
                     Intent intent = new Intent(Splash.this, Home2.class);
                     startActivity(intent);
                     finish();
                 }
-                Intent intent = new Intent(Splash.this, New_Login.class);
-                editor = sharedPreferences.edit();
-                editor.putString("user", " ");
-                editor.putString("password", " ");
+                else {
+                    Intent intent = new Intent(Splash.this, New_Login.class);
+                    editor = sharedPreferences.edit();
+                    editor.putString("user", " ");
+                    editor.putString("password", " ");
 
-                startActivity(intent);
+                    startActivity(intent);
 
-                finish();
+                    finish();
+                }
             }
         }, 3000);
 

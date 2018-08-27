@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,7 +44,7 @@ public class SignIn extends AppCompatActivity {
     ProgressDialog dialog;
     CheckBox agree_checkbox,checkBox;
     String email;
-
+    boolean doubleBackToExitPressedOnce = false;
     static final String APP_ID="72405";
     static final String AUTH_KEY="zCNmPJGEkrGyseU";
     static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
@@ -172,6 +173,7 @@ if(checkifFieldsHaveValidValues())
                 editor.commit();
                 Intent intent=new Intent(getApplicationContext(),Home2.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -243,7 +245,31 @@ if(checkifFieldsHaveValidValues())
             }
         });
     }
+    @Override
+    public void onBackPressed() {
 
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+
+    }
 
 }
 
