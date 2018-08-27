@@ -247,7 +247,6 @@ public class Register_Now extends AppCompatActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
 
-
                 saveUserData(qbUser);
                 Log.e("QuickBloxSuccess", "Success");
 

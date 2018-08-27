@@ -505,13 +505,8 @@ public class Profile extends AppCompatActivity {
         } else if (name.getText().toString().equals("")) {
             name.setError("field Cannot be empty");
             return false;
-        } else if (gmail.getText().toString().equals("")) {
-            gmail.setError("field Cannot be empty");
-            return false;
-        } else if (age.getText().toString().equals("")) {
-            age.setError("field Cannot be empty");
-            return false;
-        } else if (state.getText().toString().equals("")) {
+        }
+        else if (state.getText().toString().equals("")) {
             state.setError("field Cannot be empty");
             return false;
         } else if (height.getText().toString().equals("")) {

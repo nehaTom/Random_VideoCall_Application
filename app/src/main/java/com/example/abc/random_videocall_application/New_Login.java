@@ -38,6 +38,7 @@ import com.quickblox.users.model.QBUser;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
 
 public class New_Login extends AppCompatActivity {
     TextView login_textview;
@@ -74,7 +75,18 @@ public class New_Login extends AppCompatActivity {
         setfacebookLogin();
         setGoogleLogin();
         setLoginOnClick();
+        clearSharedPefrencesData();
 
+    }
+
+    private void clearSharedPefrencesData() {
+        //sharedPreferences.getAll();
+        Map<String, ?> allEntries = sharedPreferences.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            Log.d("map values", entry.getKey() + ": " + entry.getValue().toString());
+            editor.remove(entry.getKey());
+            editor.commit();
+        }
     }
 
     private void updateUI(GoogleSignInAccount account) {

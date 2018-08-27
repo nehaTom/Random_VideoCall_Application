@@ -27,13 +27,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Call_History" />
-        <activity android:name=".Existing_User" />
-        <activity android:name=".New_Login" />
+        <activity android:name=".Call_History"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Existing_User"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".New_Login"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Home2"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -53,7 +57,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Profile"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".Register_Now"
             android:screenOrientation="portrait" />
@@ -130,14 +135,18 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Splash">
+        <activity android:name=".Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileView"></activity>
+        <activity android:name=".ProfileView"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>
