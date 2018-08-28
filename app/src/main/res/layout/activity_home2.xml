@@ -21,7 +21,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_marginTop="55dp"
+            android:background="@drawable/home_screen_background_image"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/randomCall"
+                android:layout_width="275dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="130dp"
+                android:layout_marginLeft="45dp"
+                android:background="@drawable/background_img"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
 
         <include
             layout="@layout/activity_footer"
@@ -29,13 +40,7 @@
             android:layout_height="100dp"
             android:layout_alignParentBottom="true" />
 
-        <ImageView
-            android:id="@+id/randomCall"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="100dp"
-            android:background="@drawable/background_img"
-            android:scaleType="fitCenter" />
+
 
     </RelativeLayout>
 

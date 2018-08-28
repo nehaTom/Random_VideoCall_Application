@@ -80,7 +80,6 @@ public class Profile extends AppCompatActivity {
     String Name, Email, Mobile, Password, Birthday, Gender;
     Uri photoToUpload;
     Date date;
-
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     ProgressDialog progressDialog;
@@ -89,6 +88,7 @@ public class Profile extends AppCompatActivity {
     Height_Profile ,
     Weight_Profile ,
     ethinicity_Profile,About_You_Profile;
+    ImageView BackArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,8 +185,19 @@ public class Profile extends AppCompatActivity {
         });
         setDataIfExist();
         checkPermissions();
+        onClckBack();
     }
+    private void onClckBack() {
+        BackArrow = findViewById(R.id.BackArrow);
+        BackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), ProfileView.class);
+                startActivity(i);
 
+            }
+        });
+    }
     private void updateProfile() {
         QBCustomObject record = new QBCustomObject();
         record.setClassName("Profile");

@@ -226,6 +226,7 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
 
     private void setUserName() {
         String name = sharedPreferences.getString("PName", "");
+        user_name_appmenu.setText(name);
     }
 
     private void tryReLoginToChat() {

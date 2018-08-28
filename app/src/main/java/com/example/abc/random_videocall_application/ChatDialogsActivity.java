@@ -165,6 +165,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
     private void setUserName() {
         String name = sharedPreferences.getString("PName", "");
+        user_name_appmenu.setText(name);
     }
 
     private void setLogout() {
