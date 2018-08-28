@@ -57,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Register_Now extends AppCompatActivity {
     RadioButton maleGender, femaleGender, otherGender;
@@ -198,7 +200,7 @@ public class Register_Now extends AppCompatActivity {
 
 
     private boolean checkValidation() {
-
+      String email=emailEdit.getText().toString();
 
         if (nameEdit.getText().toString().equals("")) {
             nameEdit.setError("field Cannot be empty");
@@ -206,10 +208,16 @@ public class Register_Now extends AppCompatActivity {
         } else if (emailEdit.getText().toString().equals("")) {
             emailEdit.setError("field Cannot be empty");
             return false;
+        }else if (emailValidator(email)==false) {
+            emailEdit.setError("Enter correct email");
+            return false;
         } else if (mobileEdit.getText().toString().equals("")) {
             mobileEdit.setError("field Cannot be empty");
             return false;
-        } else if (passwordEdit.getText().toString().equals("")) {
+        } else if (mobileEdit.getText().toString().length()<10) {
+            mobileEdit.setError("mobile No cannot be less than 10 number");
+            return false;
+        }else if (passwordEdit.getText().toString().equals("")) {
             passwordEdit.setError("field Cannot be empty");
             return false;
         } else if (birthEdit.getText().toString().equals("")) {
@@ -224,7 +232,15 @@ public class Register_Now extends AppCompatActivity {
         return true;
     }
 
-
+    public boolean emailValidator(String email)
+    {
+        Pattern pattern;
+        Matcher matcher;
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
     private void quickBloxValidation()
 
     {

@@ -516,6 +516,12 @@ public class Profile extends AppCompatActivity {
         } else if (name.getText().toString().equals("")) {
             name.setError("field Cannot be empty");
             return false;
+        }else if (phone.getText().toString().equals("")) {
+            phone.setError("field Cannot be empty");
+            return false;
+        } else if (phone.getText().toString().length()<10) {
+            phone.setError("mobile No cannot be less than 10 number");
+            return false;
         }
         else if (state.getText().toString().equals("")) {
             state.setError("field Cannot be empty");
