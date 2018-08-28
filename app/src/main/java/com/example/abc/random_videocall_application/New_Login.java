@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
 import com.facebook.AccessToken;
@@ -48,7 +50,7 @@ public class New_Login extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ProgressDialog dialog;
     SharedPreferences.Editor editor;
-
+    boolean doubleBackToExitPressedOnce = false;
     static final String APP_ID = "72405";
     static final String AUTH_KEY = "zCNmPJGEkrGyseU";
     static final String AUTH_SECRET = "V6nrN7Cdv2Vt2Vm";
@@ -60,6 +62,8 @@ public class New_Login extends AppCompatActivity {
         setContentView(R.layout.activity_new__login);
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        editor.putBoolean("hasLoggedIn", true);
+        editor.commit();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -318,6 +322,32 @@ public class New_Login extends AppCompatActivity {
                 Log.e("ERROR", e.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+
     }
 
 

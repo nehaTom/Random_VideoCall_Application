@@ -97,8 +97,9 @@ if(checkifFieldsHaveValidValues())
         regiterNow_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), Register_Now.class);
+                Intent intent = new Intent(SignIn.this, Register_Now.class);
                 startActivity(intent);
+                SignIn.this.finish();
             }
         });
     }
@@ -159,21 +160,23 @@ if(checkifFieldsHaveValidValues())
                     editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
                     editor.putString("PName",fields.get("Full_Name").toString());
                     editor.commit();
-                    Intent intent=new Intent(getApplicationContext(),Home2.class);
+                    Intent intent=new Intent(SignIn.this,Home2.class);
                     startActivity(intent);
+                    SignIn.this.finish();
                 }
             }
 
             @Override
             public void onError(QBResponseException e) {
                 Log.e("TAG","checking");
+
                 editor.putString("Interested_In","");
                 editor.putString("Profile_Id","");
                 editor.putString("PName","");
                 editor.commit();
-                Intent intent=new Intent(getApplicationContext(),Home2.class);
+                Intent intent=new Intent(SignIn.this,Home2.class);
                 startActivity(intent);
-                finish();
+                SignIn.this.finish();
             }
         });
 
@@ -245,31 +248,38 @@ if(checkifFieldsHaveValidValues())
             }
         });
     }
+
     @Override
     public void onBackPressed() {
-
-        if (doubleBackToExitPressedOnce) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
-
+        Intent intent=new Intent(SignIn.this,New_Login.class);
+        startActivity(intent);
+        finish();
     }
+    //    @Override
+//    public void onBackPressed() {
+//
+//        if (doubleBackToExitPressedOnce) {
+//            Intent intent = new Intent(Intent.ACTION_MAIN);
+//            intent.addCategory(Intent.CATEGORY_HOME);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//            finish();
+//
+//            return;
+//        }
+//
+//        this.doubleBackToExitPressedOnce = true;
+//        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+//
+//        new Handler().postDelayed(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                doubleBackToExitPressedOnce = false;
+//            }
+//        }, 2000);
+//
+//    }
 
 }
 

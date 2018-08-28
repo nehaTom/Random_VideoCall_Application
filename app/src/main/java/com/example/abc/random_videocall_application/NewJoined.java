@@ -91,6 +91,8 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        editor.putBoolean("hasLoggedIn", true);
+        editor.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -198,6 +200,8 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         editor.commit();
         LogOutClass logOutClass = new LogOutClass(this,sharedPrefsHelper.getQbUser());
         logOutClass.logout();
+        finish();
+
 
     }
 

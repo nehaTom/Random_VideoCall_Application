@@ -62,6 +62,8 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        editor.putBoolean("hasLoggedIn", true);
+        editor.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -98,7 +100,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
         editor.commit();
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
-
+finish();
     }
 
     private void getRecyclerViewId() {

@@ -88,6 +88,7 @@ public class Home2 extends AppCompatActivity
         setContentView(R.layout.activity_home2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
+
         requestExecutor = App.getInstance().getQbResRequestExecutor();
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
        // loginSession();
@@ -98,6 +99,8 @@ public class Home2 extends AppCompatActivity
 
         sharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        editor.putBoolean("hasLoggedIn", true);
+        editor.commit();
 
         setAddMob();
         setfooter();
@@ -133,37 +136,11 @@ public class Home2 extends AppCompatActivity
         editor.commit();
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
+        Home2.this.finish();
 
     }
 
-    private void gmailLogout() {
-        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-                        Toast.makeText(getApplicationContext(), "You Are Logout from Gmail !!! ", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), New_Login.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
 
-                    @Override
-                    public void onError(QBResponseException e) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-
-            }
-        });
-    }
 
     private void setOnclicksRandomButton() {
         randomCall = findViewById(R.id.randomCall);
@@ -215,6 +192,7 @@ public class Home2 extends AppCompatActivity
 
                 Intent intent = new Intent(Home2.this,Home2.class);
                 startActivity(intent);
+
             }
         });
 
