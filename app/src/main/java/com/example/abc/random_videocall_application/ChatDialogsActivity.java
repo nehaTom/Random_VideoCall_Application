@@ -166,6 +166,8 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
     private void setUserName() {
         String name = sharedPreferences.getString("PName", "");
         user_name_appmenu.setText(name);
+        editor.putBoolean("hasLoggedIn", true);
+        editor.commit();
     }
 
     private void setLogout() {
@@ -173,6 +175,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
       editor.commit();
         LogOutClass logOutClass = new LogOutClass(this, sharedPrefsHelper.getQbUser());
         logOutClass.logout();
+        finish();
     }
 
     private void setAddMob() {
