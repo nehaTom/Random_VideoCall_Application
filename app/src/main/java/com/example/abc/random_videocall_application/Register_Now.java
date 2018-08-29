@@ -70,7 +70,7 @@ public class Register_Now extends AppCompatActivity {
     ProgressDialog dialog;
     SharedPreferences.Editor editor;
     Map<String, String> header;
-    String name, mobile, password, Birthday, gender, email;
+    String name, mobile, password, Birthday, gender, email,ageS;
     boolean doubleBackToExitPressedOnce = false;
 
 //    static final String APP_ID="72648";
@@ -135,6 +135,17 @@ public class Register_Now extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                Calendar today = Calendar.getInstance();
+                int age = today.get(Calendar.YEAR) - myCalendar.get(Calendar.YEAR);
+                if (today.get(Calendar.DAY_OF_YEAR) < myCalendar.get(Calendar.DAY_OF_YEAR)){
+                    age--;
+                }
+
+                Integer ageInt = new Integer(age);
+                ageS = ageInt.toString();
+
+                //return ageS;
                 updateLabel();
             }
 
@@ -153,9 +164,13 @@ public class Register_Now extends AppCompatActivity {
 
 
                 // TODO Auto-generated method stub
+                DatePickerDialog datePickerDialog =
                 new DatePickerDialog(Register_Now.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                datePickerDialog.show();
+
             }
         });
 
@@ -182,21 +197,25 @@ public class Register_Now extends AppCompatActivity {
     }
 
     public void showMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        //builder.set
-        builder.setMessage(message);
-        //builder.show();
-        AlertDialog dialog1 = builder.create();
-        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Window view = ((AlertDialog) dialog).getWindow();
-                view.setBackgroundDrawableResource(R.color.white);
-            }
-        });
-        dialog1.show();
+        Toast.makeText(getApplicationContext(), message,
+                Toast.LENGTH_LONG).show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
+//        builder.setCancelable(true);
+//        builder.setTitle(title);
+//        //builder.set
+//        builder.setMessage(message);
+//        //builder.show();
+//        AlertDialog dialog1 = builder.create();
+//        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
+//            @Override
+//            public void onShow(DialogInterface dialog) {
+//                Window view = ((AlertDialog) dialog).getWindow();
+//                view.setBackgroundDrawableResource(R.color.white);
+//            }
+//        });
+//        dialog1.show();
+
+
 
     }
 
@@ -229,8 +248,11 @@ public class Register_Now extends AppCompatActivity {
             //otherGender.setError("field Cannot be empty");
             showMessage("Error","Please select gender");
 
-            return false;
-        }
+            return false;}
+//        }else if (Integer.parseInt(ageS)<18){
+//            showMessage("Error","Minimum age should be 18 years");
+//            return false;
+//        }
         return true;
     }
 
@@ -272,7 +294,7 @@ public class Register_Now extends AppCompatActivity {
                 editor.putString("Gender", gender);
                 editor.putString("user", User);
                 editor.putString("password", Password);
-               editor.putString("Birthday", String.valueOf(Birthday));
+               editor.putString("Birthday", ageS);
                 editor.putString("Email", email);
                 editor.putString("Phone", mobile);
                 editor.putString("App_User", "Simple_Login");

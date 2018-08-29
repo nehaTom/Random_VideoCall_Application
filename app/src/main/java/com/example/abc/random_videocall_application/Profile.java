@@ -85,10 +85,10 @@ public class Profile extends AppCompatActivity {
     ProgressDialog progressDialog;
     private String Name_Profile,Mobile_Profile ,
     State_Profile ,
-    Height_Profile ,
-    Weight_Profile ,
     ethinicity_Profile,About_You_Profile;
     ImageView BackArrow;
+    int Height_Profile ,
+            Weight_Profile ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,18 +142,10 @@ public class Profile extends AppCompatActivity {
          Password = sharedPreferences.getString("password", "");
          Birthday = sharedPreferences.getString("Birthday", "");
          Gender = sharedPreferences.getString("Gender", "");
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/mm/yy");
-
-        try {
-            date = new Date();
-            date =simpleDateFormat.parse(Birthday);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         String Gender = sharedPreferences.getString("Gender", "");
-        String dateValue = getAge(date.getDay(),date.getMonth(),date.getYear())+"";
-        age.setText(dateValue);
+        //String dateValue = getAge(date.getDay(),date.getMonth(),date.getYear())+"";
+        age.setText(Birthday + " years");
         name.setText(Name);
         gmail.setText(Email);
         phone.setText(Mobile);
@@ -208,8 +200,8 @@ public class Profile extends AppCompatActivity {
         }
         object.put("State", State_Profile);
 //        object.putFloat("Height", Float.parseFloat(Height_Profile));
-        object.put("Height", 12232);
-        object.put("Weight", 5336);
+        object.put("Height", Height_Profile);
+        object.put("Weight", Weight_Profile);
         object.put("Nationality", ethinicity_Profile);
         object.put("About_Me", About_You_Profile);
         object.put("Gender", Gender);
@@ -318,8 +310,11 @@ public class Profile extends AppCompatActivity {
          Name_Profile = name.getText().toString().trim();
          Mobile_Profile = phone.getText().toString().trim();
          State_Profile = state.getText().toString().trim();
-         Height_Profile = height.getText().toString().trim();
-         Weight_Profile = weight.getText().toString().trim();
+
+
+
+         Height_Profile =Integer.parseInt(height.getText().toString().trim());//.toString().trim();
+         Weight_Profile = Integer.parseInt(weight.getText().toString().trim());
          ethinicity_Profile = Ethnicity.getText().toString().trim();
          About_You_Profile = aboutYou.getText().toString().trim();
     }
@@ -332,11 +327,11 @@ public class Profile extends AppCompatActivity {
         //// put fields
         QBCustomObject object = new QBCustomObject();
         object.putString("Full_Name", Name_Profile);
-        object.putInteger("Phone", Integer.parseInt(Mobile_Profile));
+        object.putString("Phone", Mobile_Profile);
         object.putString("State", State_Profile);
 //        object.putFloat("Height", Float.parseFloat(Height_Profile));
-        object.putFloat("Height", 12232);
-        object.putFloat("Weight", 5336);
+        object.putInteger("Height", Height_Profile);
+        object.putInteger("Weight", Weight_Profile);
         object.putString("Nationality", ethinicity_Profile);
         object.putString("About_Me", About_You_Profile);
         object.putString("Gender", Gender);
@@ -500,7 +495,7 @@ public class Profile extends AppCompatActivity {
         state.setText(sharedPreferences.getString("State",""));
         height.setText(sharedPreferences.getString("Height",""));
         gender.setText(sharedPreferences.getString("Gender",""));
-        age.setText(sharedPreferences.getString("Age",""));
+        age.setText(sharedPreferences.getString("Birthday","")+" years");
         Ethnicity.setText(sharedPreferences.getString("Nationality",""));
         weight.setText(sharedPreferences.getString("Weight",""));
         gmail.setText(sharedPreferences.getString("user",""));
@@ -540,27 +535,14 @@ public class Profile extends AppCompatActivity {
             return false;
         }
         else if (interestedRadioGroup.getCheckedRadioButtonId() == -1) {
-            showMessage("Error","Please select gender");
+            showMessage("Error","Please select Interested In");
             return false;
         }
         return true;
     }
     public void showMessage(String title, String message) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getApplication());
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        //builder.set
-        builder.setMessage(message);
-        //builder.show();
-        android.support.v7.app.AlertDialog dialog1 = builder.create();
-        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Window view = ((android.support.v7.app.AlertDialog) dialog).getWindow();
-                view.setBackgroundDrawableResource(R.color.white);
-            }
-        });
-        dialog1.show();
+        Toast.makeText(getApplicationContext(), message,
+                Toast.LENGTH_LONG).show();
 
     }
     private int getAge(int day, int month, int year){

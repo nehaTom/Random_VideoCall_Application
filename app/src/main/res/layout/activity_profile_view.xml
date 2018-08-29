@@ -96,7 +96,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:text="Harpreet Kaur"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
 
@@ -124,7 +123,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:text="harpreet.kaur@codemaven.net"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
 
@@ -152,7 +150,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:text="23 years"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
 
@@ -181,7 +178,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="48dp"
                     android:maxLength="10"
-                    android:text="8080808880"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
 
@@ -209,7 +205,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:text="Female"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
 
@@ -238,7 +233,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:inputType="text"
-                    android:text="UP"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
 
@@ -266,7 +260,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:inputType="text"
-                    android:text="UP"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mediumFont" />
             </LinearLayout>

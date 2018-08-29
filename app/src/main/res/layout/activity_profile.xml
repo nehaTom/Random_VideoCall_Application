@@ -147,7 +147,7 @@
 
                 <TextView
                     android:id="@+id/age"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:text="23 years"
@@ -306,16 +306,17 @@
 
 
                 <EditText
-                    android:padding="5dp"
                     android:id="@+id/height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
+                    android:background="@drawable/edittextbg"
                     android:hint="_cm"
-                    android:inputType="text"
+                    android:maxLength="3"
+                    android:inputType="text|number"
+                    android:padding="5dp"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont"
-                    android:background="@drawable/edittextbg"/>
+                    android:textSize="@dimen/mediumFont" />
 
             </LinearLayout>
 
@@ -337,16 +338,17 @@
 
 
                 <EditText
-                    android:padding="5dp"
                     android:id="@+id/weight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
+                    android:background="@drawable/edittextbg"
                     android:hint="_Kg"
-                    android:inputType="text"
+                    android:maxLength="3"
+                    android:inputType="text|number"
+                    android:padding="5dp"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/mediumFont"
-                    android:background="@drawable/edittextbg"/>
+                    android:textSize="@dimen/mediumFont" />
 
             </LinearLayout>
 

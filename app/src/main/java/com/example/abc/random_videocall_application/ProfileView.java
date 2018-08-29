@@ -115,34 +115,38 @@ public class ProfileView extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
                 if(qbCustomObjects.size()>0) {
-                    String id = qbCustomObjects.get(0).getCustomObjectId();
-                    HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
-                    Log.e("Check",fields.get("Interested_In").toString());
-                    Log.e("Check",fields.get("Gender").toString());
-                    name.setText(fields.get("Full_Name").toString());
-                    editor.putString("NAME",fields.get("Full_Name").toString());
-                    interestedIn.setText(fields.get("Interested_In").toString());
-                    editor.putString("INTERESTEDIN",fields.get("Interested_In").toString());
-                    aboutYou.setText(fields.get("About_Me").toString());
-                    editor.putString("About_Me",fields.get("About_Me").toString());
-                    phone.setText(fields.get("Phone").toString());
-                    editor.putString("Phone",fields.get("Phone").toString());
-                    state.setText(fields.get("State").toString());
-                    editor.putString("State",fields.get("State").toString());
-                    height.setText(fields.get("Height").toString());
-                    editor.putString("Height",fields.get("Height").toString());
-                    gender.setText(fields.get("Gender").toString());
-                    editor.putString("Gender",fields.get("Gender").toString());
-                    age.setText(fields.get("Age").toString());
-                    editor.putString("Age",fields.get("Age").toString());
-                    Ethnicity.setText(fields.get("Nationality").toString());
-                    editor.putString("Nationality",fields.get("Nationality").toString());
-                    weight.setText(fields.get("Weight").toString());
-                    editor.putString("Weight",fields.get("Weight").toString());
-                    editor.commit();
-                    gmail.setText(sharedPreferences.getString("user",""));
-                    //hideProgressDialog();
-                    setImageIfexist();
+                    for(int i = 0 ;i <qbCustomObjects.size();i++) {
+                        if(qbCustomObjects.get(0).getUserId().equals(profileId)) {
+                            String id = qbCustomObjects.get(0).getCustomObjectId();
+                            HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
+                            Log.e("Check", fields.get("Interested_In").toString());
+                            Log.e("Check", fields.get("Gender").toString());
+                            name.setText(fields.get("Full_Name").toString());
+                            editor.putString("NAME", fields.get("Full_Name").toString());
+                            interestedIn.setText(fields.get("Interested_In").toString());
+                            editor.putString("INTERESTEDIN", fields.get("Interested_In").toString());
+                            aboutYou.setText(fields.get("About_Me").toString());
+                            editor.putString("About_Me", fields.get("About_Me").toString());
+                            phone.setText(fields.get("Phone").toString());
+                            editor.putString("Phone", fields.get("Phone").toString());
+                            state.setText(fields.get("State").toString());
+                            editor.putString("State", fields.get("State").toString());
+                            height.setText(fields.get("Height").toString());
+                            editor.putString("Height", fields.get("Height").toString());
+                            gender.setText(fields.get("Gender").toString());
+                            editor.putString("Gender", fields.get("Gender").toString());
+                            age.setText(fields.get("Age").toString());
+                            editor.putString("Birthday", fields.get("Age").toString());
+                            Ethnicity.setText(fields.get("Nationality").toString());
+                            editor.putString("Nationality", fields.get("Nationality").toString());
+                            weight.setText(fields.get("Weight").toString());
+                            editor.putString("Weight", fields.get("Weight").toString());
+                            editor.commit();
+                            gmail.setText(sharedPreferences.getString("user", ""));
+                            //hideProgressDialog();
+                            setImageIfexist();
+                        }
+                    }
 
                 }
             }
@@ -193,6 +197,7 @@ public class ProfileView extends AppCompatActivity {
         aboutYou = findViewById(R.id.aboutYou);
         interestedIn = findViewById(R.id.interestedIn);
         profileId = sharedPreferences.getString("ID","");
+        Log.e("check",profileId);
 
     }
 }
