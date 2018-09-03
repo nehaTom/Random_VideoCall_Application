@@ -100,6 +100,7 @@ public class ChatMessageAdapter extends BaseAdapter {
                 time.setText(""+qbChatMessages.get(i).getDateSent());
                 time.setTextColor(Color.BLACK);
                 String SenderName= QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName();
+
                 //editor.putString("SenderName",SenderName);
                 //editor.commit();
             }
