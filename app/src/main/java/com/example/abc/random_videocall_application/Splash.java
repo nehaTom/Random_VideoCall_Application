@@ -7,10 +7,17 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.activities.LoginActivity;
+import com.example.abc.random_videocall_application.VideoClasses.activities.OpponentsActivity;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
+import com.quickblox.users.model.QBUser;
+
 public class Splash extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    private SharedPrefsHelper sharedPrefsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +35,12 @@ public class Splash extends AppCompatActivity {
                // boolean hasLoggedIn = sharedPreferences.getString("hasLoggedIn", "");
                 if (hasLoggedIn) {
 
-                    Intent intent = new Intent(Splash.this, Home2.class);
-                    startActivity(intent);
-                    finish();
+                    sharedPrefsHelper = SharedPrefsHelper.getInstance();
+
+                    if (sharedPrefsHelper.hasQbUser()) {
+                        startLoginService(sharedPrefsHelper.getQbUser());
+                    }
+                    startHomeActivity();
                 }
                 else {
                     Intent intent = new Intent(Splash.this, New_Login.class);
@@ -45,5 +55,12 @@ public class Splash extends AppCompatActivity {
             }
         }, 3000);
 
+    }
+    protected void startLoginService(QBUser qbUser) {
+        CallService.start(this, qbUser);
+    }
+    private void startHomeActivity() {
+        Home2.start(Splash.this, false);
+        finish();
     }
 }

@@ -3,6 +3,7 @@ package com.example.abc.random_videocall_application.VideoClasses.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.abc.random_videocall_application.Home2;
 import com.example.abc.random_videocall_application.VideoClasses.activities.OpponentsActivity;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacksImpl;
@@ -44,7 +45,7 @@ public class WebRtcSessionManager extends QBRTCClientSessionCallbacksImpl {
 
         if (currentSession == null){
             setCurrentSession(session);
-            OpponentsActivity.start(context, true);
+            Home2.start(context, true);
         }
     }
 

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
 import com.quickblox.auth.session.QBSettings;
@@ -38,23 +39,21 @@ import java.util.HashMap;
 public class SignIn extends AppCompatActivity {
     TextView regiterNow_text;
     Button loginBtn;
-    EditText userNameEditText,userPasswordEditText;
+    EditText userNameEditText, userPasswordEditText;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     ProgressDialog dialog;
-    CheckBox agree_checkbox,checkBox;
+    CheckBox agree_checkbox, checkBox;
     String email;
     boolean doubleBackToExitPressedOnce = false;
-    static final String APP_ID="72405";
-    static final String AUTH_KEY="zCNmPJGEkrGyseU";
-    static final String AUTH_SECRET="V6nrN7Cdv2Vt2Vm";
-    static final String ACCOUNT_KEY="qAx_5ERjtk6Fy_tBh1rs";
-
+    static final String APP_ID = "72405";
+    static final String AUTH_KEY = "zCNmPJGEkrGyseU";
+    static final String AUTH_SECRET = "V6nrN7Cdv2Vt2Vm";
+    static final String ACCOUNT_KEY = "qAx_5ERjtk6Fy_tBh1rs";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
 
         super.onCreate(savedInstanceState);
@@ -74,22 +73,19 @@ public class SignIn extends AppCompatActivity {
     }
 
 
-
     private void setLoginButton() {
         loginBtn = findViewById(R.id.loginBtn);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-if(checkifFieldsHaveValidValues())
-{
-    quickBloxValidation();
-}
+                if (checkifFieldsHaveValidValues()) {
+                    quickBloxValidation();
+                }
             }
 
 
         });
     }
-
 
 
     private void setRegisterNow() {
@@ -105,24 +101,22 @@ if(checkifFieldsHaveValidValues())
     }
 
 
-
-
     private void quickBloxValidation()
 
-    {dialog.show();
-        final String User=userNameEditText.getText().toString().trim();
-        final String Password= userPasswordEditText.getText().toString().trim();
+    {
+        dialog.show();
+        final String User = userNameEditText.getText().toString().trim();
+        final String Password = userPasswordEditText.getText().toString().trim();
         QBUser qbUser = new QBUser(User, Password);
         QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle)
-            {
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
                 dialog.dismiss();
-                editor.putString("user",User);
-                editor.putString("password",Password);
+                editor.putString("user", User);
+                editor.putString("password", Password);
                 editor.putBoolean("hasLoggedIn", true);
-                editor.putString("App_User","Simple_Login");
-                editor.putString("ID",qbUser.getId().toString());
+                editor.putString("App_User", "Simple_Login");
+                editor.putString("ID", qbUser.getId().toString());
                 editor.commit();
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
@@ -131,11 +125,9 @@ if(checkifFieldsHaveValidValues())
             }
 
             @Override
-            public void onError(QBResponseException e)
-            {
+            public void onError(QBResponseException e) {
                 dialog.dismiss();
-//Log.e("Login_Error",e.getMessage());
-                Toast.makeText(getApplicationContext(),e.getMessage(),
+                Toast.makeText(getApplicationContext(), e.getMessage(),
                         Toast.LENGTH_LONG).show();
 
             }
@@ -147,90 +139,64 @@ if(checkifFieldsHaveValidValues())
     public void getProfileById(String id) {
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.eq("userId", id);
-        Performer<ArrayList<QBCustomObject>> performer =  QBCustomObjects.getObjects("Profile",requestBuilder);
+        Performer<ArrayList<QBCustomObject>> performer = QBCustomObjects.getObjects("Profile", requestBuilder);
         performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
-                if(qbCustomObjects.size()>0) {
+                if (qbCustomObjects.size() > 0) {
                     String id = qbCustomObjects.get(0).getCustomObjectId();
                     HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
-                    Log.e("Check",fields.get("Interested_In").toString());
-                    Log.e("Check",fields.get("Gender").toString());
-                    editor.putString("Interested_In",fields.get("Interested_In").toString());
-                    editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
-                    editor.putString("PName",fields.get("Full_Name").toString());
+                    editor.putString("Interested_In", fields.get("Interested_In").toString());
+                    editor.putString("Profile_Id", qbCustomObjects.get(0).getCustomObjectId());
+                    editor.putString("PName", fields.get("Full_Name").toString());
                     editor.commit();
-                    Intent intent=new Intent(SignIn.this,Home2.class);
-                    startActivity(intent);
-                    SignIn.this.finish();
                 }
+                startLoginService(SharedPrefsHelper.getInstance().getQbUser());
+                startHomeActivity();
             }
 
             @Override
             public void onError(QBResponseException e) {
-                Log.e("TAG","checking");
-
-                editor.putString("Interested_In","");
-                editor.putString("Profile_Id","");
-                editor.putString("PName","");
+                Log.e("TAG", "checking");
+                editor.putString("Interested_In", "");
+                editor.putString("Profile_Id", "");
+                editor.putString("PName", "");
                 editor.commit();
-                Intent intent=new Intent(SignIn.this,Home2.class);
-                startActivity(intent);
-                SignIn.this.finish();
+                startHomeActivity();
             }
         });
 
     }
 
-
-
-    public void showMessage(String title,String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        //builder.set
-        builder.setMessage(message);
-        //builder.show();
-        AlertDialog dialog1 = builder.create();
-        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Window view = ((AlertDialog)dialog).getWindow();
-                view.setBackgroundDrawableResource(R.color.white);
-            }
-        });
-        dialog1.show();
-
+    private void startHomeActivity() {
+        Home2.start(SignIn.this, false);
+        finish();
     }
-//    @Override
-//    public void onBackPressed() {
-//        moveTaskToBack(true);
-//    }
-    private boolean checkifFieldsHaveValidValues()
-    { String email,password;
-        email= userNameEditText.getText().toString().trim();
+    protected void startLoginService(QBUser qbUser) {
+        CallService.start(this, qbUser);
+    }
+
+    private boolean checkifFieldsHaveValidValues() {
+        String email, password;
+        email = userNameEditText.getText().toString().trim();
         password = userPasswordEditText.getText().toString().trim();
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             userNameEditText.setError("Please enter  Username");
             return false;
-        }else if (password.isEmpty()){
+        } else if (password.isEmpty()) {
             userPasswordEditText.setError("Please enter  Password");
             return false;
-        }if(!agree_checkbox.isChecked()) {
-        agree_checkbox.setError("Please Agree Policies");
-        return false;
-    }
+        }
+        if (!agree_checkbox.isChecked()) {
+            agree_checkbox.setError("Please Agree Policies");
+            return false;
+        }
         return true;
     }
 
-    private void initializeQuickBlox()
-    {
-//
-        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
-        // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-//        final String API_DOAMIN = "https://apicustomdomain.quickblox.com";
-//        final String CHAT_DOMAIN = "chatcustomdomain.quickblox.com";
+    private void initializeQuickBlox() {
 
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setEndpoints("https://api.quickblox.com", "chat.quickblox.com", ServiceZone.PRODUCTION);
         QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
     }
@@ -251,36 +217,10 @@ if(checkifFieldsHaveValidValues())
 
     @Override
     public void onBackPressed() {
-        Intent intent=new Intent(SignIn.this,New_Login.class);
+        Intent intent = new Intent(SignIn.this, New_Login.class);
         startActivity(intent);
         finish();
     }
-    //    @Override
-//    public void onBackPressed() {
-//
-//        if (doubleBackToExitPressedOnce) {
-//            Intent intent = new Intent(Intent.ACTION_MAIN);
-//            intent.addCategory(Intent.CATEGORY_HOME);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//            finish();
-//
-//            return;
-//        }
-//
-//        this.doubleBackToExitPressedOnce = true;
-//        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                doubleBackToExitPressedOnce = false;
-//            }
-//        }, 2000);
-//
-//    }
-
 }
 
 

@@ -29,6 +29,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.BaseService;
 import com.quickblox.auth.session.QBSession;
@@ -87,8 +89,7 @@ public class Profile extends AppCompatActivity {
     State_Profile ,
     ethinicity_Profile,About_You_Profile;
     ImageView BackArrow;
-    int Height_Profile ,
-            Weight_Profile ;
+    int Height_Profile , Weight_Profile ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,8 +216,8 @@ public class Profile extends AppCompatActivity {
             public void onSuccess(QBCustomObject qbCustomObject, Bundle bundle) {
                 if(photoToUpload == null){
                     hideProgressDialog();
-                    Intent i = new Intent(getApplicationContext(), Home2.class);
-                    startActivity(i);
+                    startLoginService(SharedPrefsHelper.getInstance().getQbUser());
+                    startHomeActivity();
                 }else {
                     upload_check();
                 }
@@ -225,10 +226,19 @@ public class Profile extends AppCompatActivity {
 
             @Override
             public void onError(QBResponseException e) {
+                Log.e("Profile_Error",e.getMessage());
                 hideProgressDialog();
             }
         });
 
+    }
+    private void startHomeActivity() {
+        Home2.start(Profile.this, false);
+        finish();
+    }
+
+    protected void startLoginService(QBUser qbUser) {
+        CallService.start(this, qbUser);
     }
 
     private void checkPermissions() {
@@ -545,23 +555,7 @@ public class Profile extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
 
     }
-    private int getAge(int day, int month, int year){
-        Calendar dob = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
 
-        dob.set(day, month,year );
-
-        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
-            age--;
-        }
-
-        Integer ageInt = new Integer(age);
-        // String ageS = ageInt.toString();
-
-        return ageInt;
-    }
 
     @Override
     public void onBackPressed() {

@@ -82,6 +82,8 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
     private PermissionsChecker checker;
     QbUsersDbManager dbManager;
     TextView user_name_appmenu;
+    boolean isRunForCall;
+    WebRtcSessionManager webRtcSessionManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +126,35 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
         setGridView();
         setData();
         setOnClicks();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isRunForCall = extras.getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+        }
+
+        webRtcSessionManager = WebRtcSessionManager.getInstance(getApplicationContext());
+        if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+            CallActivity.start(NewJoined.this, true);
+        }
 
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            isRunForCall = intent.getExtras().getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+            if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+                CallActivity.start(NewJoined.this, true);
+            }
+        }
+    }
+
+    public static void start(Context context, boolean isRunForCall) {
+        Intent intent = new Intent(context, Home2.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
+        context.startActivity(intent);
     }
 
     private void createSessionForChat() {

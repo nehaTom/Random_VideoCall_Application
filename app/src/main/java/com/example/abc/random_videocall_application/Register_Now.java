@@ -70,13 +70,9 @@ public class Register_Now extends AppCompatActivity {
     ProgressDialog dialog;
     SharedPreferences.Editor editor;
     Map<String, String> header;
-    String name, mobile, password, Birthday, gender, email,ageS;
+    String name, mobile, password, Birthday, gender, email, ageS;
     boolean doubleBackToExitPressedOnce = false;
 
-//    static final String APP_ID="72648";
-//    static final String AUTH_KEY="5ZyyFJzKUdh2kjN";
-//    static final String AUTH_SECRET="wJaJMKJqqq5bznN";
-//    static final String ACCOUNT_KEY="jmDTjvqNm4zi2JfyrTYm";
 
     static final String APP_ID = "72405";
     static final String AUTH_KEY = "zCNmPJGEkrGyseU";
@@ -138,14 +134,12 @@ public class Register_Now extends AppCompatActivity {
 
                 Calendar today = Calendar.getInstance();
                 int age = today.get(Calendar.YEAR) - myCalendar.get(Calendar.YEAR);
-                if (today.get(Calendar.DAY_OF_YEAR) < myCalendar.get(Calendar.DAY_OF_YEAR)){
+                if (today.get(Calendar.DAY_OF_YEAR) < myCalendar.get(Calendar.DAY_OF_YEAR)) {
                     age--;
                 }
 
                 Integer ageInt = new Integer(age);
                 ageS = ageInt.toString();
-
-                //return ageS;
                 updateLabel();
             }
 
@@ -165,9 +159,9 @@ public class Register_Now extends AppCompatActivity {
 
                 // TODO Auto-generated method stub
                 DatePickerDialog datePickerDialog =
-                new DatePickerDialog(Register_Now.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                        new DatePickerDialog(Register_Now.this, date, myCalendar
+                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                                myCalendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
                 datePickerDialog.show();
 
@@ -199,29 +193,13 @@ public class Register_Now extends AppCompatActivity {
     public void showMessage(String title, String message) {
         Toast.makeText(getApplicationContext(), message,
                 Toast.LENGTH_LONG).show();
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
-//        builder.setCancelable(true);
-//        builder.setTitle(title);
-//        //builder.set
-//        builder.setMessage(message);
-//        //builder.show();
-//        AlertDialog dialog1 = builder.create();
-//        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialog) {
-//                Window view = ((AlertDialog) dialog).getWindow();
-//                view.setBackgroundDrawableResource(R.color.white);
-//            }
-//        });
-//        dialog1.show();
-
 
 
     }
 
 
     private boolean checkValidation() {
-      String email=emailEdit.getText().toString();
+        String email = emailEdit.getText().toString();
 
         if (nameEdit.getText().toString().equals("")) {
             nameEdit.setError("field Cannot be empty");
@@ -229,35 +207,30 @@ public class Register_Now extends AppCompatActivity {
         } else if (emailEdit.getText().toString().equals("")) {
             emailEdit.setError("field Cannot be empty");
             return false;
-        }else if (emailValidator(email)==false) {
+        } else if (emailValidator(email) == false) {
             emailEdit.setError("Enter correct email");
             return false;
         } else if (mobileEdit.getText().toString().equals("")) {
             mobileEdit.setError("field Cannot be empty");
             return false;
-        } else if (mobileEdit.getText().toString().length()<10) {
+        } else if (mobileEdit.getText().toString().length() < 10) {
             mobileEdit.setError("mobile No cannot be less than 10 number");
             return false;
-        }else if (passwordEdit.getText().toString().equals("")) {
+        } else if (passwordEdit.getText().toString().equals("")) {
             passwordEdit.setError("field Cannot be empty");
             return false;
         } else if (birthEdit.getText().toString().equals("")) {
             birthEdit.setError("field Cannot be empty");
             return false;
         } else if (genderGroup.getCheckedRadioButtonId() == -1) {
-            //otherGender.setError("field Cannot be empty");
-            showMessage("Error","Please select gender");
+            showMessage("Error", "Please select gender");
 
-            return false;}
-//        }else if (Integer.parseInt(ageS)<18){
-//            showMessage("Error","Minimum age should be 18 years");
-//            return false;
-//        }
+            return false;
+        }
         return true;
     }
 
-    public boolean emailValidator(String email)
-    {
+    public boolean emailValidator(String email) {
         Pattern pattern;
         Matcher matcher;
         final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -265,6 +238,7 @@ public class Register_Now extends AppCompatActivity {
         matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
     private void quickBloxValidation()
 
     {
@@ -275,7 +249,7 @@ public class Register_Now extends AppCompatActivity {
         String Name = nameEdit.getText().toString().trim();
         String User = emailEdit.getText().toString().trim();
         String Password = passwordEdit.getText().toString().trim();
-        String Birthday= birthEdit.getText().toString();
+        String Birthday = birthEdit.getText().toString();
         String email = emailEdit.getText().toString().trim();
         String mobile = mobileEdit.getText().toString().trim();
 
@@ -294,15 +268,13 @@ public class Register_Now extends AppCompatActivity {
                 editor.putString("Gender", gender);
                 editor.putString("user", User);
                 editor.putString("password", Password);
-               editor.putString("Birthday", ageS);
+                editor.putString("Birthday", ageS);
                 editor.putString("Email", email);
                 editor.putString("Phone", mobile);
                 editor.putString("App_User", "Simple_Login");
-
                 editor.putBoolean("hasLoggedIn", true);
-                editor.putString("ID",qbUser.getId().toString());
+                editor.putString("ID", qbUser.getId().toString());
                 editor.commit();
-
                 qbUser.setPassword(Password);
                 SharedPrefsHelper.getInstance().saveQbUser(qbUser);
                 getProfileById(qbUser.getId().toString());
@@ -325,65 +297,42 @@ public class Register_Now extends AppCompatActivity {
     public void getProfileById(String id) {
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.eq("userId", id);
-        Performer<ArrayList<QBCustomObject>> performer =  QBCustomObjects.getObjects("Profile",requestBuilder);
+        Performer<ArrayList<QBCustomObject>> performer = QBCustomObjects.getObjects("Profile", requestBuilder);
         performer.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
-                if(qbCustomObjects.size()>0) {
+                if (qbCustomObjects.size() > 0) {
                     String id = qbCustomObjects.get(0).getCustomObjectId();
                     HashMap<String, Object> fields = qbCustomObjects.get(0).getFields();
-                    Log.e("Check",fields.get("Interested_In").toString());
-                    Log.e("Check",fields.get("Gender").toString());
-                    editor.putString("Interested_In",fields.get("Interested_In").toString());
-                    editor.putString("Profile_Id",qbCustomObjects.get(0).getCustomObjectId());
-                    editor.putString("PName",fields.get("Full_Name").toString());
+                    Log.e("Check", fields.get("Interested_In").toString());
+                    Log.e("Check", fields.get("Gender").toString());
+                    editor.putString("Interested_In", fields.get("Interested_In").toString());
+                    editor.putString("Profile_Id", qbCustomObjects.get(0).getCustomObjectId());
+                    editor.putString("PName", fields.get("Full_Name").toString());
                     editor.commit();
-                    Intent i = new Intent(getApplicationContext(), Profile.class);
-                    i.putExtra("FromWhere","Register");
-                    startActivity(i);
+
                 }
+
+                Intent i = new Intent(getApplicationContext(), Profile.class);
+                i.putExtra("FromWhere", "Register");
+                startActivity(i);
             }
 
             @Override
             public void onError(QBResponseException e) {
-                Log.e("TAG","checking");
-                editor.putString("Interested_In","");
-                editor.putString("Profile_Id","");
-                editor.putString("PName","");
+                Log.e("TAG", "checking");
+                editor.putString("Interested_In", "");
+                editor.putString("Profile_Id", "");
+                editor.putString("PName", "");
                 editor.commit();
                 Intent i = new Intent(getApplicationContext(), Profile.class);
-                i.putExtra("FromWhere","Register");
+                i.putExtra("FromWhere", "Register");
                 startActivity(i);
             }
         });
 
     }
 
-    private void buildUsersList() throws IOException {
-        List<String> tags = new ArrayList<>();
-
-
-//        tags.add();
-
-        QBUsers.getUsersByTags(tags, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
-            @Override
-            public void onSuccess(ArrayList<QBUser> result, Bundle params) {
-//                UsersAdapter adapter = new UsersAdapter(LoginActivity.this, result);
-//                userListView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-//                ErrorUtils.showSnackbar(userListView, R.string.login_cant_obtain_users, e,
-//                        R.string.dlg_retry, new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                buildUsersList();
-//                            }
-//                        });
-            }
-        });
-    }
 
     private void registerQuickBlox()
 
@@ -404,50 +353,18 @@ public class Register_Now extends AppCompatActivity {
     private void initializeQuickBlox() {
         //
         QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
-        // QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
-//        final String API_DOAMIN = "https://apicustomdomain.quickblox.com";
-//        final String CHAT_DOMAIN = "chatcustomdomain.quickblox.com";
 
         QBSettings.getInstance().setEndpoints("https://api.quickblox.com", "chat.quickblox.com", ServiceZone.PRODUCTION);
         QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
     }
 
     @Override
-    public void onBackPressed()
-    {
-        Intent intent = new Intent(Register_Now.this,New_Login.class);
+    public void onBackPressed() {
+        Intent intent = new Intent(Register_Now.this, New_Login.class);
         startActivity(intent);
-//            intent.addCategory(Intent.CATEGORY_HOME);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//          // intent.startActivity(Register_Now.this,New_Login.class);
-          finish();
+        finish();
     }
-//    @Override
-//    public void onBackPressed() {
 //
-//        if (doubleBackToExitPressedOnce) {
-//            Intent intent = new Intent(Register_Now.this,New_Login.class);
-//            startActivity(intent);
-//            intent.addCategory(Intent.CATEGORY_HOME);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//          // intent.startActivity(Register_Now.this,New_Login.class);
-//            finish();
-//
-//            return;
-//        }
-//
-//        this.doubleBackToExitPressedOnce = true;
-//        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                doubleBackToExitPressedOnce = false;
-//            }
-//        }, 2000);
-//
-//    }
 
 }
 

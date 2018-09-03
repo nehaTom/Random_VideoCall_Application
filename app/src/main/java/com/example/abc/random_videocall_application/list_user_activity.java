@@ -86,7 +86,8 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
     private PermissionsChecker checker;
     boolean doubleBackToExitPressedOnce = false;
     private QbUsersDbManager dbManager;
-
+    boolean isRunForCall;
+    WebRtcSessionManager webRtcSessionManager;
     TextView user_name_appmenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,32 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         retrieveAllUsers();
         setData();
         setOnClicks();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isRunForCall = extras.getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+        }
+
+        webRtcSessionManager = WebRtcSessionManager.getInstance(getApplicationContext());
+        if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+            CallActivity.start(list_user_activity.this, true);
+        }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            isRunForCall = intent.getExtras().getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+            if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+                CallActivity.start(list_user_activity.this, true);
+            }
+        }
+    }
+
+    public static void start(Context context, boolean isRunForCall) {
+        Intent intent = new Intent(context, Home2.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
+        context.startActivity(intent);
     }
 
 //    private void createSessionForFacebook()

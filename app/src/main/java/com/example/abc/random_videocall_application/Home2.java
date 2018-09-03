@@ -78,10 +78,30 @@ public class Home2 extends AppCompatActivity
     private PermissionsChecker checker;
 
     SharedPreferences sharedPreferences;
+    boolean isRunForCall;
     SharedPreferences.Editor editor;
     QBUser currentUser;
     TextView user_name_appmenu;
+    private WebRtcSessionManager webRtcSessionManager;
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            isRunForCall = intent.getExtras().getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+            if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+                CallActivity.start(Home2.this, true);
+            }
+        }
+    }
+
+    public static void start(Context context, boolean isRunForCall) {
+        Intent intent = new Intent(context, Home2.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
+        context.startActivity(intent);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +112,14 @@ public class Home2 extends AppCompatActivity
         requestExecutor = App.getInstance().getQbResRequestExecutor();
         dbManager = QbUsersDbManager.getInstance(getApplicationContext());
        // loginSession();
-
+        webRtcSessionManager = WebRtcSessionManager.getInstance(getApplicationContext());
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isRunForCall = extras.getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+        }
+        if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+            CallActivity.start(Home2.this, true);
+        }
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
         checker = new PermissionsChecker(getApplicationContext());
         currentUser = sharedPrefsHelper.getQbUser();
