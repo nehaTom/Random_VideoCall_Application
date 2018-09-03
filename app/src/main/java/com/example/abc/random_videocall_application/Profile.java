@@ -347,7 +347,6 @@ public class Profile extends AppCompatActivity {
         object.putString("Gender", Gender);
         object.putString("Interested_In", Interested_In);
         object.putFile("Image", images);
-
         object.putInteger("Age", 24);
         object.putString("Parent ID", Email);
 

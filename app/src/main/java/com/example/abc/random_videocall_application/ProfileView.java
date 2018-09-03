@@ -86,7 +86,7 @@ public class ProfileView extends AppCompatActivity {
             progressDialog.setCanceledOnTouchOutside(false);
 
             // Disable the back button
-            DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
+             DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                     return keyCode == KeyEvent.KEYCODE_BACK;
