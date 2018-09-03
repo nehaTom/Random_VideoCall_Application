@@ -442,13 +442,8 @@ public class Home2 extends AppCompatActivity
         currentOpponentsList = dbManager.getAllUsers();
         Log.d("TAG", "proceedInitUsersList currentOpponentsList= " + currentOpponentsList);
         currentOpponentsList.remove(sharedPrefsHelper.getQbUser());
-//       long currentTime = System.currentTimeMillis();
         for (i = 0; i < currentOpponentsList.size(); i++) {
             QBUser user = (QBUser) currentOpponentsList.get(i);
-//            long userLastRequestAtTime = user.getLastRequestAt().getTime();
-//            if((currentTime - userLastRequestAtTime) > 5*60*1000){
-//                // user is offline now
-//            }
             if(idsList.isEmpty()) {
                 tempList.add(user);
             }else {
@@ -467,6 +462,8 @@ public class Home2 extends AppCompatActivity
         if (i > 0) {
             selectedUser = new QBUser();
             selectedUser = tempList.get(random);
+            editor.putString("CallingName", selectedUser.getFullName());
+            editor.putString("CallingId",selectedUser.getId().toString());
             videoCallfunction();
         }else {
             Toast.makeText(getApplicationContext(), "No user Available", Toast.LENGTH_LONG).show();
