@@ -2,12 +2,14 @@ package com.example.abc.random_videocall_application.VideoClasses.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.abc.random_videocall_application.R;
 import com.example.abc.random_videocall_application.VideoClasses.UiUtils;
+import com.example.abc.random_videocall_application.VideoClasses.db.CallHistoryHelper;
 import com.example.abc.random_videocall_application.VideoClasses.db.QbUsersDbManager;
 import com.example.abc.random_videocall_application.VideoClasses.utils.CollectionsUtils;
 import com.example.abc.random_videocall_application.VideoClasses.utils.RingtonePlayer;
@@ -43,7 +46,6 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
     private TextView callTypeTextView;
     private ImageButton rejectButton;
     private ImageButton takeButton;
-
     private List<Integer> opponentsIds;
     private Vibrator vibrator;
     private QBRTCTypes.QBConferenceType conferenceType;
@@ -53,6 +55,7 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
     private QBRTCSession currentSession;
     private QbUsersDbManager qbUserDbManager;
     private TextView alsoOnCallText;
+    private CallHistoryHelper callHistoryHelper;
 
     @Override
     public void onAttach(Activity activity) {
@@ -72,6 +75,7 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
         Log.d(TAG, "onCreate() from IncomeCallFragment");
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -137,6 +141,8 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
         rejectButton = (ImageButton) view.findViewById(R.id.image_button_reject_call);
         takeButton = (ImageButton) view.findViewById(R.id.image_button_accept_call);
+        callHistoryHelper = new CallHistoryHelper(getContext());
+
     }
 
     private void setVisibilityAlsoOnCallTextView() {
@@ -226,14 +232,28 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         stopCallNotification();
 
         incomeCallFragmentCallbackListener.onAcceptCurrentSession();
+        //addDataInLocalDb("receivedA");
         Log.d(TAG, "Call is started");
     }
+    private void addDataInLocalDb(String type){
+        Time dtNow = new Time();
+        dtNow.setToNow();
+        String lsNow = dtNow.format("%Y.%m.%d %H:%M");
+        QBUser callerUser = qbUserDbManager.getUserById(currentSession.getCallerID());
+        String callerName = UsersUtils.getUserNameOrId(callerUser, currentSession.getCallerID());
+        String callingId = "0";
+        if(opponentsIds.size()>0){
+            callingId = opponentsIds.get(0).toString();
+        }
 
+        callHistoryHelper.insertEntry(callerName,callingId,lsNow,"",type);
+    }
     private void reject() {
         enableButtons(false);
         stopCallNotification();
 
         incomeCallFragmentCallbackListener.onRejectCurrentSession();
+        //addDataInLocalDb("receivedR");
         Log.d(TAG, "Call is rejected");
     }
 

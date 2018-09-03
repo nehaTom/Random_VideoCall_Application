@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.db.CallHistoryHelper;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -30,6 +31,8 @@ import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
+
+import java.util.ArrayList;
 
 public class My_Contacts extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     RecyclerView Existing_RecyclerView;
@@ -40,8 +43,7 @@ public class My_Contacts extends AppCompatActivity implements NavigationView.OnN
   SharedPrefsHelper sharedPrefsHelper;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-//    SharedPreferences sharedPreferences;
-//    SharedPreferences.Editor editor;
+    CallHistoryHelper callHistoryHelper;
     TextView user_name_appmenu;
     boolean doubleBackToExitPressedOnce = false;
     int[] images = {
@@ -176,14 +178,16 @@ finish();
 
 
     private void setRecyclerView() {
+        callHistoryHelper = new CallHistoryHelper(this);
         Existing_RecyclerView = findViewById(R.id.Existing_RecyclerView);
+        ArrayList<String> list = callHistoryHelper.getAllHistory();
 //        Existing_RecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         Existing_RecyclerView.setLayoutManager(layoutManager);
-        adapter = new ExistingUser_Card_Adapter(this, "My_Contact", images);
+        adapter = new ExistingUser_Card_Adapter(this, "My_Contact",list);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
-        Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels, "list"));
+        Existing_RecyclerView.addItemDecoration(new SpacesItemDecoration(5, ""));
         Existing_RecyclerView.setAdapter(adapter);
     }
 

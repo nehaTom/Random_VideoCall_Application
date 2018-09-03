@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.abc.random_videocall_application.R;
 import com.example.abc.random_videocall_application.VideoClasses.Toaster;
+import com.example.abc.random_videocall_application.VideoClasses.db.CallHistoryHelper;
 import com.example.abc.random_videocall_application.VideoClasses.db.QbUsersDbManager;
 import com.example.abc.random_videocall_application.VideoClasses.fragments.AudioConversationFragment;
 import com.example.abc.random_videocall_application.VideoClasses.fragments.BaseConversationFragment;
@@ -72,6 +74,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     private static final String TAG = CallActivity.class.getSimpleName();
 
+    private CallHistoryHelper callHistoryHelper;
     public static final String OPPONENTS_CALL_FRAGMENT = "opponents_call_fragment";
     public static final String INCOME_CALL_FRAGMENT = "income_call_fragment";
     public static final String CONVERSATION_CALL_FRAGMENT = "conversation_call_fragment";
@@ -137,6 +140,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        callHistoryHelper = new CallHistoryHelper(this);
         initQBRTCClient();
         initAudioManager();
         initWiFiManagerListener();
@@ -149,12 +153,12 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
             startAudioManager();
             ringtonePlayer.play(true);
         }
-        startSuitableFragment(isInCommingCall);
+         startSuitableFragment(isInCommingCall);
     }
 
     private void startAudioManager() {
         audioManager.start((selectedAudioDevice, availableAudioDevices) -> {
-            Toaster.shortToast("Audio device switched to  " + selectedAudioDevice);
+            //Toaster.shortToast("Audio device switched to  " + selectedAudioDevice);
 
             if (onChangeAudioDeviceCallback != null) {
                 onChangeAudioDeviceCallback.audioDeviceChanged(selectedAudioDevice);
@@ -293,23 +297,23 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
             @Override
             public void onCameraDisconnected() {
-                showToast("Camera onCameraDisconnected: ");
+                //showToast("Camera onCameraDisconnected: ");
             }
 
             @Override
             public void onCameraFreezed(String s) {
-                showToast("Camera freezed: " + s);
+                //showToast("Camera freezed: " + s);
                 hangUpCurrentSession();
             }
 
             @Override
             public void onCameraOpening(String s) {
-                showToast("Camera aOpening: " + s);
+               //showToast("Camera aOpening: " + s);
             }
 
             @Override
             public void onFirstFrameAvailable() {
-                showToast("onFirstFrameAvailable: ");
+                //showToast("onFirstFrameAvailable: ");
             }
 
             @Override
@@ -407,10 +411,26 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     }
 
     public void hangUpCurrentSession() {
+        //hang by user call outgoing
+        addDataInLocalDb("OutGoingCallHang");
         ringtonePlayer.stop();
         if (getCurrentSession() != null) {
             getCurrentSession().hangUp(new HashMap<String, String>());
         }
+    }
+
+    private void addDataInLocalDb(String type){
+        Time dtNow = new Time();
+        dtNow.setToNow();
+        String lsNow = dtNow.format("%Y.%m.%d %H:%M");
+        QBUser callerUser = dbManager.getUserById(currentSession.getCallerID());
+        String callerName = UsersUtils.getUserNameOrId(callerUser, currentSession.getCallerID());
+        String callingId = "0";
+        if(opponentsIdsList.size()>0){
+            callingId = opponentsIdsList.get(0).toString();
+        }
+
+        callHistoryHelper.insertEntry(callerName,callingId,lsNow,"",type);
     }
 
     private void setAudioEnabled(boolean isAudioEnabled) {
@@ -491,6 +511,8 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     @Override
     public void onUserNotAnswer(QBRTCSession session, Integer userID) {
+        /////// call and video outgoing not answered
+        addDataInLocalDb("CallNotAnswered");
         if (!session.equals(getCurrentSession())) {
             return;
         }
@@ -504,6 +526,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     @Override
     public void onCallAcceptByUser(QBRTCSession session, Integer userId, Map<String, String> userInfo) {
+        addDataInLocalDb("callAccepted");
         if (!session.equals(getCurrentSession())) {
             return;
         }
@@ -512,6 +535,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     @Override
     public void onCallRejectByUser(QBRTCSession session, Integer userID, Map<String, String> userInfo) {
+        addDataInLocalDb("callRejected");
         if (!session.equals(getCurrentSession())) {
             return;
         }
@@ -595,11 +619,13 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     @Override
     public void onReceiveHangUpFromUser(final QBRTCSession session, final Integer userID, Map<String, String> map) {
+
         if (session.equals(getCurrentSession())) {
 
             if (userID.equals(session.getCallerID())) {
                 hangUpCurrentSession();
                 Log.d(TAG, "initiator hung up the call");
+                addDataInLocalDb("CallEnded");
             }
 
             QBUser participant = dbManager.getUserById(userID);

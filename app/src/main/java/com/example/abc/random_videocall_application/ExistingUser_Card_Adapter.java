@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 //s
@@ -19,9 +21,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_Adapter.MyViewHolder> {
 
     private final Context context;
-    private final int[] images;
+    private int[] images = null;
     private final String fromWhere;
     private String[] names = null;
+    ArrayList<String> list = null;
+
 
     public ExistingUser_Card_Adapter(Context context, String fromWhere, int[] images) {
         this.context = context;
@@ -34,6 +38,12 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
         this.fromWhere = fromWhere;
         this.images = images;
         this.names = names;
+    }
+
+    public ExistingUser_Card_Adapter(Context context, String fromWhere, ArrayList<String> list) {
+        this.context = context;
+        this.fromWhere = fromWhere;
+        this.list = list;
     }
 
 
@@ -135,7 +145,7 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
                 User_video.setVisibility(View.GONE);
             } else if (fromWhere.equals("My_Contact")) {
                 profile_image.setVisibility(View.GONE);
-                name.setVisibility(View.GONE);
+                name.setVisibility(View.VISIBLE);
                 User_chitchat.setVisibility(View.GONE);
                 User_video.setVisibility(View.GONE);
                 User_chat.setVisibility(View.GONE);
@@ -164,9 +174,14 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
     @Override
     public void onBindViewHolder(MyViewHolder holder, int i) {
 
-        holder.profile_image.setImageResource(images[i]);
+
         if (fromWhere.equalsIgnoreCase("Existing_User")) {
             holder.name.setText(names[i]);
+            holder.profile_image.setImageResource(images[i]);
+        }else if(fromWhere.equalsIgnoreCase("My_Contact")){
+            holder.name.setText(list.get(i));
+        }else {
+            holder.profile_image.setImageResource(images[i]);
         }
 //        holder.name.setText();
 
@@ -176,6 +191,10 @@ class ExistingUser_Card_Adapter extends RecyclerView.Adapter<ExistingUser_Card_A
     @Override
     public int getItemCount() {
 
+
+        if(fromWhere.equalsIgnoreCase("My_Contact")){
+            return list.size();
+        }
         return images.length;
     }
 

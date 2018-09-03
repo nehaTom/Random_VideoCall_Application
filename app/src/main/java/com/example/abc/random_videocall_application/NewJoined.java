@@ -323,7 +323,7 @@ public class NewJoined extends AppCompatActivity implements QBSystemMessageListe
                 @Override
                 public void onSuccess(ArrayList<QBUser> users, Bundle params) {
                     Log.e("Users: ", users.toString());
-                    dbManager.saveAllUsers(users, true);
+                       dbManager.saveAllUsers(users, true);
                     manupulateUserList();
 
                 }

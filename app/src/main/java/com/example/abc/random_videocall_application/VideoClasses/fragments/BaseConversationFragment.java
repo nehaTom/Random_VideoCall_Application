@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ToggleButton;
 
 import com.example.abc.random_videocall_application.R;
 import com.example.abc.random_videocall_application.VideoClasses.activities.CallActivity;
+import com.example.abc.random_videocall_application.VideoClasses.db.CallHistoryHelper;
 import com.example.abc.random_videocall_application.VideoClasses.db.QbUsersDbManager;
 import com.example.abc.random_videocall_application.VideoClasses.utils.CollectionsUtils;
 import com.example.abc.random_videocall_application.VideoClasses.utils.Consts;
@@ -48,6 +50,7 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
     protected TextView allOpponentsTextView;
     protected TextView ringingTextView;
     protected QBUser currentUser;
+    private CallHistoryHelper callHistoryHelper;
 
     public static BaseConversationFragment newInstance(BaseConversationFragment baseConversationFragment, boolean isIncomingCall) {
         Log.d(TAG, "isIncomingCall =  " + isIncomingCall);
@@ -113,11 +116,30 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
 
     protected abstract void configureToolbar();
 
+
+    private void addDataInLocalDb(String type){
+        Time dtNow = new Time();
+        dtNow.setToNow();
+        String lsNow = dtNow.format("%Y.%m.%d %H:%M");
+        QBUser callerUser ;
+        if(opponents.size()>0){
+            callerUser =opponents.get(0);
+            String callerName = callerUser.getFullName();
+            String callingId = callerUser.getId().toString();
+            callHistoryHelper.insertEntry(callerName,callingId,lsNow,"",type);
+
+        }
+
+
+    }
+
     protected void initFields() {
+
         currentUser = QBChatService.getInstance().getUser();
         dbManager = QbUsersDbManager.getInstance(getActivity().getApplicationContext());
         sessionManager = WebRtcSessionManager.getInstance(getActivity());
         currentSession = sessionManager.getCurrentSession();
+        callHistoryHelper = new CallHistoryHelper(getContext());
 
         if (getArguments() != null) {
             isIncomingCall = getArguments().getBoolean(Consts.EXTRA_IS_INCOMING_CALL);
@@ -143,6 +165,7 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
         if (currentSession.getState() != QBRTCSession.QBRTCSessionState.QB_RTC_SESSION_CONNECTED) {
             if (isIncomingCall) {
                 currentSession.acceptCall(null);
+                addDataInLocalDb("videoI");
             } else {
                 currentSession.startCall(null);
             }
@@ -221,12 +244,15 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
     @Override
     public void onCallStarted() {
         hideOutgoingScreen();
+        //addDataInLocalDb("videoO");
         startTimer();
         actionButtonsEnabled(true);
+
     }
 
     @Override
     public void onCallStopped() {
+        //video outgoing not picked
         if (currentSession == null) {
             Log.d(TAG, "currentSession = null onCallStopped");
             return;
