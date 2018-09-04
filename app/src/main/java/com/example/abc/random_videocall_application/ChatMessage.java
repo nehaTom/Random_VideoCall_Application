@@ -61,7 +61,7 @@ public class ChatMessage extends AppCompatActivity {
     EditText editContent;
     ChatMessageAdapter adapter;
     DotLoader dotLoader;
-    TextView userName, date;
+    TextView userName, date,lastSeen;
     ImageView BackArrow;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -141,6 +141,7 @@ public class ChatMessage extends AppCompatActivity {
         initChatDialogs();
         retrieveAllMessages();
         setUserName();
+        setLastseen();
       //  setDate();
 
         ///// set date
@@ -227,6 +228,13 @@ public class ChatMessage extends AppCompatActivity {
         });
     }
 
+    private void setLastseen()
+    {
+        lastSeen = findViewById(R.id.lastSeen);
+        String SenderName = sharedPreferences.getString("SenderName", "");
+        lastSeen.setText(SenderName);
+    }
+
     private void setDate() {
         Calendar myCalendar = Calendar.getInstance();
         String myFormat = "dd/MM/yy"; //In which you need put here
@@ -259,6 +267,7 @@ public class ChatMessage extends AppCompatActivity {
 
     private void initView() {
         dotLoader = findViewById(R.id.dot_loader);
+
         lstChatMessages = findViewById(R.id.list_of_messages);
         submitButton = findViewById(R.id.send_button);
         editContent = findViewById(R.id.edit_content);

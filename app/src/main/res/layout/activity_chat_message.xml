@@ -14,9 +14,10 @@
         <RelativeLayout
             android:id="@+id/chatTool"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_alignParentTop="true"
-            android:background="@color/dark_blue">
+            android:background="@color/dark_blue"
+            android:paddingBottom="3dp">
 
             <ImageView
                 android:id="@+id/BackArrow"
@@ -39,6 +40,40 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/largeFont"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lastSeen"
+                android:layout_below="@+id/userName"
+                android:gravity="center_vertical"
+                android:layout_centerInParent="true"
+
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:text="last seen 2:30"
+                android:layout_marginLeft="10dp"/>
+
+
+            <ImageView
+                android:id="@+id/User_chat1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+               android:layout_toRightOf="@+id/userName"
+                android:layout_weight="1"
+                android:background="@drawable/phone"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/User_chat2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/User_chat1"
+                android:layout_weight="1"
+                android:background="@drawable/vdo" />
+
         </RelativeLayout>
 
         <ImageButton

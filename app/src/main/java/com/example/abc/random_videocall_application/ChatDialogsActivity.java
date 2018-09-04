@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -147,6 +148,7 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 QBChatDialog qbChatDialog = (QBChatDialog) lstChatDialogs.getAdapter().getItem(position);
                 String Sender_Name = qbChatDialog.getName();
+               // String Last_Seen=qbChatDialog.getLastMessageDateSent();
                 editor.putString("SenderName", Sender_Name);
                 editor.commit();
 
@@ -376,7 +378,13 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         chatList_white.setVisibility(View.VISIBLE);
     }
 
-
+    protected void startLoginService(QBUser qbUser) {
+        CallService.start(this, qbUser);
+    }
+    private void startHomeActivity() {
+        Home2.start(ChatDialogsActivity.this, false);
+        finish();
+    }
     private void setOnClicks() {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -385,8 +393,8 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 //                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(getApplication(), Home2.class);
-                startActivity(intent);
+                startLoginService(SharedPrefsHelper.getInstance().getQbUser());
+                startHomeActivity();
             }
         });
         newUser.setOnClickListener(new View.OnClickListener() {
@@ -473,8 +481,8 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.home) {
-            Intent intent = new Intent(getApplicationContext(), Home2.class);
-            startActivity(intent);
+            startLoginService(SharedPrefsHelper.getInstance().getQbUser());
+            startHomeActivity();
         } else if (id == R.id.profile) {
             Intent i = new Intent(getApplicationContext(), ProfileView.class);
             startActivity(i);
