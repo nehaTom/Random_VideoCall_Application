@@ -47,32 +47,32 @@
                 android:layout_below="@+id/userName"
                 android:gravity="center_vertical"
                 android:layout_centerInParent="true"
-
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:text="last seen 2:30"
-                android:layout_marginLeft="10dp"/>
+                android:text="last seen 2:30"/>
 
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_centerInParent="true"
+    android:layout_alignParentRight="true"
+    android:paddingRight="20dp"
+    >
             <ImageView
-                android:id="@+id/User_chat1"
+                android:id="@+id/User_call"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_centerHorizontal="true"
-               android:layout_toRightOf="@+id/userName"
-                android:layout_weight="1"
-                android:background="@drawable/phone"
-                android:visibility="visible" />
+                android:background="@drawable/callwhite"
+                android:layout_marginRight="20dp" />
 
             <ImageView
-                android:id="@+id/User_chat2"
+                android:id="@+id/User_video"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="15dp"
                 android:layout_toRightOf="@+id/User_chat1"
-                android:layout_weight="1"
-                android:background="@drawable/vdo" />
+                android:background="@drawable/videowhite" />
+</LinearLayout>
 
         </RelativeLayout>
 
@@ -84,8 +84,7 @@
             android:layout_alignParentLeft="true"
             android:background="@null"
             android:padding="4dp"
-            android:src="@android:drawable/ic_input_add"
-            android:visibility="invisible" />
+            android:src="@android:drawable/ic_input_add" />
 
         <ImageButton
             android:id="@+id/send_button"

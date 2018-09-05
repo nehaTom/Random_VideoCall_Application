@@ -130,6 +130,7 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         lstUsers = (ListView) findViewById(R.id.lstuser);
         lstUsers.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
+
 //        lstUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -308,6 +309,7 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
 
         QBUser user = (QBUser) lstUsers.getItemAtPosition(i);
         String SenderName = user.getFullName();
+
         editor.putString("SenderName", SenderName);
         editor.commit();
         QBChatDialog dialog = DialogUtils.buildPrivateDialog(user.getId());
@@ -340,7 +342,7 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         logOutClass.logout();
         finish();
     }
-
+    ArrayList<QBUser> qbUser=null;
 
     private void retrieveAllUsers() {
 
@@ -360,8 +362,10 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
                 @Override
                 public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
                     mDialog.dismiss();
+                    qbUser=qbUsers;
                     dbManager.saveAllUsers(qbUsers, true);
                     setListDataValue();
+                //    long abc=qbUsers.get(i)
                 }
 
                 @Override
@@ -380,6 +384,9 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
         ArrayList<QBUser> qbUsers = dbManager.getAllUsers();
         QBUsersHolder.getInstance().putUsers(qbUsers);
 
+
+
+       // Log.e("Last_Test",""+qbUser.get(2).getLastRequestAt().getTime());
         ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<QBUser>();
         int i = 1;
         for (QBUser user : qbUsers) {
@@ -854,7 +861,14 @@ public class list_user_activity extends AppCompatActivity implements QBSystemMes
                             @Override
                             public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
                                 mDialog.dismiss();
-
+                                long millis=(qbChatDialog.getLastMessageDateSent())/1000;
+                                long m = (millis / 60) % 60;
+                                long h = (millis / (60 * 60))%24;
+                                String hms = String.format("%02d:%02d", h,
+                                        m);
+                                // String Last_Seen=qbChatDialog.getLastMessageDateSent();
+                                editor.putString("Last_Seen_List",hms);
+                                editor.commit();
                                 Intent intent = new Intent(getApplication(), ChatMessage.class);
                                 intent.putExtra(Common.DIALOG_EXTRA, qbChatDialog);
                                 intent.putExtra("Activity_Name", "List_User");

@@ -107,4 +107,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         }
         return view;
     }
+
+
+
 }

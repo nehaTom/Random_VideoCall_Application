@@ -1,10 +1,18 @@
 package com.example.abc.random_videocall_application;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,9 +23,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,7 +38,15 @@ import android.widget.Toast;
 
 import com.example.abc.random_videocall_application.VideoClasses.LogOutClass;
 import com.example.abc.random_videocall_application.VideoClasses.SharedPrefsHelper;
+import com.example.abc.random_videocall_application.VideoClasses.Toaster;
+import com.example.abc.random_videocall_application.VideoClasses.activities.CallActivity;
+import com.example.abc.random_videocall_application.VideoClasses.activities.PermissionsActivity;
 import com.example.abc.random_videocall_application.VideoClasses.services.CallService;
+import com.example.abc.random_videocall_application.VideoClasses.utils.Consts;
+import com.example.abc.random_videocall_application.VideoClasses.utils.PermissionsChecker;
+import com.example.abc.random_videocall_application.VideoClasses.utils.PushNotificationSender;
+import com.example.abc.random_videocall_application.VideoClasses.utils.WebRtcSessionManager;
+import com.github.library.bubbleview.BubbleTextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -48,20 +69,29 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCClient;
+import com.quickblox.videochat.webrtc.QBRTCSession;
+import com.quickblox.videochat.webrtc.QBRTCTypes;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMessageListener, QBChatDialogMessageListener, NavigationView.OnNavigationItemSelectedListener {
     ListView lstChatDialogs;
+
     ImageView home, newUser, existingUser, chatList, contact, home_white, newUser_white, existingUser_white,
             chatList_white, contact_white, logout;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     SharedPrefsHelper sharedPrefsHelper;
     TextView user_name_appmenu;
+    Uri photoToUpload;
+    private PermissionsChecker checker;
     boolean doubleBackToExitPressedOnce = false;
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -109,12 +139,13 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         setContentView(R.layout.activity_chat_dialogs);
 
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        checker = new PermissionsChecker(getApplicationContext());
         setAddMob();
 
 //      logout=findViewById(R.id.logout);
 //        logout.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClick(View v) {m
 //                setLogout();
 //            }
 //        });
@@ -148,7 +179,14 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 QBChatDialog qbChatDialog = (QBChatDialog) lstChatDialogs.getAdapter().getItem(position);
                 String Sender_Name = qbChatDialog.getName();
+
+                long millis=(qbChatDialog.getLastMessageDateSent())/1000;
+                long m = (millis / 60) % 60;
+                long h = (millis / (60 * 60))%24;
+                String hms = String.format("%02d:%02d", h,
+                        m);
                // String Last_Seen=qbChatDialog.getLastMessageDateSent();
+                editor.putString("Last_Seen",hms);
                 editor.putString("SenderName", Sender_Name);
                 editor.commit();
 
@@ -164,6 +202,8 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
 
     }
+
+
 
     private void setUserName() {
         String name = sharedPreferences.getString("PName", "");
@@ -389,8 +429,6 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                home.setBackgroundColor(Color.parseColor("#ffffff"));
-//                home.setImageResource(R.drawable.home);
                 home.setVisibility(View.GONE);
                 home_white.setVisibility(View.VISIBLE);
                 startLoginService(SharedPrefsHelper.getInstance().getQbUser());
@@ -400,9 +438,6 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         newUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                newUser.setBackgroundColor(Color.parseColor("#ffffff"));
-//                newUser.setImageResource(R.drawable.newlyadded);
-
                 newUser.setVisibility(View.GONE);
                 newUser_white.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(getApplication(), NewJoined.class);
@@ -413,32 +448,16 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
         existingUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                existingUser.setBackgroundColor(Color.parseColor("#ffffff"));
-//                existingUser.setImageResource(R.drawable.existinguser);
-
                 existingUser.setVisibility(View.GONE);
                 existingUser_white.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(getApplication(), list_user_activity.class);
                 startActivity(intent);
             }
         });
-//        chatList.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                chatList.setBackgroundColor(Color.parseColor("#ffffff"));
-////                chatList.setImageResource(R.drawable.chat);
-//
-//                chatList.setVisibility(View.GONE);
-//                chatList_white.setVisibility(View.VISIBLE);
-//                Intent intent = new Intent(getApplication(), ChatDialogsActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                contact.setBackgroundColor(Color.parseColor("#ffffff"));
-//                contact.setImageResource(R.drawable.contacts);
 
                 contact.setVisibility(View.GONE);
                 contact_white.setVisibility(View.VISIBLE);
@@ -514,5 +533,152 @@ public class ChatDialogsActivity extends AppCompatActivity implements QBSystemMe
 
 
     //--------------------------------------------
+
+
+
+    private class ChatMessageAdapter extends BaseAdapter {
+
+        private Context context;
+        private ArrayList<QBChatMessage> qbChatMessages;
+
+        SharedPreferences sharedPreferences;
+        SharedPreferences.Editor editor;
+
+        public ChatMessageAdapter(Context context, ArrayList<QBChatMessage> qbChatMessages) {
+            this.context = context;
+            this.qbChatMessages = qbChatMessages;
+
+        }
+
+        @Override
+        public int getCount() {
+            return qbChatMessages.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return qbChatMessages.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+            View view = convertView;
+            if (convertView == null){
+
+                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                Log.d("myTag", " " + qbChatMessages.get(i).getSenderId());
+                Log.d("myTag", " " + QBChatService.getInstance().getUser().getId());
+
+                if (qbChatMessages.get(i).getSenderId().equals(QBChatService.getInstance().getUser().getId())){
+
+                    view = inflater.inflate(R.layout.list_send_message, null);
+                    BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
+                    TextView time=view.findViewById(R.id.time);
+                    TextView date=view.findViewById(R.id.date);
+                    long date_value = qbChatMessages.get(i).getDateSent();
+                    String dateValue = Long.toString(date_value);
+                    date.setText(dateValue);
+                    bubbleTextView.setText(qbChatMessages.get(i).getBody());
+                    long millis=(qbChatMessages.get(i).getDateSent())/1000;
+                    //long s = millis % 60;
+                    long m = (millis / 60) % 60;
+                    long h = (millis / (60 * 60))%24;
+                    String hms = String.format("%02d:%02d", h,
+                            m);
+
+                    time.setText(hms);
+                    time.setTextColor(Color.BLACK);
+                    Log.e("time", String.valueOf(qbChatMessages.get(i).getDateSent()/1000));
+
+                } else {
+
+                    sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                    editor = sharedPreferences.edit();
+                    view = inflater.inflate(R.layout.list_rec_message, null);
+                    BubbleTextView bubbleTextView = (BubbleTextView)view.findViewById(R.id.message_content);
+                    TextView time=view.findViewById(R.id.time);
+
+                    TextView date=view.findViewById(R.id.date);
+                    long date_value = qbChatMessages.get(i).getDateSent();
+                    String dateValue = Long.toString(date_value);
+                    date.setText(dateValue);
+                    //date.setText((int) qbChatMessages.get(i).getDateSent());
+
+                    bubbleTextView.setText(qbChatMessages.get(i).getBody());
+                    TextView txtName = (TextView)view.findViewById(R.id.message_user);
+                    txtName.setText(QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName());
+                    time.setText(""+qbChatMessages.get(i).getDateSent());
+                    time.setTextColor(Color.BLACK);
+                    String SenderName= QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName();
+
+                    //editor.putString("SenderName",SenderName);
+                    //editor.commit();
+                }
+            }
+            return view;
+        }
+
+        private boolean isLoggedInChat() {
+            if (!QBChatService.getInstance().isLoggedIn()) {
+                Toaster.shortToast(R.string.dlg_signal_error);
+                tryReLoginToChat();
+                return false;
+            }
+            return true;
+        }
+
+        private void tryReLoginToChat() {
+            if (sharedPrefsHelper.hasQbUser()) {
+                QBUser qbUser = sharedPrefsHelper.getQbUser();
+                CallService.start(getApplicationContext(), qbUser);
+            }
+        }
+
+        private void videoCallfunction(int position) {
+            //selectedUser = (QBUser)lstUsers.getItemAtPosition(position);
+
+            if (isLoggedInChat()) {
+                startCall(true);
+            }
+            if (checker.lacksPermissions(Consts.PERMISSIONS)) {
+                startPermissionsActivity(false);
+            }
+
+        }
+
+        private void startPermissionsActivity(boolean checkOnlyAudio) {
+            PermissionsActivity.startActivity(getApplicationContext(), checkOnlyAudio, Consts.PERMISSIONS);
+        }
+
+        private void startCall(boolean isVideoCall) {
+
+
+          //  int idValue = selectedUser.getId();
+            ArrayList<Integer> opponentsList = new ArrayList<>();
+           // opponentsList.add(idValue);
+            QBRTCTypes.QBConferenceType conferenceType = isVideoCall
+                    ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
+                    : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+
+            QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
+
+            QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(opponentsList, conferenceType);
+
+            WebRtcSessionManager.getInstance(getApplicationContext()).setCurrentSession(newQbRtcSession);
+
+            PushNotificationSender.sendPushMessage(opponentsList, sharedPrefsHelper.getQbUser().getFullName());
+
+            CallActivity.start(getApplicationContext(), false);
+        }
+
+
+    }
+
 
 }

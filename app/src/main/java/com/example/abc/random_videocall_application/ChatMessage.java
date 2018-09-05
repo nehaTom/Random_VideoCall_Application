@@ -2,19 +2,29 @@ package com.example.abc.random_videocall_application;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bhargavms.dotloader.DotLoader;
+import com.example.abc.random_videocall_application.VideoClasses.utils.Consts;
+import com.github.library.bubbleview.BubbleTextView;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.BaseService;
 import com.quickblox.auth.session.QBSession;
@@ -48,6 +60,8 @@ import com.quickblox.users.model.QBUser;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,15 +75,17 @@ public class ChatMessage extends AppCompatActivity {
     EditText editContent;
     ChatMessageAdapter adapter;
     DotLoader dotLoader;
-    TextView userName, date,lastSeen;
-    ImageView BackArrow;
+    QBUser selectedUser;
+    ImageButton attachment_button;
+    TextView userName, date, lastSeen;
+    ImageView BackArrow, User_call;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-
-
     int contextMenuIndexClicked = -1;
     boolean isEditMode = false;
     QBChatMessage editMessage;
+    private static int RESULT_LOAD_IMAGE = 1;
+    Uri photoToUpload;
 
 
     boolean doubleBackToExitPressedOnce = false;
@@ -142,7 +158,9 @@ public class ChatMessage extends AppCompatActivity {
         retrieveAllMessages();
         setUserName();
         setLastseen();
-      //  setDate();
+        setImageAttachment();
+
+        //  setDate();
 
         ///// set date
 //        DatePickerDialog.OnDateSetListener setDate = new DatePickerDialog.OnDateSetListener() {
@@ -178,7 +196,14 @@ public class ChatMessage extends AppCompatActivity {
                     chatMessage.setBody(editContent.getText().toString());
                     chatMessage.setSenderId(QBChatService.getInstance().getUser().getId());
                     chatMessage.setSaveToHistory(true);
-
+//                    long millis=(qbChatDialog.getLastMessageDateSent())/1000;
+//                    long m = (millis / 60) % 60;
+//                    long h = (millis / (60 * 60))%24;
+//                    String hms = String.format("%02d:%02d", h,
+//                            m);
+//                    // String Last_Seen=qbChatDialog.getLastMessageDateSent();
+//                    editor.putString("Last_Seen",hms);
+//                    editor.commit();
                     chatMessage.setDateSent(Calendar.getInstance().getTime().getTime());
                     Log.e("SysT", String.valueOf(Calendar.getInstance().getTime()));
                     chatMessage.setMarkable(true);
@@ -228,11 +253,83 @@ public class ChatMessage extends AppCompatActivity {
         });
     }
 
-    private void setLastseen()
+    private void setImageAttachment()
     {
+        attachment_button=findViewById(R.id.attachment_button);
+        attachment_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+//            cursor.close();
+//            imv.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//        }
+            Uri selectedImage = data.getData();
+            Bitmap bmp;
+
+            try {
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePath[0]);
+                String images = cursor.getString(columnIndex);
+                //  imv.setImageURI(selectedImage);
+                //      Toast.makeText(getApplicationContext(), "This is my Toast message!"+,
+                //           Toast.LENGTH_LONG).show();
+                Log.d("Check", images);
+                // imv.setImageBitmap(null);
+                bmp=getScaledBitmap(selectedImage);
+                attachment_button.setImageBitmap(bmp);
+
+                Log.e("Image",bmp.toString());
+                //imv.setImageURI(selectedImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private Bitmap getScaledBitmap(Uri selectedImage) {
+
+        Bitmap thumb = null;
+        try {
+            photoToUpload = selectedImage;
+            ContentResolver cr = getApplicationContext().getContentResolver();
+            InputStream in = cr.openInputStream(selectedImage);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            thumb = BitmapFactory.decodeStream(in, null, options);
+        } catch (FileNotFoundException e) {
+        }
+        return thumb;
+    }
+    private void setLastseen() {
+        Intent intent = getIntent();
         lastSeen = findViewById(R.id.lastSeen);
-        String SenderName = sharedPreferences.getString("SenderName", "");
-        lastSeen.setText(SenderName);
+
+        String Activity_Name = intent.getStringExtra("Activity_Name");
+        if (Activity_Name.equals("Chat_Dialog")) {
+            String Last_Seen = sharedPreferences.getString("Last_Seen", "");
+            lastSeen.setText("last seen " + Last_Seen);
+        } else if (Activity_Name.equals("List_User")) {
+            String Last_Seen = sharedPreferences.getString("Last_Seen_List", "");
+            lastSeen.setText("last seen " + Last_Seen);
+
+
+        }
     }
 
     private void setDate() {
@@ -458,5 +555,116 @@ public class ChatMessage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         return;
+    }
+
+////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+
+
+
+    private class ChatMessageAdapter extends BaseAdapter {
+
+        private Context context;
+        private ArrayList<QBChatMessage> qbChatMessages;
+
+        SharedPreferences sharedPreferences;
+        SharedPreferences.Editor editor;
+
+        public ChatMessageAdapter(Context context, ArrayList<QBChatMessage> qbChatMessages) {
+            this.context = context;
+            this.qbChatMessages = qbChatMessages;
+
+        }
+
+        @Override
+        public int getCount() {
+            return qbChatMessages.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return qbChatMessages.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+            View view = convertView;
+            if (convertView == null) {
+
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                Log.d("myTag", " " + qbChatMessages.get(i).getSenderId());
+                Log.d("myTag", " " + QBChatService.getInstance().getUser().getId());
+                User_call=findViewById(R.id.User_call);
+                User_call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        QBUser selected=;
+//                        selectedUser = qbChatMessages.get(i);
+//                        if (isLoggedInChat()) {
+//                            startCall(false);
+//                        }
+//                        if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
+//                            startPermissionsActivity(true);
+//                        }
+
+
+                    }
+                });
+
+                if (qbChatMessages.get(i).getSenderId().equals(QBChatService.getInstance().getUser().getId())) {
+
+                    view = inflater.inflate(R.layout.list_send_message, null);
+                    BubbleTextView bubbleTextView = (BubbleTextView) view.findViewById(R.id.message_content);
+                    TextView time = view.findViewById(R.id.time);
+                    TextView date = view.findViewById(R.id.date);
+                    long date_value = qbChatMessages.get(i).getDateSent();
+                    String dateValue = Long.toString(date_value);
+                    date.setText(dateValue);
+                    bubbleTextView.setText(qbChatMessages.get(i).getBody());
+                    long millis = (qbChatMessages.get(i).getDateSent()) / 1000;
+                    //long s = millis % 60;
+                    long m = (millis / 60) % 60;
+                    long h = (millis / (60 * 60)) % 24;
+                    String hms = String.format("%02d:%02d", h,
+                            m);
+
+                    time.setText(hms);
+                    time.setTextColor(Color.BLACK);
+                    Log.e("time", String.valueOf(qbChatMessages.get(i).getDateSent() / 1000));
+
+                } else {
+
+                    sharedPreferences = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                    editor = sharedPreferences.edit();
+                    view = inflater.inflate(R.layout.list_rec_message, null);
+                    BubbleTextView bubbleTextView = (BubbleTextView) view.findViewById(R.id.message_content);
+                    TextView time = view.findViewById(R.id.time);
+
+                    TextView date = view.findViewById(R.id.date);
+                    long date_value = qbChatMessages.get(i).getDateSent();
+                    String dateValue = Long.toString(date_value);
+                    date.setText(dateValue);
+                    //date.setText((int) qbChatMessages.get(i).getDateSent());
+
+                    bubbleTextView.setText(qbChatMessages.get(i).getBody());
+                    TextView txtName = (TextView) view.findViewById(R.id.message_user);
+                    txtName.setText(QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName());
+                    time.setText("" + qbChatMessages.get(i).getDateSent());
+                    time.setTextColor(Color.BLACK);
+                    String SenderName = QBUsersHolder.getInstance().getUserById(qbChatMessages.get(i).getSenderId()).getFullName();
+
+                    //editor.putString("SenderName",SenderName);
+                    //editor.commit();
+                }
+            }
+            return view;
+        }
     }
 }
