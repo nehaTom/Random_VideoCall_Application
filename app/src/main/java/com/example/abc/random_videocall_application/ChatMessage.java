@@ -259,6 +259,9 @@ public class ChatMessage extends AppCompatActivity {
     private void setImageAttachment()
     {
 
+
+
+
         attachment_button=findViewById(R.id.attachment_button);
 
         attachment_button.setOnClickListener(new View.OnClickListener() {
