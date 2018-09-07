@@ -34,7 +34,15 @@
             app:arrowLocation="right"
             app:arrowCenter="true"
             app:bubbleColor="#ffffff"/>
-
+        <ImageView
+            android:id="@+id/Image_send"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:layout_below="@+id/time"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

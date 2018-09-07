@@ -78,7 +78,7 @@ public class ChatMessage extends AppCompatActivity {
     QBUser selectedUser;
     ImageButton attachment_button;
     TextView userName, date, lastSeen;
-    ImageView BackArrow, User_call;
+    ImageView BackArrow, User_call,Image_upload;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     int contextMenuIndexClicked = -1;
@@ -86,7 +86,7 @@ public class ChatMessage extends AppCompatActivity {
     QBChatMessage editMessage;
     private static int RESULT_LOAD_IMAGE = 1;
     Uri photoToUpload;
-
+    Bitmap bmp;
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -151,6 +151,7 @@ public class ChatMessage extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
 
+//        Image_upload=findViewById(R.id.Image_upload);
         date = findViewById(R.id.date);
 //        createSessionForFacebook();
         initView();
@@ -196,6 +197,8 @@ public class ChatMessage extends AppCompatActivity {
                     chatMessage.setBody(editContent.getText().toString());
                     chatMessage.setSenderId(QBChatService.getInstance().getUser().getId());
                     chatMessage.setSaveToHistory(true);
+                    //////////////////////////////////////////////////
+                    //chatMessage.setAttachments();
 //                    long millis=(qbChatDialog.getLastMessageDateSent())/1000;
 //                    long m = (millis / 60) % 60;
 //                    long h = (millis / (60 * 60))%24;
@@ -255,7 +258,9 @@ public class ChatMessage extends AppCompatActivity {
 
     private void setImageAttachment()
     {
+
         attachment_button=findViewById(R.id.attachment_button);
+
         attachment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +284,7 @@ public class ChatMessage extends AppCompatActivity {
             Bitmap bmp;
 
             try {
+
                 String[] filePath = {MediaStore.Images.Media.DATA};
                 Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
                 cursor.moveToFirst();
@@ -290,7 +296,7 @@ public class ChatMessage extends AppCompatActivity {
                 Log.d("Check", images);
                 // imv.setImageBitmap(null);
                 bmp=getScaledBitmap(selectedImage);
-                attachment_button.setImageBitmap(bmp);
+               // Image_upload.setImageBitmap(bmp);
 
                 Log.e("Image",bmp.toString());
                 //imv.setImageURI(selectedImage);
@@ -624,6 +630,8 @@ public class ChatMessage extends AppCompatActivity {
                     BubbleTextView bubbleTextView = (BubbleTextView) view.findViewById(R.id.message_content);
                     TextView time = view.findViewById(R.id.time);
                     TextView date = view.findViewById(R.id.date);
+                    ImageView Image_send=view.findViewById(R.id.Image_send);
+                    Image_send.setImageBitmap(bmp);
                     long date_value = qbChatMessages.get(i).getDateSent();
                     String dateValue = Long.toString(date_value);
                     date.setText(dateValue);
